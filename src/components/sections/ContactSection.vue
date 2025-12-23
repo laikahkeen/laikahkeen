@@ -148,6 +148,7 @@
 import { ref, reactive } from 'vue';
 import Button from '../ui/Button.vue';
 import { useScrollAnimation } from '../../composables/useScrollAnimation';
+import { submitContactForm, type ContactFormData } from '../../api';
 
 interface SubmitMessage {
   type: 'success' | 'error';
@@ -158,7 +159,7 @@ const header = ref<HTMLElement | null>(null);
 const form = ref<HTMLElement | null>(null);
 const info = ref<HTMLElement | null>(null);
 
-const formData = reactive({
+const formData = reactive<ContactFormData>({
   name: '',
   email: '',
   message: '',
@@ -172,24 +173,27 @@ const handleSubmit = async () => {
   submitMessage.value = null;
 
   try {
-    // TODO: Replace with actual form submission endpoint (Formspree, EmailJS, etc.)
-    // For now, just simulate a submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const result = await submitContactForm(formData);
 
-    submitMessage.value = {
-      type: 'success',
-      text: "Thank you for your message! I'll get back to you soon.",
-    };
+    if (result.success) {
+      submitMessage.value = {
+        type: 'success',
+        text: "Thank you for your message! I'll get back to you soon.",
+      };
 
-    // Reset form
-    formData.name = '';
-    formData.email = '';
-    formData.message = '';
+      // Reset form
+      formData.name = '';
+      formData.email = '';
+      formData.message = '';
+    } else {
+      throw new Error(result.message || 'Form submission failed');
+    }
   } catch (error) {
     submitMessage.value = {
       type: 'error',
       text: 'Something went wrong. Please try again or email me directly.',
     };
+    console.error('Form submission error:', error);
   } finally {
     isSubmitting.value = false;
   }
