@@ -7,18 +7,24 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: gh-pages
+      url: https://laikahkeen.com
     steps:
       - uses: actions/checkout@v3
 
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: '20'
 
       - name: Install and Build
         run: |
           npm install
           npm run build
+
+      - name: Add CNAME for Pages custom domain
+        run: echo 'laikahkeen.com' > ./dist/CNAME
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
