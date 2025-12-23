@@ -1,21 +1,23 @@
 <template>
-  <nav :class="[
-    'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-    isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
-  ]">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20">
+  <nav
+    :class="[
+      'fixed left-0 right-0 top-0 z-50 transition-all duration-300',
+      isScrolled ? 'bg-white/90 shadow-sm backdrop-blur-md' : 'bg-transparent',
+    ]"
+  >
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="flex h-20 items-center justify-between">
         <!-- Logo -->
         <a
           href="#hero"
           @click.prevent="scrollToSection('hero')"
-          class="text-xl font-mono font-semibold hover:text-gray-600 transition-colors"
+          class="font-mono text-xl font-semibold transition-colors hover:text-gray-600"
         >
           LKK
         </a>
 
         <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center space-x-8">
+        <div class="hidden items-center space-x-8 md:flex">
           <a
             v-for="link in navLinks"
             :key="link.id"
@@ -23,7 +25,7 @@
             @click.prevent="scrollToSection(link.id)"
             :class="[
               'text-sm font-medium transition-colors hover:text-gray-600',
-              activeSection === link.id ? 'text-black' : 'text-gray-500'
+              activeSection === link.id ? 'text-black' : 'text-gray-500',
             ]"
           >
             {{ link.label }}
@@ -33,15 +35,10 @@
         <!-- Mobile Menu Button -->
         <button
           @click="mobileMenuOpen = !mobileMenuOpen"
-          class="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          class="rounded-lg p-2 transition-colors hover:bg-gray-100 md:hidden"
           aria-label="Toggle menu"
         >
-          <svg
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               v-if="!mobileMenuOpen"
               stroke-linecap="round"
@@ -49,13 +46,7 @@
               stroke-width="2"
               d="M4 6h16M4 12h16M4 18h16"
             />
-            <path
-              v-else
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
+            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
@@ -70,19 +61,19 @@
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 -translate-y-4"
     >
-      <div
-        v-if="mobileMenuOpen"
-        class="md:hidden bg-white border-t border-gray-200"
-      >
-        <div class="px-6 py-4 space-y-3">
+      <div v-if="mobileMenuOpen" class="border-t border-gray-200 bg-white md:hidden">
+        <div class="space-y-3 px-6 py-4">
           <a
             v-for="link in navLinks"
             :key="link.id"
             :href="`#${link.id}`"
-            @click.prevent="scrollToSection(link.id); mobileMenuOpen = false"
+            @click.prevent="
+              scrollToSection(link.id);
+              mobileMenuOpen = false;
+            "
             :class="[
               'block py-2 text-sm font-medium transition-colors hover:text-gray-600',
-              activeSection === link.id ? 'text-black' : 'text-gray-500'
+              activeSection === link.id ? 'text-black' : 'text-gray-500',
             ]"
           >
             {{ link.label }}
@@ -94,11 +85,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 interface NavLink {
-  id: string
-  label: string
+  id: string;
+  label: string;
 }
 
 const navLinks: NavLink[] = [
@@ -108,44 +99,44 @@ const navLinks: NavLink[] = [
   { id: 'projects', label: 'Projects' },
   { id: 'experience', label: 'Experience' },
   { id: 'contact', label: 'Contact' },
-]
+];
 
-const isScrolled = ref<boolean>(false)
-const activeSection = ref<string>('hero')
-const mobileMenuOpen = ref<boolean>(false)
+const isScrolled = ref<boolean>(false);
+const activeSection = ref<string>('hero');
+const mobileMenuOpen = ref<boolean>(false);
 
 const scrollToSection = (sectionId: string): void => {
-  const element = document.getElementById(sectionId)
+  const element = document.getElementById(sectionId);
   if (element) {
-    element.scrollIntoView({ behavior: 'smooth' })
+    element.scrollIntoView({ behavior: 'smooth' });
   }
-}
+};
 
 const handleScroll = (): void => {
-  isScrolled.value = window.scrollY > 50
+  isScrolled.value = window.scrollY > 50;
 
   // Detect active section
-  const sections = navLinks.map(link => link.id)
-  sections.unshift('hero')
+  const sections = navLinks.map((link) => link.id);
+  sections.unshift('hero');
 
   for (const sectionId of sections) {
-    const element = document.getElementById(sectionId)
+    const element = document.getElementById(sectionId);
     if (element) {
-      const rect = element.getBoundingClientRect()
+      const rect = element.getBoundingClientRect();
       if (rect.top <= 100 && rect.bottom >= 100) {
-        activeSection.value = sectionId
-        break
+        activeSection.value = sectionId;
+        break;
       }
     }
   }
-}
+};
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-  handleScroll()
-})
+  window.addEventListener('scroll', handleScroll);
+  handleScroll();
+});
 
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
+  window.removeEventListener('scroll', handleScroll);
+});
 </script>

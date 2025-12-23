@@ -1,59 +1,66 @@
 <template>
-  <div class="relative flex gap-6 group">
+  <div class="group relative flex gap-6">
     <!-- Timeline Line & Dot -->
     <div class="flex flex-col items-center">
       <!-- Year Badge -->
-      <div class="w-16 h-16 rounded-full border-2 border-black bg-white flex items-center justify-center font-mono font-bold text-sm mb-4 group-hover:bg-black group-hover:text-white transition-all duration-300">
+      <div
+        class="mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-black bg-white font-mono text-sm font-bold transition-all duration-300 group-hover:bg-black group-hover:text-white"
+      >
         {{ year }}
       </div>
 
       <!-- Vertical Line (only if not last item) -->
-      <div v-if="!isLast" class="w-0.5 bg-gray-300 flex-1 min-h-[80px] group-hover:bg-black transition-colors duration-300"></div>
+      <div
+        v-if="!isLast"
+        class="min-h-[80px] w-0.5 flex-1 bg-gray-300 transition-colors duration-300 group-hover:bg-black"
+      ></div>
     </div>
 
     <!-- Content -->
     <div class="flex-1 pb-12">
-      <div class="bg-white border border-gray-200 p-6 group-hover:border-black group-hover:shadow-lg transition-all duration-300">
+      <div
+        class="border border-gray-200 bg-white p-6 transition-all duration-300 group-hover:border-black group-hover:shadow-lg"
+      >
         <!-- Type Badge -->
-        <div class="inline-block px-3 py-1 text-xs font-medium border border-gray-300 mb-3" :class="typeBadgeClass">
+        <div class="mb-3 inline-block border border-gray-300 px-3 py-1 text-xs font-medium" :class="typeBadgeClass">
           {{ typeLabel }}
         </div>
 
-        <h3 class="text-xl font-semibold mb-2">{{ title }}</h3>
-        <p class="text-gray-600 text-sm leading-relaxed">{{ description }}</p>
+        <h3 class="mb-2 text-xl font-semibold">{{ title }}</h3>
+        <p class="text-sm leading-relaxed text-gray-600">{{ description }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { MilestoneType } from '../../types'
+import { computed } from 'vue';
+import type { MilestoneType } from '../../types';
 
 interface Props {
-  year: string
-  title: string
-  description: string
-  type?: MilestoneType
-  isLast?: boolean
+  year: string;
+  title: string;
+  description: string;
+  type?: MilestoneType;
+  isLast?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'career',
-  isLast: false
-})
+  isLast: false,
+});
 
 const typeLabel = computed(() => {
   const labels: Record<MilestoneType, string> = {
     career: 'Career',
     education: 'Education',
     learning: 'Learning',
-    achievement: 'Achievement'
-  }
-  return labels[props.type] || 'Milestone'
-})
+    achievement: 'Achievement',
+  };
+  return labels[props.type] || 'Milestone';
+});
 
 const typeBadgeClass = computed(() => {
-  return 'bg-white text-black'
-})
+  return 'bg-white text-black';
+});
 </script>

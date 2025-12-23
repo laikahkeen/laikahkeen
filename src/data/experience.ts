@@ -1,4 +1,4 @@
-import type { Experience } from '../types'
+import type { Experience } from '../types';
 
 export const experiences: Experience[] = [
   {
@@ -7,14 +7,15 @@ export const experiences: Experience[] = [
     role: 'Full Stack Developer',
     period: '2024 - Present',
     location: 'Remote',
-    description: 'Building custom web applications for clients worldwide, specializing in Vue.js and Node.js solutions.',
+    description:
+      'Building custom web applications for clients worldwide, specializing in Vue.js and Node.js solutions.',
     responsibilities: [
       'Developing full-stack web applications using Vue 3, Node.js, and PostgreSQL',
       'Implementing responsive designs with Tailwind CSS and modern animation libraries',
       'Collaborating with designers and stakeholders to deliver high-quality products',
-      'Optimizing application performance and ensuring best practices'
+      'Optimizing application performance and ensuring best practices',
     ],
-    current: true
+    current: true,
   },
   {
     id: 2,
@@ -27,9 +28,9 @@ export const experiences: Experience[] = [
       'Architected and developed new features for SaaS platform',
       'Mentored junior developers and conducted code reviews',
       'Implemented CI/CD pipelines and automated testing',
-      'Collaborated with product team on technical requirements'
+      'Collaborated with product team on technical requirements',
     ],
-    current: false
+    current: false,
   },
   {
     id: 3,
@@ -42,9 +43,9 @@ export const experiences: Experience[] = [
       'Built responsive websites and web applications using Vue.js and React',
       'Developed RESTful APIs with Node.js and Express',
       'Integrated third-party services and payment gateways',
-      'Maintained and optimized existing client projects'
+      'Maintained and optimized existing client projects',
     ],
-    current: false
+    current: false,
   },
   {
     id: 4,
@@ -57,8 +58,8 @@ export const experiences: Experience[] = [
       'Developed user interfaces using HTML, CSS, and JavaScript',
       'Collaborated with designers to implement pixel-perfect designs',
       'Learned modern frameworks and best practices',
-      'Assisted in debugging and fixing production issues'
+      'Assisted in debugging and fixing production issues',
     ],
-    current: false
-  }
-]
+    current: false,
+  },
+];

@@ -8,19 +8,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { SkillLevel } from '../../types'
+import { computed } from 'vue';
+import type { SkillLevel } from '../../types';
 
 interface Props {
-  name: string
-  level?: SkillLevel
-  showLevel?: boolean
+  name: string;
+  level?: SkillLevel;
+  showLevel?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   level: 'intermediate',
-  showLevel: false
-})
+  showLevel: false,
+});
 
 const tagClasses = computed(() => {
   return [
@@ -28,17 +28,17 @@ const tagClasses = computed(() => {
     'border border-gray-300 bg-white text-black',
     'transition-all duration-300',
     'hover:border-black hover:shadow-md hover:-translate-y-0.5',
-    'text-sm'
-  ].join(' ')
-})
+    'text-sm',
+  ].join(' ');
+});
 
 const levelLabel = computed(() => {
   const levels: Record<SkillLevel, string> = {
     beginner: '⭐',
     intermediate: '⭐⭐',
     advanced: '⭐⭐⭐',
-    expert: '⭐⭐⭐⭐'
-  }
-  return levels[props.level] || ''
-})
+    expert: '⭐⭐⭐⭐',
+  };
+  return levels[props.level] || '';
+});
 </script>

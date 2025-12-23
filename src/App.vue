@@ -15,20 +15,20 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount } from 'vue'
-import Lenis from 'lenis'
-import Navigation from './components/layout/Navigation.vue'
-import Footer from './components/layout/Footer.vue'
-import HeroSection from './components/sections/HeroSection.vue'
-import AboutSection from './components/sections/AboutSection.vue'
-import JourneySection from './components/sections/JourneySection.vue'
-import SkillsetSection from './components/sections/SkillsetSection.vue'
-import ProjectsSection from './components/sections/ProjectsSection.vue'
-import ExperienceSection from './components/sections/ExperienceSection.vue'
-import ContactSection from './components/sections/ContactSection.vue'
+import { onMounted, onBeforeUnmount } from 'vue';
+import Lenis from 'lenis';
+import Navigation from './components/layout/Navigation.vue';
+import Footer from './components/layout/Footer.vue';
+import HeroSection from './components/sections/HeroSection.vue';
+import AboutSection from './components/sections/AboutSection.vue';
+import JourneySection from './components/sections/JourneySection.vue';
+import SkillsetSection from './components/sections/SkillsetSection.vue';
+import ProjectsSection from './components/sections/ProjectsSection.vue';
+import ExperienceSection from './components/sections/ExperienceSection.vue';
+import ContactSection from './components/sections/ContactSection.vue';
 
-let lenis: Lenis | null = null
-let rafId: number | null = null
+let lenis: Lenis | null = null;
+let rafId: number | null = null;
 
 onMounted(() => {
   // Initialize Lenis smooth scroll
@@ -36,24 +36,24 @@ onMounted(() => {
     duration: 1.2,
     easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     smoothTouch: false,
-  } as any)
+  } as any);
 
   function raf(time: number) {
-    lenis!.raf(time)
-    rafId = requestAnimationFrame(raf)
+    lenis!.raf(time);
+    rafId = requestAnimationFrame(raf);
   }
 
-  rafId = requestAnimationFrame(raf)
-})
+  rafId = requestAnimationFrame(raf);
+});
 
 onBeforeUnmount(() => {
   if (rafId) {
-    cancelAnimationFrame(rafId)
+    cancelAnimationFrame(rafId);
   }
   if (lenis) {
-    lenis.destroy()
+    lenis.destroy();
   }
-})
+});
 </script>
 
 <style>
