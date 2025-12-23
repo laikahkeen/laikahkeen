@@ -19,6 +19,8 @@ jobs:
           node-version: '20'
 
       - name: Install and Build
+        env:
+          VITE_WEB3FORMS_ACCESS_TOKEN: ${{ secrets.VITE_WEB3FORMS_ACCESS_TOKEN }}
         run: |
           npm install
           npm run build
