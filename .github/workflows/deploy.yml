@@ -8,7 +8,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     environment:
-      name: gh-pages
+      name: github-pages
       url: https://laikahkeen.com
     steps:
       - uses: actions/checkout@v3
