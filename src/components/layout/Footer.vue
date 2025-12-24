@@ -4,7 +4,7 @@
       <div class="flex flex-col items-center justify-between gap-6 md:flex-row">
         <!-- Brand -->
         <div class="text-center md:text-left">
-          <p class="font-mono text-lg font-semibold">Lai Kah Keen</p>
+          <p class="text-lg font-semibold">Lai Kah Keen</p>
           <p class="mt-1 text-sm text-gray-400">Full Stack Developer</p>
         </div>
 

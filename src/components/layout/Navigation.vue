@@ -11,7 +11,7 @@
         <a
           href="#hero"
           @click.prevent="scrollToSection('hero')"
-          class="font-mono text-xl font-semibold transition-colors hover:text-gray-600"
+          class="text-xl font-semibold transition-colors hover:text-gray-600"
         >
           LKK
         </a>
@@ -96,7 +96,7 @@ const navLinks: NavLink[] = [
   { id: 'about', label: 'About' },
   { id: 'journey', label: 'Journey' },
   { id: 'skills', label: 'Skills' },
-  { id: 'projects', label: 'Projects' },
+  // { id: 'projects', label: 'Projects' },
   { id: 'experience', label: 'Experience' },
   { id: 'contact', label: 'Contact' },
 ];

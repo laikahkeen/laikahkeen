@@ -23,13 +23,13 @@
         <!-- Description -->
         <div class="mb-12 overflow-hidden">
           <p ref="description" class="mx-auto max-w-2xl text-base text-gray-500 md:text-lg">
-            Crafting elegant digital experiences with modern web technologies
+            Crafting elegant digital experiences with modern web technologies.
           </p>
         </div>
 
         <!-- CTA Buttons -->
         <div ref="cta" class="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button variant="primary" size="lg" @click="scrollToProjects"> View My Work </Button>
+          <!-- <Button variant="primary" size="lg" @click="scrollToProjects"> View My Work </Button> -->
           <Button variant="secondary" size="lg" @click="scrollToContact"> Get In Touch </Button>
         </div>
       </div>
@@ -60,13 +60,13 @@ const shape2 = ref<HTMLElement | null>(null);
 const shape3 = ref<HTMLElement | null>(null);
 
 // Mouse parallax for shapes
-useMouseParallax(shape1, { strength: 15 });
-useMouseParallax(shape2, { strength: -20 });
-useMouseParallax(shape3, { strength: 10 });
+useMouseParallax(shape1, { strength: 150 });
+useMouseParallax(shape2, { strength: -200 });
+useMouseParallax(shape3, { strength: 100 });
 
-const scrollToProjects = () => {
-  document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-};
+// const scrollToProjects = () => {
+//   document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+// };
 
 const scrollToContact = () => {
   document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });

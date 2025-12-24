@@ -4,7 +4,7 @@
     <div class="flex flex-col items-center">
       <!-- Year Badge -->
       <div
-        class="mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-black bg-white font-mono text-sm font-bold transition-all duration-300 group-hover:bg-black group-hover:text-white"
+        class="mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-black bg-white text-sm font-bold transition-all duration-300 group-hover:bg-black group-hover:text-white"
       >
         {{ year }}
       </div>
