@@ -29,7 +29,7 @@
 
         <!-- CTA Buttons -->
         <div ref="cta" class="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <!-- <Button variant="primary" size="lg" @click="scrollToProjects"> View My Work </Button> -->
+          <Button variant="primary" size="lg" @click="scrollToProjects"> View My Work </Button>
           <Button variant="secondary" size="lg" @click="scrollToContact"> Get In Touch </Button>
         </div>
       </div>
@@ -64,9 +64,9 @@ useMouseParallax(shape1, { strength: 150 });
 useMouseParallax(shape2, { strength: -200 });
 useMouseParallax(shape3, { strength: 100 });
 
-// const scrollToProjects = () => {
-//   document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-// };
+const scrollToProjects = () => {
+  document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+};
 
 const scrollToContact = () => {
   document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });

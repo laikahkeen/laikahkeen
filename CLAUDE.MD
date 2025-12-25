@@ -32,7 +32,8 @@ laikahkeen/
 │   ├── data/            # Content data (projects, skills, journey, experience)
 │   ├── utils/           # Utility functions
 │   ├── App.vue          # Root component
-│   └── main.js          # Application entry point
+│   ├── main.ts          # Application entry point
+│   └── api.ts           # API integration (Web3Forms)
 ├── index.html           # HTML entry with meta tags and SEO
 ├── package.json
 ├── tailwind.config.js   # Tailwind configuration
@@ -64,7 +65,7 @@ laikahkeen/
 
 - **GSAP**: Used for complex scroll-triggered animations
 - **ScrollTrigger**: Attached to section components via composables
-- **Lenis**: Smooth scroll initialized in `main.js`
+- **Lenis**: Smooth scroll initialized in `main.ts`
 - Common patterns:
   - Fade-in on scroll: `gsap.from()` with `opacity: 0, y: 50`
   - Stagger animations: Use `stagger: 0.1` for sequential reveals
@@ -74,10 +75,10 @@ laikahkeen/
 
 Content is separated into data files in `src/data/`:
 
-- `projects.js`: Portfolio projects with title, description, tech, image, links
-- `skills.js`: Technical skills grouped by category
-- `journey.js`: Timeline of education and career milestones
-- `experience.js`: Work experience entries
+- `projects.ts`: Portfolio projects with title, description, tech, image, links
+- `skills.ts`: Technical skills grouped by category
+- `journey.ts`: Timeline of education and career milestones
+- `experience.ts`: Work experience entries
 
 When updating content, modify these data files rather than hardcoding in components.
 
@@ -89,16 +90,18 @@ When updating content, modify these data files rather than hardcoding in compone
 2. **About**: Profile photo with bio and core competencies
 3. **Journey**: Vertical timeline with milestone markers
 4. **Skills**: Categorized skill tags (Frontend, Backend, Tools, etc.)
-5. **Projects**: Featured project cards with hover effects
-6. **Experience**: Work history with expandable details
-7. **Contact**: Form with validation (placeholder submission - needs integration)
+5. **Experience**: Work history with expandable details and resume download link
+6. **Contact**: Fully functional form integrated with Web3Forms
 
 ### SEO & Meta Tags
 
 - Open Graph tags for social sharing (`index.html`)
+- Twitter card meta tags
 - Semantic HTML structure
 - Meta description and keywords
-- Favicon and touch icons
+- Complete favicon suite (16x16, 32x32, Apple touch icon, Android icons)
+- OG image for social preview (`/public/og-image.png`)
+- Web manifest for PWA support
 
 ## Development Workflow
 
@@ -130,8 +133,11 @@ npm run preview
 
 ### Common Tasks
 
-**Update Projects**: Edit `src/data/projects.js`
-**Update Skills**: Edit `src/data/skills.js`
+**Update Projects**: Edit `src/data/projects.ts`
+**Update Skills**: Edit `src/data/skills.ts`
+**Update Journey**: Edit `src/data/journey.ts`
+**Update Experience**: Edit `src/data/experience.ts`
+**Update Resume**: Replace `/public/resume.pdf`
 **Change Colors**: Modify `tailwind.config.js` (stick to monochrome)
 **Add Meta Tags**: Update `index.html`
 **Modify Navigation**: Edit `src/components/layout/Navigation.vue`
@@ -143,14 +149,6 @@ The site is deployed on GitHub Pages with a custom domain (laikahkeen.com).
 - **Build command**: `npm run build`
 - **Output directory**: `dist/`
 - **CNAME**: Configured in `public/CNAME`
-
-### Deploy to GitHub Pages
-
-```bash
-npm install -D gh-pages
-npm run build
-npx gh-pages -d dist
-```
 
 ## Important Notes
 
@@ -170,11 +168,13 @@ npx gh-pages -d dist
 
 ### Contact Form
 
-The contact form currently has a placeholder `handleSubmit` function. To make it functional:
+The contact form is fully integrated with **Web3Forms** for email delivery:
 
-1. Integrate with Formspree, EmailJS, or similar service
-2. Update `handleSubmit` in `src/components/sections/ContactSection.vue`
-3. Add environment variables for API keys if needed
+1. Form submissions handled via `src/api.ts`
+2. Uses Web3Forms API with access token from environment variable
+3. Access token configured via `VITE_WEB3FORMS_ACCESS_TOKEN` in `.env`
+4. Includes form validation, loading states, and success/error messaging
+5. Automatic form reset on successful submission
 
 ### Browser Support
 
@@ -201,8 +201,8 @@ When working on this project:
 
 **Developer**: Lai Kah Keen
 **Email**: laikahkeen@gmail.com
-**Repository**: https://github.com/laikahkeen (update with actual repo URL)
+**Repository**: https://github.com/laikahkeen/laikahkeen
 
 ---
 
-Last updated: 2025-12-22
+Last updated: 2025-12-25

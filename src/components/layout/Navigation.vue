@@ -96,7 +96,7 @@ const navLinks: NavLink[] = [
   { id: 'about', label: 'About' },
   { id: 'journey', label: 'Journey' },
   { id: 'skills', label: 'Skills' },
-  // { id: 'projects', label: 'Projects' },
+  { id: 'projects', label: 'Projects' },
   { id: 'experience', label: 'Experience' },
   { id: 'contact', label: 'Contact' },
 ];

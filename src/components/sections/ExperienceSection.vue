@@ -48,7 +48,7 @@
 
       <!-- Download Resume -->
       <div ref="cta" class="mt-12 text-center">
-        <a href="https://linkedin.com/in/lai-kah-keen" target="_blank" rel="noopener noreferrer">
+        <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">
           <Button variant="primary" size="lg"> Download Resume (PDF) </Button>
         </a>
       </div>

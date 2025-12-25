@@ -23,7 +23,7 @@
 
     <!-- Content -->
     <div class="p-6">
-      <h3 class="mb-2 text-xl font-semibold transition-colors group-hover:text-gray-600">
+      <h3 class="mb-2 text-xl font-semibold text-gray-400 transition-colors group-hover:text-gray-600">
         {{ project.title }}
       </h3>
       <p class="mb-4 line-clamp-3 text-sm text-gray-600">
@@ -48,7 +48,7 @@
           :href="project.liveUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-1 text-sm font-medium hover:underline"
+          class="inline-flex items-center gap-1 text-sm font-medium text-gray-400 hover:underline"
         >
           Live Demo
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,7 +65,7 @@
           :href="project.githubUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-1 text-sm font-medium hover:underline"
+          class="inline-flex items-center gap-1 text-sm font-medium text-gray-400 hover:underline"
         >
           GitHub
           <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
