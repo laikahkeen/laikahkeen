@@ -1,15 +1,15 @@
 <template>
   <footer class="bg-black py-12 text-white">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
-      <div class="flex flex-col items-center justify-between gap-6 md:flex-row">
+      <div class="flex flex-col items-center gap-6 md:flex-row">
         <!-- Brand -->
-        <div class="text-center md:text-left">
+        <div class="text-center md:flex-1 md:text-left">
           <p class="text-lg font-semibold">Lai Kah Keen</p>
           <p class="mt-1 text-sm text-gray-400">Full Stack Developer</p>
         </div>
 
         <!-- Social Links -->
-        <div class="flex items-center gap-6">
+        <div class="flex items-center justify-center gap-6 md:flex-1">
           <a
             v-for="social in socials"
             :key="social.name"
@@ -24,7 +24,7 @@
         </div>
 
         <!-- Copyright -->
-        <div class="text-center md:text-right">
+        <div class="text-center md:flex-1 md:text-right">
           <p class="text-sm text-gray-400">&copy; {{ new Date().getFullYear() }} Lai Kah Keen. All rights reserved.</p>
         </div>
       </div>

@@ -19,7 +19,7 @@ export interface Project {
   image: string;
   tags: string[];
   liveUrl: string;
-  githubUrl: string;
+  githubUrl?: string;
   featured: boolean;
 }
 
