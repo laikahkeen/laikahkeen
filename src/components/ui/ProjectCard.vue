@@ -16,8 +16,17 @@
       ></div>
 
       <!-- Featured Badge -->
-      <div v-if="project.featured" class="absolute right-4 top-4 bg-black px-3 py-1 text-xs font-medium text-white">
+      <div
+        v-if="project.featured"
+        class="absolute left-4 top-4 bg-black px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-white"
+      >
         Featured
+      </div>
+      <div
+        v-if="project.status === 'archived'"
+        class="absolute left-4 top-4 border border-white/20 bg-white/90 px-3 py-1 text-xs font-medium uppercase tracking-[0.2em] text-gray-700"
+      >
+        Archived
       </div>
     </div>
 
@@ -75,6 +84,10 @@
           </svg>
         </a>
       </div>
+
+      <p v-if="project.status === 'archived'" class="mt-4 text-xs uppercase tracking-[0.2em] text-gray-400">
+        No longer actively maintained
+      </p>
     </div>
   </div>
 </template>

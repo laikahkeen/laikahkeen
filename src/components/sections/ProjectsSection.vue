@@ -3,8 +3,8 @@
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <!-- Section Header -->
       <div ref="header" class="mb-16 text-center">
-        <h2 class="mb-4 text-4xl font-bold md:text-5xl">Featured Projects</h2>
-        <p class="mx-auto max-w-2xl text-lg text-gray-400">A selection of my recent work and side projects</p>
+        <h2 class="mb-4 text-4xl font-bold md:text-5xl">Projects</h2>
+        <p class="mx-auto max-w-2xl text-lg text-gray-400">Current work first, with previous projects kept as archive</p>
       </div>
 
       <!-- Projects Grid -->

@@ -21,6 +21,7 @@ export interface Project {
   liveUrl: string;
   githubUrl?: string;
   featured: boolean;
+  status: 'active' | 'archived';
 }
 
 // Journey types
