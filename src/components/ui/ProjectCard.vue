@@ -1,9 +1,9 @@
 <template>
   <div
-    class="group relative overflow-hidden border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    class="group relative grid overflow-hidden border border-gray-800 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl lg:grid-cols-[0.9fr_1.1fr]"
   >
     <!-- Image -->
-    <div class="relative h-64 overflow-hidden bg-gray-100">
+    <div class="relative min-h-72 overflow-hidden bg-gray-100">
       <img
         v-if="project.image"
         :src="project.image"
@@ -31,13 +31,35 @@
     </div>
 
     <!-- Content -->
-    <div class="p-6">
-      <h3 class="mb-2 text-xl font-semibold text-gray-400 transition-colors group-hover:text-gray-600">
+    <div class="flex flex-col p-6 md:p-8">
+      <div class="mb-5 flex flex-wrap items-center gap-3">
+        <p class="text-xs font-medium uppercase tracking-[0.25em] text-gray-500">
+          {{ project.status === 'active' ? 'Current build' : 'Archived study' }}
+        </p>
+        <span class="h-px flex-1 bg-gray-200"></span>
+      </div>
+
+      <h3 class="mb-3 text-2xl font-semibold text-black transition-colors group-hover:text-gray-700 md:text-3xl">
         {{ project.title }}
       </h3>
-      <p class="mb-4 line-clamp-3 text-sm text-gray-600">
+      <p class="mb-6 text-sm leading-7 text-gray-600 md:text-base">
         {{ project.description }}
       </p>
+
+      <dl class="mb-6 grid gap-4 border-y border-gray-200 py-5">
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-[0.2em] text-gray-400">Problem</dt>
+          <dd class="mt-2 text-sm leading-6 text-gray-700">{{ project.problem }}</dd>
+        </div>
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-[0.2em] text-gray-400">Approach</dt>
+          <dd class="mt-2 text-sm leading-6 text-gray-700">{{ project.solution }}</dd>
+        </div>
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-[0.2em] text-gray-400">Signal</dt>
+          <dd class="mt-2 text-sm leading-6 text-gray-700">{{ project.impact }}</dd>
+        </div>
+      </dl>
 
       <!-- Tags -->
       <div class="mb-4 flex flex-wrap gap-2">
@@ -50,8 +72,10 @@
         </span>
       </div>
 
+      <p class="mb-5 text-xs uppercase tracking-[0.18em] text-gray-500">{{ project.role }}</p>
+
       <!-- Links -->
-      <div class="flex gap-4">
+      <div class="mt-auto flex gap-4">
         <a
           v-if="project.liveUrl"
           :href="project.liveUrl"

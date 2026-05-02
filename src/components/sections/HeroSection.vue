@@ -10,6 +10,10 @@
     <!-- Main Content -->
     <div class="relative z-10 mx-auto max-w-7xl px-6 text-center lg:px-8">
       <div ref="content">
+        <div ref="eyebrow" class="mb-6 overflow-hidden">
+          <p class="text-xs font-medium uppercase tracking-[0.35em] text-gray-500">Full-stack product engineer</p>
+        </div>
+
         <!-- Animated Name -->
         <div class="mb-6 overflow-hidden">
           <h1 ref="name" class="text-6xl font-bold tracking-tight md:text-8xl lg:text-9xl">Lai Kah Keen</h1>
@@ -17,14 +21,35 @@
 
         <!-- Tagline -->
         <div class="mb-8 overflow-hidden">
-          <p ref="tagline" class="text-xl font-light text-gray-600 md:text-2xl lg:text-3xl">Full Stack Developer</p>
+          <p
+            ref="tagline"
+            class="mx-auto max-w-4xl text-xl font-light leading-tight text-gray-700 md:text-3xl lg:text-4xl"
+          >
+            I turn messy product ideas into calm, shippable web systems.
+          </p>
         </div>
 
         <!-- Description -->
         <div class="mb-12 overflow-hidden">
-          <p ref="description" class="mx-auto max-w-2xl text-base text-gray-500 md:text-lg">
-            Crafting elegant digital experiences with modern web technologies.
+          <p ref="description" class="mx-auto max-w-3xl text-base leading-8 text-gray-500 md:text-lg">
+            Vue, React, Go, and TypeScript across the full path from product shape to production details. I care about
+            interfaces that explain themselves, systems that stay maintainable, and experiments that become useful.
           </p>
+        </div>
+
+        <div ref="metrics" class="mx-auto mb-12 grid max-w-3xl grid-cols-1 gap-3 text-left sm:grid-cols-3">
+          <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
+            <p class="text-2xl font-semibold">03</p>
+            <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Product builds</p>
+          </div>
+          <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
+            <p class="text-2xl font-semibold">Go + TS</p>
+            <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Core stack</p>
+          </div>
+          <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
+            <p class="text-2xl font-semibold">UX</p>
+            <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Systems focus</p>
+          </div>
         </div>
 
         <!-- CTA Buttons -->
@@ -51,8 +76,10 @@ import Button from '../ui/Button.vue';
 import { useMouseParallax } from '../../composables/useParallax';
 
 const name = ref<HTMLElement | null>(null);
+const eyebrow = ref<HTMLElement | null>(null);
 const tagline = ref<HTMLElement | null>(null);
 const description = ref<HTMLElement | null>(null);
+const metrics = ref<HTMLElement | null>(null);
 const cta = ref<HTMLElement | null>(null);
 const scrollIndicator = ref<HTMLElement | null>(null);
 const shape1 = ref<HTMLElement | null>(null);
@@ -76,12 +103,22 @@ onMounted(() => {
   // Hero entrance animation
   const tl = gsap.timeline();
 
-  tl.from(name.value, {
-    y: 100,
+  tl.from(eyebrow.value, {
+    y: 30,
     opacity: 0,
-    duration: 1,
-    ease: 'power4.out',
+    duration: 0.7,
+    ease: 'power3.out',
   })
+    .from(
+      name.value,
+      {
+        y: 100,
+        opacity: 0,
+        duration: 1,
+        ease: 'power4.out',
+      },
+      '-=0.35'
+    )
     .from(
       tagline.value,
       {
@@ -101,6 +138,17 @@ onMounted(() => {
         ease: 'power3.out',
       },
       '-=0.4'
+    )
+    .from(
+      metrics.value?.children || [],
+      {
+        y: 24,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.08,
+        ease: 'power3.out',
+      },
+      '-=0.35'
     )
     .from(
       cta.value,

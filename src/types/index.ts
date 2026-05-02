@@ -16,6 +16,10 @@ export interface Project {
   id: number;
   title: string;
   description: string;
+  problem: string;
+  solution: string;
+  impact: string;
+  role: string;
   image: string;
   tags: string[];
   liveUrl: string;
