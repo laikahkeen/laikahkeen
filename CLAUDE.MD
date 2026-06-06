@@ -1,1 +1,0 @@
-../.claude-shared/claudemd/laikahkeen-CLAUDE.md
