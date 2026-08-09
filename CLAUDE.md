@@ -60,6 +60,15 @@ A modern, single-page developer portfolio for Lai Kah Keen built with Vue 3, Tai
 
 ```
 laikahkeen/
+├── cv/                  # CV source — see "The CV" below. NOT part of the Vite build
+│   ├── cv.yaml          # the only file with CV content in it
+│   ├── README.md        # constraints, positioning, and why-nots — READ BEFORE EDITING
+│   ├── research.md      # primary sources behind the constraints
+│   ├── build/           # generated resume.html + resume.pdf
+│   └── archive/         # retired sources and previous live CVs
+├── scripts/
+│   ├── build-cv.sh      # cv.yaml -> html -> pdf, then verifies the output
+│   └── cv-render.py     # CV presentation + content validation
 ├── public/              # Static assets (images, CNAME)
 ├── src/
 │   ├── assets/          # Styles (main.css with Tailwind directives)
@@ -176,10 +185,60 @@ npm run preview
 **Update Skills**: Edit `src/data/skills.ts`
 **Update Journey**: Edit `src/data/journey.ts`
 **Update Experience**: Edit `src/data/experience.ts`
-**Update Resume**: Replace `/public/resume.pdf`
+**Update CV**: Edit `cv/cv.yaml`, run `./scripts/build-cv.sh`, then promote deliberately (see "The CV")
 **Change Colors**: Modify `tailwind.config.js` (stick to monochrome)
 **Add Meta Tags**: Update `index.html`
 **Modify Navigation**: Edit `src/components/layout/Navigation.vue`
+
+## The CV
+
+`cv/` builds the downloadable CV. It is **not** part of the Vite build — `vite.config.js`
+uses the root `index.html` as its only entry, so nothing in `cv/` is bundled or deployed.
+
+```bash
+./scripts/build-cv.sh          # cv/cv.yaml -> cv/build/resume.html -> cv/build/resume.pdf
+```
+
+**Read `cv/README.md` before touching any of this.** Its constraints are evidence from
+primary sources (cited in `cv/research.md`), not house style, and it records decisions
+that look like defects from the outside. The four that get "fixed" by mistake:
+
+- **Edit `cv/cv.yaml` only.** The HTML and PDF in `cv/build/` are generated. There is no
+  hand-written HTML source any more; the retired one is in `cv/archive/`.
+- **Single column, body ≥10pt, margins ≥0.5in.** Greenhouse documents columned layouts as
+  a parse-failure cause; the type and margin floors are CMU SCS. One page is the budget —
+  when it overflows, **cut content, never shrink type or margins**.
+- **`design.hyphenate` stays `false`.** Chrome's auto-hyphenation breaks words in the PDF
+  *text layer* using U+2010, so `migration` extracts as `mi‐gration` and a keyword search
+  misses it. Invisible in the rendered page.
+- **`design.font` must stay a `*-local` option.** A webfont embeds as Type 3; and never
+  lead a font stack with `-apple-system`, which embeds as Type 3 *and* inflates the file.
+
+`build-cv.sh` verifies page count, font embedding, and broken words on every run, and
+`cv-render.py` validates the content rules (two-line bullets, action-verb openings, no
+year counts). Warnings go to stderr — read them.
+
+### Promoting to the live site
+
+The build deliberately does **not** write `public/resume.pdf`, which is the CV served from
+laikahkeen.com. Promotion is a separate, manual decision:
+
+```bash
+cp cv/build/resume.pdf public/resume.pdf
+```
+
+### Positioning
+
+CV content is shaped to one claim: **builds the AI agent tooling other engineers adopt,
+and ships the product frontend on top of it.** The role line, the profile's first
+sentence, the current role's first bullet, and the first Skills row all lead with AI
+tooling on purpose. Do not flatten this back into a generic "software engineer building
+SaaS applications" summary. The full rationale, and what is deliberately kept off the CV,
+is in `cv/README.md` — changing positioning is a decision to raise with the owner, not an
+edit to make.
+
+Two standing content rules: **no year counts anywhere**, and **no unverifiable numbers** —
+a figure that cannot be defended in an interview is worse than no figure.
 
 ## Deployment
 
@@ -235,6 +294,8 @@ When working on this project:
 6. **Check responsiveness** - Always consider mobile, tablet, and desktop views
 7. **Preserve TypeScript** - Keep type checking working with `npm run type-check`
 8. **Follow component structure** - Sections vs UI components vs Layout
+9. **For the CV, read `cv/README.md` first** - Edit `cv/cv.yaml`, never the generated
+   HTML or PDF, and treat its constraints as evidence rather than preference
 
 ## Contact
 
@@ -244,4 +305,4 @@ When working on this project:
 
 ---
 
-Last updated: 2025-12-25
+Last updated: 2026-08-09

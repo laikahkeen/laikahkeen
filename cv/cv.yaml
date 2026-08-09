@@ -1,0 +1,188 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# CV content — the single source of truth.
+#
+# This file holds WHAT the CV says. It says nothing about how it looks.
+# Two renderers consume it:
+#
+#   scripts/cv-render.py       -> HTML -> PDF   (full fidelity, R4)
+#   scripts/cv-to-rendercv.py  -> rendercv YAML (lossy, see that script, R2)
+#
+# Inline emphasis: **bold** works in bullets and values. Both renderers
+# understand it. Nothing else is markup — write plain prose.
+#
+# Before editing, read README.md. The constraints there are evidence from
+# primary sources (cited in research.md), not house style. In particular:
+# bullets are two lines maximum and open with a verb, and the page budget is
+# one page with almost no slack — pay for overflow with content, never with
+# font size or margins.
+# ═══════════════════════════════════════════════════════════════════════════
+
+basics:
+  name: Lai Kah Keen
+  # "AI agent tooling" leads, ahead of frontend — it is the scarcer half of the
+  # combination and the whole positioning. "MCP" deliberately stays out of this
+  # line and lives in the body instead: a non-specialist recruiter may not parse
+  # the acronym, and the headline is the wrong place to lose them.
+  role: Software Engineer — AI agent tooling and SaaS frontend
+  email: laikahkeen@gmail.com
+  phone: "+60 16-215 9518"
+  location: Cheras, Selangor, Malaysia
+  # Contact details render into the document body, never a header/footer —
+  # Greenhouse lists both as parse failure modes.
+  links:
+    - text: laikahkeen.com
+      url: https://laikahkeen.com
+    - text: github.com/laikahkeen
+      url: https://github.com/laikahkeen
+
+# No first-person pronouns anywhere in the CV.
+#
+# Sentence one is the whole positioning: tooling other engineers adopt, plus the
+# product surface on top. Sentence two is the evidence for it, and it leads with
+# the adoption because that is social proof from engineers rather than a
+# self-assessment — the strongest single claim available. Do not soften it back
+# into "software engineer building SaaS application software", which was true of
+# a hundred thousand people.
+profile: >-
+  Software engineer who builds the AI agent tooling other engineers adopt, and
+  ships the product frontend on top of it. Wrote the Go MCP server now used
+  across the engineering team to connect coding agents to the company's task
+  tracker, with two more shipped — one inside a commercial product, one a
+  41-tool personal system. Strongest on production frontends — Vue 3, React,
+  React Native — and owns the billing and Go APIs behind them.
+
+# Paid work only. Unpaid own products go under `projects`.
+experience:
+  - title: Full Stack Developer
+    org: ABC Sales AI
+    dates: Sept 2025 – Present
+    meta: Remote | part-time and contract Apr 2024 – Aug 2025
+    # MCP bullet leads deliberately — it carries the positioning. Frontend second
+    # (range), billing third (trust). TODO: none of these three state a Result.
+    # Missing numbers, in order of value: engineers on the team who use the MCP
+    # server, tenants or users on the frontend, subscriptions or MRR in the
+    # migration. Add the figures; do NOT add a fourth unquantified bullet.
+    bullets:
+      - >-
+        Wrote an **internal MCP server in Go**, now hosted and **adopted across
+        the engineering team** to connect AI coding agents to the company's task
+        tracker.
+      - >-
+        Build and ship product features on a multi-tenant **SaaS frontend**
+        (Vue 3, Pinia, PrimeVue, Tailwind), carrying work from requirement
+        through to production.
+      - >-
+        Own **billing and subscriptions** across the frontend and the Go API
+        behind it, including a silent MYR→TWD migration that moved live
+        subscriptions across plans with no customer-facing disruption.
+
+  # CSI Prop moved to `projects` (2026-08), leaving Boostomatic as the only
+  # contract here — so the nested `subentries` form is no longer needed. The
+  # renderer still supports it if a second concurrent client appears.
+  - title: Contract Engineer
+    org: Boostomatic
+    dates: Mar 2026 – Present
+    meta: Remote | marketing agency, in production | alongside full-time engineering work
+    bullets:
+      - >-
+        Built a Go service replacing **30+ hand-maintained Notion automation
+        rules** with one YAML config, routing task digests to 14 Slack
+        channels across 8 client accounts on a cron schedule.
+      - >-
+        Added a Gemini-backed Slack assistant for reading and writing Notion
+        tasks, designed so a non-developer operates it without touching code.
+
+  - title: Software Developer
+    org: Kloudius Services
+    dates: Mar 2024 – Jun 2025
+    meta: Kuala Lumpur, Malaysia
+    bullets:
+      - >-
+        Maintained and extended a cross-platform **React Native TV streaming
+        app** — modular TypeScript components, Redux and Zustand state, Jest
+        coverage, and accessibility fixes for constrained TV hardware.
+
+  # Demoted to a bullet-less entry (2026-08). Two reasons, both from the owner:
+  # the "100+ automations / RM1M annually / 100K+ records" figures could not be
+  # stood behind, and the work predates the positioning this CV now makes. A
+  # number you cannot defend in the room is worse than no number, so they are
+  # gone rather than softened. The entry stays in Experience — it was
+  # employment, and it carries the 2021–2024 timeline and the promotion.
+  - title: Automation Specialist → Lead
+    org: FAR Capital
+    dates: 2021 – Feb 2024
+    meta: Kuala Lumpur, Malaysia | business automation, internal CRM and tooling over MySQL
+
+projects:
+  - label: propbook
+    value: >-
+      Property-analytics product, built solo and live — Go engine, MCP server,
+      Next.js, Stripe billing
+  # Scale figures verified 2026-08-09 against the repo: 45.5k lines of non-test
+  # Go beside 40.6k of tests, 15.6k TypeScript, 41 MCP tools, 752 commits.
+  - label: keen-ops
+    value: >-
+      Personal life-OS in daily use — Go Telegram bot, **41-tool finance MCP
+      server**, Next.js PWA, event-sourced SQLite where every write is reversible
+  # NOTE: paid client work, sitting in Projects at the owner's instruction. This
+  # is the one place the "paid work goes in Experience" rule in README.md is
+  # knowingly broken.
+  - label: CSI Prop
+    value: >-
+      Property firm, Apr 2024 – Feb 2026 — standardised automation workflows,
+      built with non-technical stakeholders
+  - label: Earlier
+    value: >-
+      ideahook (Go, Redis, LLM) and batch.video (React, Electron, FFmpeg) —
+      laikahkeen.com
+
+# AI leads, matching the role line and the profile. Frontend stays immediately
+# second — the claim is the combination, not AI alone.
+skills:
+  - label: AI
+    value: MCP servers, LLM integration (Gemini, multi-provider), function calling, agent workflows
+  - label: Frontend
+    value: TypeScript, Vue 3, Pinia, React, React Native, Next.js, Tailwind CSS, Vite, Jest
+  - label: Backend
+    value: Go (Gin, Chi), Node.js, PostgreSQL, SQLite, Redis, REST, OpenAPI
+  - label: Infra
+    value: Docker, Terraform, AWS Lambda, Railway, GitHub Actions
+  - label: Spoken
+    value: English (fluent), Mandarin (native), Cantonese (native), Malay (conversational)
+
+education:
+  - institution: Taylor's University
+    degree: BSc (Hons) in Architecture
+    dates: 2018 – 2020
+
+layout:
+  # Education renders inside the "Skills & Education" section rather than getting
+  # its own, to hold one page. The word "Education" stays in that heading so
+  # parsers keying on standard section names still find it. Set false to split.
+  fold_education_into_skills: true
+
+# ── Presentation ───────────────────────────────────────────────────────────
+# These settings came out of a comparison against rendercv (see README.md,
+# "Why not rendercv"). Each is free in vertical space, so none of them
+# threatens the one-page budget.
+design:
+  # sans-local | serif-local | inter-webfont
+  #
+  # A LOCALLY INSTALLED font embeds as CID TrueType. The webfont embeds as
+  # Type 3, is ~2x the file size, and needs the network at render time. So the
+  # two `-local` options are strictly better; `inter-webfont` only exists to
+  # reproduce the pre-2026-08 CV exactly (with justify and center_header off).
+  font: serif-local
+
+  # Justified body text, as in rendercv's themes. Costs nothing vertically.
+  justify: true
+
+  # LEAVE THIS FALSE. Verified: Chrome's automatic hyphenation breaks words in
+  # the TEXT LAYER using U+2010, not a soft hyphen — "products" extracted as
+  # "prod‐ucts", "migration" as "mi‐gration". A keyword search for the whole word
+  # then fails, which is the parse degradation research.md exists to avoid.
+  # Loose word spacing is the cheaper price.
+  hyphenate: false
+
+  # Centre the name and contact block. Purely presentational, costs no space.
+  center_header: true

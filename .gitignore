@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Generated CV output — rebuild with ./scripts/build-cv.sh.
+# The published CV is public/resume.pdf, which IS tracked.
+cv/build/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

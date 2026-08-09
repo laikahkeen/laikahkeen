@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lai Kah Keen — Software Engineer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ---------------------------------------------------------------
+         Monochrome CV. See cv/research.md for the sourcing behind these
+         constraints — they are not stylistic preferences:
+
+           - SINGLE COLUMN. Greenhouse documents "resumes with a columned
+             layout" as a cause of failed resume parsing. Do not reintroduce
+             a sidebar.
+           - Body font >= 10pt, margins >= 0.5in (12.7mm) per CMU SCS.
+           - No tables, no text boxes, no graphics, contact details in the
+             body rather than a header/footer — all listed by Greenhouse as
+             parse failure modes.
+
+         Render with ../scripts/build-cv.sh.
+         --------------------------------------------------------------- */
+
+      :root {
+        --black: #000000;
+        --white: #ffffff;
+        --gray-100: #f5f5f5;
+        --gray-300: #d4d4d4;
+        --gray-500: #737373;
+        --gray-600: #525252;
+        --gray-800: #262626;
+        --gray-900: #171717;
+
+        --text: var(--gray-900);
+        --muted: var(--gray-600);
+        --faint: var(--gray-500);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        background: var(--gray-100);
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        font-size: 10pt;
+        line-height: 1.4;
+        color: var(--text);
+        background: var(--gray-100);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 8mm auto;
+        padding: 13mm 15mm;
+        background: var(--white);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      }
+
+      /* ---------- header ---------- */
+
+      .masthead {
+        border-bottom: 1.5px solid var(--black);
+        padding-bottom: 7px;
+        margin-bottom: 11px;
+      }
+
+      .name {
+        font-size: 21pt;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+
+      .role {
+        font-size: 10.5pt;
+        font-weight: 500;
+        color: var(--gray-800);
+        margin-top: 2px;
+      }
+
+      /* Contact details sit in the document body, never a header/footer or
+         text box — Greenhouse lists both as parse failure modes. */
+      .contact {
+        margin-top: 6px;
+        font-size: 9.2pt;
+        color: var(--muted);
+      }
+
+      .contact a {
+        color: var(--muted);
+        text-decoration: none;
+      }
+
+      .sep {
+        color: var(--gray-300);
+        margin: 0 5px;
+      }
+
+      /* ---------- sections ---------- */
+
+      section {
+        margin-bottom: 9px;
+      }
+
+      section:last-child {
+        margin-bottom: 0;
+      }
+
+      h2 {
+        font-size: 9pt;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--black);
+        padding-bottom: 3px;
+        border-bottom: 1px solid var(--gray-300);
+        margin-bottom: 7px;
+      }
+
+      .summary {
+        color: var(--gray-800);
+      }
+
+      /* ---------- experience ---------- */
+
+      .job {
+        margin-bottom: 9px;
+      }
+
+      .job:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Note: a right-aligned date in a flex row extracts AFTER the location
+         line rather than next to the title. Tried flex-start alignment to fix
+         the ordering — it changed nothing, so this stays on baseline, which
+         looks correct. The date is still inside the entry block, so this is
+         cosmetic in the text layer, not a parsing failure. */
+      .job-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10px;
+      }
+
+
+      .job-title {
+        font-size: 10.5pt;
+        font-weight: 600;
+      }
+
+      .job-title .at {
+        font-weight: 400;
+        color: var(--gray-600);
+      }
+
+      .job-dates {
+        font-size: 9pt;
+        color: var(--faint);
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .job-meta {
+        font-size: 9pt;
+        color: var(--faint);
+        margin-bottom: 4px;
+      }
+
+      .project-name {
+        font-size: 10pt;
+        font-weight: 600;
+        margin-top: 6px;
+      }
+
+      .project-name .tagline {
+        font-weight: 400;
+        color: var(--gray-600);
+      }
+
+      ul {
+        list-style: none;
+        margin-top: 3px;
+      }
+
+      li {
+        position: relative;
+        padding-left: 12px;
+        margin-bottom: 2px;
+        color: var(--gray-800);
+      }
+
+      li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.5em;
+        width: 3px;
+        height: 3px;
+        background: var(--faint);
+        border-radius: 50%;
+      }
+
+      strong {
+        font-weight: 600;
+        color: var(--gray-900);
+      }
+
+      /* ---------- inline label rows (skills, education, languages) ---------- */
+
+      .row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 3px;
+      }
+
+      .row:last-child {
+        margin-bottom: 0;
+      }
+
+      .row-label {
+        flex: 0 0 22mm;
+        font-weight: 600;
+        color: var(--gray-600);
+        font-size: 9.2pt;
+      }
+
+      .row-value {
+        flex: 1;
+        color: var(--gray-800);
+      }
+
+      /* ---------- print ---------- */
+
+      @page {
+        size: A4;
+        /* >= 0.5in per CMU SCS guidance; do not reduce to win a page break */
+        margin: 13mm 15mm;
+      }
+
+      @media print {
+        html,
+        body {
+          background: var(--white);
+        }
+
+        .page {
+          width: auto;
+          min-height: 0;
+          margin: 0;
+          padding: 0;
+          box-shadow: none;
+        }
+
+        h2 {
+          break-after: avoid;
+          page-break-after: avoid;
+        }
+
+        .job-head,
+        .job-meta,
+        .project-name {
+          break-after: avoid;
+          page-break-after: avoid;
+        }
+
+        li,
+        .row {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+
+        a {
+          color: inherit;
+        }
+
+        * {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+      <header class="masthead">
+        <div class="name">Lai Kah Keen</div>
+        <div class="role">Software Engineer — SaaS frontend and AI tooling</div>
+        <div class="contact">
+          laikahkeen@gmail.com<span class="sep">|</span>+60 16-215 9518<span class="sep">|</span
+          >Cheras, Selangor, Malaysia<span class="sep">|</span
+          ><a href="https://laikahkeen.com">laikahkeen.com</a><span class="sep">|</span
+          ><a href="https://github.com/laikahkeen">github.com/laikahkeen</a>
+        </div>
+      </header>
+
+      <section>
+        <h2>Profile</h2>
+        <p class="summary">
+          Software engineer building SaaS application software, with AI as core tooling rather than
+          decoration. Wrote the MCP server my engineering team now uses to connect coding agents to
+          our task tracker, and shipped two products with LLM cores. Strongest on production
+          frontends — Vue 3, React, React Native — with working knowledge of the backend APIs and
+          billing behind them.
+        </p>
+      </section>
+
+      <section>
+        <h2>Experience</h2>
+
+        <div class="job">
+          <div class="job-head">
+            <div class="job-title">Full Stack Developer <span class="at">— ABC Sales AI</span></div>
+            <div class="job-dates">Sept 2025 – Present</div>
+          </div>
+          <div class="job-meta">Remote &nbsp;|&nbsp; part-time and contract Apr 2024 – Aug 2025</div>
+          <ul>
+            <li>
+              Build and ship product features on a multi-tenant <strong>SaaS frontend</strong>
+              (Vue 3, Pinia, PrimeVue, Tailwind), carrying work from requirement through to
+              production.
+            </li>
+            <li>
+              Wrote an <strong>internal MCP server in Go</strong>, now hosted and
+              <strong>adopted across the engineering team</strong> to connect AI coding agents to
+              the company's task tracker.
+            </li>
+            <li>
+              Own <strong>billing and subscriptions</strong> across the frontend and the Go API
+              behind it, including a silent MYR→TWD migration that moved live subscriptions across
+              plans with no customer-facing disruption.
+            </li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <div class="job-head">
+            <div class="job-title">Contract Engineer <span class="at">— independent clients</span></div>
+            <div class="job-dates">Apr 2024 – Present</div>
+          </div>
+          <div class="job-meta">Remote &nbsp;|&nbsp; run alongside full-time engineering work</div>
+
+          <div class="project-name">
+            Boostomatic <span class="tagline">— marketing agency, in production &nbsp;·&nbsp; Mar 2026 – Present</span>
+          </div>
+          <ul>
+            <li>
+              Built a Go service replacing <strong>30+ hand-maintained Notion automation
+              rules</strong> with one YAML config, routing task digests to 14 Slack channels across
+              8 client accounts on a cron schedule.
+            </li>
+            <li>
+              Added a Gemini-backed Slack assistant for reading and writing Notion tasks, designed
+              so a non-developer operates it without touching code.
+            </li>
+          </ul>
+
+          <div class="project-name">
+            CSI Prop <span class="tagline"
+              >— property firm, Apr 2024 – Feb 2026 &nbsp;·&nbsp; turned business requirements into
+              standardised automation workflows with non-technical stakeholders</span
+            >
+          </div>
+        </div>
+
+        <div class="job">
+          <div class="job-head">
+            <div class="job-title">Software Developer <span class="at">— Kloudius Services</span></div>
+            <div class="job-dates">Mar 2024 – Jun 2025</div>
+          </div>
+          <div class="job-meta">Kuala Lumpur, Malaysia</div>
+          <ul>
+            <li>
+              Maintained and extended a cross-platform <strong>React Native TV streaming
+              app</strong> — modular TypeScript components, Redux and Zustand state, Jest coverage,
+              and accessibility fixes for constrained TV hardware.
+            </li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <div class="job-head">
+            <div class="job-title">Automation Specialist → Lead <span class="at">— FAR Capital</span></div>
+            <div class="job-dates">2021 – Feb 2024</div>
+          </div>
+          <div class="job-meta">Kuala Lumpur, Malaysia</div>
+          <ul>
+            <li>
+              Delivered <strong>100+ business automations</strong> saving an estimated
+              <strong>RM1M annually</strong>, plus a rental booking system, a custom CRM, and an
+              MVP screening app over a MySQL database of <strong>100K+ records</strong>.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Unpaid own products live here, not in Experience. -->
+      <section>
+        <h2>Projects</h2>
+        <div class="row">
+          <div class="row-label">propbook</div>
+          <div class="row-value">
+            Property-analytics product, built solo and live — Go engine, MCP server, Next.js,
+            Stripe billing
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Earlier</div>
+          <div class="row-value">
+            ideahook (Go, Redis, LLM) and batch.video (React, Electron, FFmpeg) — laikahkeen.com
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Skills &amp; Education</h2>
+        <div class="row">
+          <div class="row-label">Frontend</div>
+          <div class="row-value">
+            TypeScript, Vue 3, Pinia, React, React Native, Next.js, Tailwind CSS, Vite, Jest
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">AI</div>
+          <div class="row-value">
+            MCP servers, LLM integration (Gemini, multi-provider), function calling, agent workflows
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Backend &amp; infra</div>
+          <div class="row-value">
+            Go (Gin, Chi), Node.js, PostgreSQL, Redis, REST, OpenAPI, AWS Lambda, Terraform, Docker
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Spoken</div>
+          <div class="row-value">
+            English (fluent), Mandarin (native), Cantonese (native), Malay (conversational)
+          </div>
+        </div>
+        <!-- Education is folded in here rather than given its own section, to
+             hold one page. The word "Education" stays in the heading above so
+             parsers keying on standard section names still find it. -->
+        <div class="row">
+          <div class="row-label">Education</div>
+          <div class="row-value">
+            Taylor's University — BSc (Hons) in Architecture, 2018 – 2020
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
