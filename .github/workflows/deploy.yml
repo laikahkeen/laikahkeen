@@ -11,12 +11,13 @@ jobs:
       name: github-pages
       url: https://laikahkeen.com
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          # Matches the maintainer's local Node (v22.x) so CI and local agree.
+          node-version: '22'
 
       - name: Install and Build
         env:
@@ -29,7 +30,7 @@ jobs:
         run: echo 'laikahkeen.com' > ./dist/CNAME
 
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist

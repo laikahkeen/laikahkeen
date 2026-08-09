@@ -47,6 +47,57 @@ A modern, single-page developer portfolio for Lai Kah Keen built with Vue 3, Tai
 
 **Live Site**: https://laikahkeen.com
 
+## What this site is for
+
+**The site is the depth layer behind the CV.** The CV is one page and makes a single
+sharp claim; the site is where the evidence for that claim lives and can breathe. That
+division is deliberate and load-bearing — it is *why* the CV is allowed to stay short.
+See `cv/README.md`.
+
+- **Audience:** someone who has just read the CV, or found the site by search, and is
+  deciding whether this person is worth a conversation. Assume they arrived with a
+  specific question, not to browse.
+- **Job:** substantiate. Projects, journey, and experience detail exist so a claim the
+  CV asserts in six words can be checked here at length.
+- **Never duplicate the CV, and never contradict it.** If the two disagree about a date,
+  a title, or what the work was, that is a defect — fix it, do not pick a side silently.
+
+### The claim both surfaces serve
+
+> Builds the AI agent tooling other engineers adopt, and ships the product frontend on
+> top of it.
+
+**Known gap (2026-08): the site does not yet lead with this.** `index.html`'s title and
+meta description say "Full Stack Developer" / "specializing in modern web technologies";
+the hero says "Full-stack product engineer"; `AboutSection.vue` says "full stack
+developer". None of the first-read surfaces mention AI, MCP, or agent tooling, so a
+visitor arriving from the CV lands on a generic portfolio and the differentiator
+disappears. The *evidence* is present (`src/data/projects.ts` mentions MCP and LLM work)
+— it is the framing that has not caught up. Also `keen-ops` is a headline CV item and is
+absent from `src/data/projects.ts` entirely.
+
+Closing that gap means rewriting positioning copy, which is the owner's decision, not a
+tidy-up. Raise it; do not quietly reword the hero.
+
+### Voice — the two surfaces differ on purpose
+
+- **The site is first person** ("I turn messy product ideas into…"). Keep it that way.
+- **The CV uses no first-person pronouns at all.** Also deliberate.
+- Do not "fix" either one to match the other; they are addressing different readers.
+- Tone on both: understated, evidence over adjectives. No hype, no "passionate about",
+  no invented metrics.
+
+### What to keep as-is
+
+These are settled and should survive any refactor. Changing one is a decision to raise,
+not a judgement call to make mid-task:
+
+- **Strict monochrome.** Black, white, grays. No accent colour, ever.
+- **Single page, scroll-driven.** Not a multi-route site.
+- **Vue 3 Composition API with `<script setup>`**, Tailwind-first, GSAP + Lenis for motion.
+- **Content lives in `src/data/`**, never hardcoded in components.
+- **Minimal dependencies.** The bundle is small on purpose; adding a library needs a reason.
+
 ## Tech Stack
 
 - **Framework**: Vue 3 (Composition API with `<script setup>`)
@@ -296,6 +347,9 @@ When working on this project:
 8. **Follow component structure** - Sections vs UI components vs Layout
 9. **For the CV, read `cv/README.md` first** - Edit `cv/cv.yaml`, never the generated
    HTML or PDF, and treat its constraints as evidence rather than preference
+10. **Know what the site is for** - It is the depth layer behind the CV (see "What this
+    site is for"). Keep the two consistent, and treat positioning copy as the owner's
+    decision rather than something to reword in passing
 
 ## Contact
 
