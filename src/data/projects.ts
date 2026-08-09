@@ -20,6 +20,22 @@ export const projects: Project[] = [
     status: 'active',
   },
   {
+    id: 4,
+    title: 'keen-ops',
+    description:
+      'A personal life OS I use every day — one event store for health, reading, and finance, captured through a Telegram bot and reviewed in a Next.js dashboard.',
+    problem:
+      'The things worth tracking across a life were scattered across ten mediocre apps, none of which talked to each other, and none of which could answer a question that spanned two of them.',
+    solution:
+      'Built three Go binaries and a Next.js PWA around a single events table: a Telegram bot with a Gemini-backed planner for capture, a read-only API, and a 41-tool finance MCP server. Every mutation records an edit batch, so any write can be replayed in reverse.',
+    impact:
+      'In daily use and still growing — the reversibility contract means no correction is ever destructive, and the shared store is what makes cross-domain questions answerable at all.',
+    role: 'Solo build — Go services, event-sourced data model, MCP tooling, Next.js dashboard, deploys',
+    tags: ['Go', 'MCP', 'SQLite', 'Next.js', 'TypeScript', 'Gemini'],
+    featured: true,
+    status: 'active',
+  },
+  {
     id: 2,
     title: 'batch.video',
     description:

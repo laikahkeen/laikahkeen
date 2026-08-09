@@ -11,6 +11,18 @@
         class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
         loading="lazy"
       />
+      <!-- No screenshot: for a private system there is nothing to show. Set the
+           title as deliberate blank type rather than leaving an empty panel.
+           Dropping an image into public/images/ takes over automatically. -->
+      <div
+        v-else
+        class="flex h-full w-full items-center justify-center p-8"
+        aria-hidden="true"
+      >
+        <span class="text-center text-2xl font-semibold tracking-tight text-gray-300 md:text-3xl">
+          {{ project.title }}
+        </span>
+      </div>
       <div
         class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
       ></div>

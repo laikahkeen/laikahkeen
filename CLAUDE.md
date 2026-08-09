@@ -67,17 +67,19 @@ See `cv/README.md`.
 > Builds the AI agent tooling other engineers adopt, and ships the product frontend on
 > top of it.
 
-**Known gap (2026-08): the site does not yet lead with this.** `index.html`'s title and
-meta description say "Full Stack Developer" / "specializing in modern web technologies";
-the hero says "Full-stack product engineer"; `AboutSection.vue` says "full stack
-developer". None of the first-read surfaces mention AI, MCP, or agent tooling, so a
-visitor arriving from the CV lands on a generic portfolio and the differentiator
-disappears. The *evidence* is present (`src/data/projects.ts` mentions MCP and LLM work)
-— it is the framing that has not caught up. Also `keen-ops` is a headline CV item and is
-absent from `src/data/projects.ts` entirely.
+**Aligned as of 2026-08.** Every first-read surface now leads with the claim: the
+`index.html` title, description and keywords, the OG and Twitter cards, the hero eyebrow,
+tagline and description, the hero metric tiles, and `AboutSection.vue`'s opening
+paragraph. `keen-ops` is in `src/data/projects.ts` alongside propbook.
 
-Closing that gap means rewriting positioning copy, which is the owner's decision, not a
-tidy-up. Raise it; do not quietly reword the hero.
+Before this, all of them said "full stack developer" and none mentioned AI, MCP or agent
+tooling — so a visitor arriving from the CV landed on a generic portfolio and the
+differentiator vanished. If you find yourself reintroducing generic "full-stack
+developer" framing on any of those surfaces, that is the regression.
+
+**Positioning copy is the owner's decision, not a tidy-up.** Raise a change; do not
+quietly reword the hero, and keep any edit consistent across all of the surfaces above —
+they drifted apart once already.
 
 ### Voice — the two surfaces differ on purpose
 

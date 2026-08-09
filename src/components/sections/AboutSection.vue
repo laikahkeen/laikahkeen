@@ -24,12 +24,13 @@
           <h2 class="mb-6 text-4xl font-bold md:text-5xl">About Me</h2>
           <div class="space-y-4 leading-relaxed text-gray-600">
             <p ref="p1">
-              I'm a software engineer who builds things with intention. Professionally, I work as a full stack
-              developer, often in fast-moving environments where clarity matters more than complexity. I enjoy turning
-              messy requirements into calm, usable systems — whether that's a UI flow, a form that actually makes sense,
-              or an interface that doesn't fight the user. I value maintainability, good structure, and decisions that
-              age well. I'm comfortable working independently, adapting quickly, and taking ownership from idea to
-              execution.
+              I'm a software engineer who builds things with intention. Most of my work sits where AI tooling meets
+              production frontends: I wrote the Go MCP server my engineering team now uses to connect coding agents to
+              our task tracker, and I've shipped two more since — one inside a commercial product, one running my own
+              day to day. On the product side I work in Vue, React and React Native, and I own the billing and Go APIs
+              behind them. I enjoy turning messy requirements into calm, usable systems — whether that's a UI flow, a
+              form that actually makes sense, or an interface that doesn't fight the user. I value maintainability,
+              good structure, and decisions that age well.
             </p>
             <p ref="p2">
               Personally, I'm driven by curiosity and a need to understand how things really work — systems, people, and

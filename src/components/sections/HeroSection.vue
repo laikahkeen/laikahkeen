@@ -11,7 +11,7 @@
     <div class="relative z-10 mx-auto max-w-7xl px-6 text-center lg:px-8">
       <div ref="content">
         <div ref="eyebrow" class="mb-6 overflow-hidden">
-          <p class="text-xs font-medium uppercase tracking-[0.35em] text-gray-500">Full-stack product engineer</p>
+          <p class="text-xs font-medium uppercase tracking-[0.35em] text-gray-500">AI tooling and product frontends</p>
         </div>
 
         <!-- Animated Name -->
@@ -25,21 +25,22 @@
             ref="tagline"
             class="mx-auto max-w-4xl text-xl font-light leading-tight text-gray-700 md:text-3xl lg:text-4xl"
           >
-            I turn messy product ideas into calm, shippable web systems.
+            I build the AI tooling other engineers adopt, and ship the product on top of it.
           </p>
         </div>
 
         <!-- Description -->
         <div class="mb-12 overflow-hidden">
           <p ref="description" class="mx-auto max-w-3xl text-base leading-8 text-gray-500 md:text-lg">
-            Vue, React, Go, and TypeScript across the full path from product shape to production details. I care about
-            interfaces that explain themselves, systems that stay maintainable, and experiments that become useful.
+            Three MCP servers shipped — one adopted across my engineering team, one inside a commercial product, one
+            running my own life. Vue, React, Go and TypeScript across the full path from product shape to production
+            detail. I care about interfaces that explain themselves and systems that stay maintainable.
           </p>
         </div>
 
         <div ref="metrics" class="mx-auto mb-12 grid max-w-3xl grid-cols-1 gap-3 text-left sm:grid-cols-3">
           <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
-            <p class="text-2xl font-semibold">03</p>
+            <p class="text-2xl font-semibold">04</p>
             <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Product builds</p>
           </div>
           <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
@@ -47,8 +48,8 @@
             <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Core stack</p>
           </div>
           <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
-            <p class="text-2xl font-semibold">UX</p>
-            <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Systems focus</p>
+            <p class="text-2xl font-semibold">MCP</p>
+            <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Agent tooling</p>
           </div>
         </div>
 

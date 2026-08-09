@@ -20,9 +20,12 @@ export interface Project {
   solution: string;
   impact: string;
   role: string;
-  image: string;
+  // Optional: not every project is publicly visitable or screenshottable.
+  // keen-ops is a private personal system — no public URL, no screenshot.
+  // ProjectCard degrades gracefully when either is absent.
+  image?: string;
   tags: string[];
-  liveUrl: string;
+  liveUrl?: string;
   githubUrl?: string;
   featured: boolean;
   status: 'active' | 'archived';
