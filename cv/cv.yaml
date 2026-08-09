@@ -151,6 +151,8 @@ skills:
     value: English (fluent), Mandarin (native), Cantonese (native), Malay (conversational)
 
 education:
+  # 2018-2020 is the STUDY period; conferral was 2021. Both are correct, and the
+  # site's journey timeline marks 2021 for that reason. Do not "reconcile" them.
   - institution: Taylor's University
     degree: BSc (Hons) in Architecture
     dates: 2018 – 2020

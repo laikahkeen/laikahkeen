@@ -56,11 +56,11 @@ export const journeyMilestones: JourneyMilestone[] = [
   },
   {
     id: 6,
-    // NOTE: this year was '2021' and disagreed with the CV, which records the
-    // degree as 2018-2020. Set to 2020 because experience.ts also has the
-    // assistant-architect role starting 2020, so two of three sources agreed.
-    // Worth the owner confirming.
-    year: '2020',
+    // NOT a conflict with the CV, which records the degree as 2018-2020.
+    // Confirmed by the owner: study finished in 2020, conferral was 2021. The
+    // CV shows the study period; this milestone marks graduating. Both are
+    // correct — do not "reconcile" them.
+    year: '2021',
     title: 'Architecture degree',
     description:
       "Graduated from Taylor's University with a Bachelor's in Architecture, worked as an assistant architect for two months, and realised I did not want to be an architect. The training in drawing a thing precisely before building it has been more useful than expected.",
