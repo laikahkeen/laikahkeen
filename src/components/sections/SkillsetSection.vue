@@ -4,7 +4,9 @@
       <!-- Section Header -->
       <div ref="header" class="mb-16 text-center">
         <h2 class="mb-4 text-4xl font-bold md:text-5xl">Skills & Expertise</h2>
-        <p class="mx-auto max-w-2xl text-lg text-gray-600">A comprehensive toolkit for building modern applications</p>
+        <p class="mx-auto max-w-2xl text-lg text-gray-600">
+          Agent tooling first, then the product surface and the services under it
+        </p>
       </div>
 
       <!-- Skills Grid -->

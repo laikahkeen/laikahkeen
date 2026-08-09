@@ -1,36 +1,49 @@
 import type { JourneyMilestone } from '../types';
 
+// Reverse-chronological. Keep this in step with cv/cv.yaml and experience.ts —
+// the site tells the longer version of the same story, never a different one.
+//
+// Added 2026 entries (2026-08): the timeline previously stopped at 2025 and so
+// contained none of the work the CV now leads with.
 export const journeyMilestones: JourneyMilestone[] = [
+  {
+    id: 0,
+    year: '2026',
+    title: 'Agent tooling as the main line of work',
+    description:
+      'The MCP server I wrote for my engineering team got adopted as shared tooling, which changed what I think my job is. Shipped two more since: the finance engine inside propbook, and a 41-tool server behind keen-ops, the life OS I run my own days on. Started contracting for Boostomatic in March, replacing 30+ hand-maintained Notion rules with one Go service a non-developer can operate.',
+    type: 'career',
+  },
   {
     id: 1,
     year: '2025',
-    title: 'Full Stack Developer',
+    title: 'Full Stack Developer, full-time',
     description:
-      'Joined ABC Sales AI as a full stack developer, working with Vue.js, React Native and Golang to maintain and improve the existing web, mobile application and backend API services.',
+      'Went full-time at ABC Sales AI in September after eighteen months part-time and on contract. Building product features on a multi-tenant SaaS frontend in Vue 3, and taking ownership of billing and subscriptions across the frontend and the Go API behind it — including a live currency migration that moved paying customers across plans without them noticing.',
     type: 'career',
   },
   {
     id: 2,
     year: '2024',
-    title: 'Frontend Developer',
+    title: 'Two jobs at once',
     description:
-      'Began to contribute to the development of a multi-platform React Native app for Kloudius Services, a Malaysia based company that provides expertise in front-end development for global clients. Also started freelancing for ABC Sales AI, working with Vue.js to maintain and improve the existing web application.',
+      'Began contributing to a cross-platform React Native TV app at Kloudius Services, a Malaysian company doing front-end work for global clients — modular TypeScript, Redux and Zustand, and accessibility on hardware where a remote is the only pointer. Ran ABC Sales AI alongside it part-time, in Vue.',
     type: 'career',
   },
   {
     id: 3,
     year: '2023',
-    title: 'Self-taught Web Development',
+    title: 'Self-taught web development',
     description:
-      'Started learning Web Development by myself through Codecademy and FreeCodeCamp. Meanwhile building end to end no-code MVP projects for FAR Capital on real life business requirements. Including building a property rental booking system and a financial screening application.',
+      'Started learning web development on my own through Codecademy and freeCodeCamp, while building end-to-end no-code MVPs for FAR Capital against real business requirements — a property rental booking system and a financial screening application. Learning against real constraints turned out to matter more than the courses.',
     type: 'learning',
   },
   {
     id: 4,
     year: '2022',
-    title: 'Automation Specialist',
+    title: 'Automation Specialist → Lead',
     description:
-      'Design and implement automation solutions for the property industry. Understand the business requirements and how to implement them in the most efficient way. Contributed to the development of a custom CRM system for FAR Capital to manage the property portfolio and buyers.',
+      'Designing and implementing automation across a property operation, and eventually leading that work. Most of the job was understanding the business well enough to know which parts were worth automating, then building a custom CRM to manage the portfolio and buyers.',
     type: 'career',
   },
   {
@@ -38,15 +51,19 @@ export const journeyMilestones: JourneyMilestone[] = [
     year: '2021',
     title: 'Apprenticeship at FAR Capital',
     description:
-      'Joined FAR Capital to learn about the property industry, turns out to be not what I expected. I quickly grasped that I was more interested in the technology behind the running of a business.',
+      'Joined FAR Capital to learn the property industry, which turned out not to be what I expected. I quickly worked out I was more interested in the technology behind running a business than in the business itself.',
     type: 'career',
   },
   {
     id: 6,
-    year: '2021',
-    title: 'Architecture Degree',
+    // NOTE: this year was '2021' and disagreed with the CV, which records the
+    // degree as 2018-2020. Set to 2020 because experience.ts also has the
+    // assistant-architect role starting 2020, so two of three sources agreed.
+    // Worth the owner confirming.
+    year: '2020',
+    title: 'Architecture degree',
     description:
-      "Graduated with a Bachelor's degree in Architecture, worked as assistant architect for 2 months, only to realise that I didn't want to be an architect.",
+      "Graduated from Taylor's University with a Bachelor's in Architecture, worked as an assistant architect for two months, and realised I did not want to be an architect. The training in drawing a thing precisely before building it has been more useful than expected.",
     type: 'education',
   },
 ];

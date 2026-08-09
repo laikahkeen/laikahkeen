@@ -1,5 +1,14 @@
 <template>
-  <section class="relative flex min-h-screen items-center justify-center overflow-hidden bg-white">
+  <!-- Padding, not margins, and on the SECTION rather than the centred content.
+       The content is vertically centred, so padding it only shifts it: an
+       earlier attempt at pb-28 on the content column cleared the scroll
+       indicator but slid the eyebrow up under the fixed nav. Because
+       box-sizing is border-box globally, this padding lives INSIDE min-h-screen,
+       so the content centres in the space left between the nav and the
+       indicator and can collide with neither. -->
+  <section
+    class="relative flex min-h-screen items-center justify-center overflow-hidden bg-white pb-24 pt-24"
+  >
     <!-- Parallax Background Shapes -->
     <div class="absolute inset-0 overflow-hidden">
       <div ref="shape1" class="absolute left-10 top-20 h-64 w-64 rotate-12 border border-gray-200"></div>
@@ -30,15 +39,14 @@
         </div>
 
         <!-- Description -->
-        <div class="mb-12 overflow-hidden">
+        <div class="mb-10 overflow-hidden">
           <p ref="description" class="mx-auto max-w-3xl text-base leading-8 text-gray-500 md:text-lg">
             Three MCP servers shipped — one adopted across my engineering team, one inside a commercial product, one
-            running my own life. Vue, React, Go and TypeScript across the full path from product shape to production
-            detail. I care about interfaces that explain themselves and systems that stay maintainable.
+            running my own life. Vue, React and Go, from product shape through to the billing behind it.
           </p>
         </div>
 
-        <div ref="metrics" class="mx-auto mb-12 grid max-w-3xl grid-cols-1 gap-3 text-left sm:grid-cols-3">
+        <div ref="metrics" class="mx-auto mb-10 grid max-w-3xl grid-cols-1 gap-3 text-left sm:grid-cols-3">
           <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
             <p class="text-2xl font-semibold">04</p>
             <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Product builds</p>
@@ -61,8 +69,16 @@
       </div>
     </div>
 
-    <!-- Scroll Indicator -->
-    <div ref="scrollIndicator" class="absolute bottom-8 left-1/2 -translate-x-1/2">
+    <!-- Scroll Indicator
+         Absolutely positioned, so it collides with the CTA row as soon as the
+         hero content grows taller than the viewport — which is what happened
+         when the description ran to five lines in an 806px-tall window. The
+         section's pb-24 reserves the strip this sits in; keep the two in step
+         if either changes. Hidden on viewports too short to seat it at all. -->
+    <div
+      ref="scrollIndicator"
+      class="absolute bottom-8 left-1/2 hidden -translate-x-1/2 [@media(min-height:760px)]:block"
+    >
       <div class="flex h-10 w-6 animate-bounce justify-center rounded-full border-2 border-black p-2">
         <div class="h-3 w-1 rounded-full bg-black"></div>
       </div>

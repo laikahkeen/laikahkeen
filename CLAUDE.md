@@ -166,7 +166,31 @@ laikahkeen/
 
 - **GSAP**: Used for complex scroll-triggered animations
 - **ScrollTrigger**: Attached to section components via composables
-- **Lenis**: Smooth scroll initialized in `main.ts`
+- **Lenis**: Smooth scroll initialized in `App.vue` (**not** `main.ts`), driven from
+  `gsap.ticker` rather than its own rAF loop, with `lenis.on('scroll', ScrollTrigger.update)`
+  so reveal animations stay in step with the smoothed scroll position
+
+### If the site "feels slow"
+
+Check `lerp` in `App.vue` **before** touching any animation. It is almost always this.
+
+`duration: 1.2` used to be set there, which meant a single wheel tick took ~1090ms to come
+to rest. That reads as sluggishness but is not a performance problem — the page holds
+~110fps with one long frame across a full-page scroll, and a trace shows CLS 0.00 and no
+long-task insights. Current setting is `lerp: 0.2`, measured at 194ms to cover 90% of a
+scroll distance (down from 385ms at `lerp: 0.1`).
+
+Useful distinction when measuring: time-to-*settle* is misleading, because smoothing has a
+long asymptotic tail nobody perceives. Measure **time to ~90% of the distance**.
+
+Two related rules:
+- **Never reintroduce `duration`.** It is frame-rate dependent and mutually exclusive with
+  `lerp`. Also note `smoothTouch` is not a real Lenis option — it was set here for a while
+  behind an `as any` cast, doing nothing.
+- **Mouse parallax uses `gsap.quickTo`**, not `gsap.to` per mousemove. The latter allocated
+  a fresh tween per event per element — hundreds a second across the hero's three shapes.
+  It also opts out entirely under `prefers-reduced-motion` and on devices without a fine
+  pointer.
 - Common patterns:
   - Fade-in on scroll: `gsap.from()` with `opacity: 0, y: 50`
   - Stagger animations: Use `stagger: 0.1` for sequential reveals

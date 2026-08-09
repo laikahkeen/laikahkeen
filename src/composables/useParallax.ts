@@ -39,38 +39,40 @@ export function useParallax(target: Ref<HTMLElement | null>, options: ParallaxOp
 }
 
 export function useMouseParallax(target: Ref<HTMLElement | null>, options: ParallaxOptions = {}) {
-  let rafId: number | null = null;
+  // gsap.quickTo reuses ONE tween per property. The previous version called
+  // gsap.to() inside a rAF on every mousemove, which allocated a fresh tween
+  // per event per element — with three shapes on the hero that is hundreds of
+  // throwaway tweens a second. quickTo just retargets the existing one.
+  let xTo: gsap.QuickToFunc | null = null;
+  let yTo: gsap.QuickToFunc | null = null;
 
   const handleMouseMove = (e: MouseEvent) => {
-    if (!target.value) return;
-
-    const { clientX, clientY } = e;
-    const { innerWidth, innerHeight } = window;
-
-    const xPercent = (clientX / innerWidth - 0.5) * 2;
-    const yPercent = (clientY / innerHeight - 0.5) * 2;
+    if (!xTo || !yTo) return;
 
     const strength = options.strength || 20;
+    const xPercent = (e.clientX / window.innerWidth - 0.5) * 2;
+    const yPercent = (e.clientY / window.innerHeight - 0.5) * 2;
 
-    if (rafId) cancelAnimationFrame(rafId);
-
-    rafId = requestAnimationFrame(() => {
-      gsap.to(target.value!, {
-        x: xPercent * strength,
-        y: yPercent * strength,
-        duration: 1,
-        ease: 'power2.out',
-      });
-    });
+    xTo(xPercent * strength);
+    yTo(yPercent * strength);
   };
 
   onMounted(() => {
-    window.addEventListener('mousemove', handleMouseMove);
+    // Pointer-driven decoration is noise for anyone who asked for less motion,
+    // and the listener is pure cost on touch devices with no pointer at all.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    if (!target.value) return;
+
+    xTo = gsap.quickTo(target.value, 'x', { duration: 0.6, ease: 'power2.out' });
+    yTo = gsap.quickTo(target.value, 'y', { duration: 0.6, ease: 'power2.out' });
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
   });
 
   onBeforeUnmount(() => {
     window.removeEventListener('mousemove', handleMouseMove);
-    if (rafId) cancelAnimationFrame(rafId);
+    xTo = null;
+    yTo = null;
   });
 
   return { handleMouseMove };
