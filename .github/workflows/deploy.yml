@@ -3,13 +3,27 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [master]
+  # Lets a deploy be re-run without an empty commit — useful when only a repo
+  # setting or secret changed.
+  workflow_dispatch:
+
+# Required by actions/deploy-pages: id-token is the OIDC handshake with the
+# Pages service, pages is the publish itself. No write to contents is needed
+# any more — the old peaceiris action pushed a gh-pages branch, this does not.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Queue deploys rather than cancelling them, so an in-flight publish is never
+# left half-applied to the live site.
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: https://laikahkeen.com
     steps:
       - uses: actions/checkout@v7
 
@@ -18,19 +32,36 @@ jobs:
         with:
           # Matches the maintainer's local Node (v22.x) so CI and local agree.
           node-version: '22'
+          cache: npm
 
       - name: Install and Build
         env:
           VITE_WEB3FORMS_ACCESS_TOKEN: ${{ secrets.VITE_WEB3FORMS_ACCESS_TOKEN }}
         run: |
-          npm install
+          npm ci
           npm run build
 
+      # The live custom domain is held in the repo's Pages settings, not here.
+      # This file only keeps the artifact self-describing; there is no
+      # public/CNAME, so this step is the sole source of dist/CNAME.
       - name: Add CNAME for Pages custom domain
         run: echo 'laikahkeen.com' > ./dist/CNAME
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

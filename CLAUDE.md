@@ -122,7 +122,7 @@ laikahkeen/
 ├── scripts/
 │   ├── build-cv.sh      # cv.yaml -> html -> pdf, then verifies the output
 │   └── cv-render.py     # CV presentation + content validation
-├── public/              # Static assets (images, CNAME)
+├── public/              # Static assets (images, resume.pdf). No CNAME — see "Deployment"
 ├── src/
 │   ├── assets/          # Styles (main.css with Tailwind directives)
 │   ├── components/
@@ -319,11 +319,20 @@ a figure that cannot be defended in an interview is worse than no figure.
 
 ## Deployment
 
-The site is deployed on GitHub Pages with a custom domain (laikahkeen.com).
+The site is deployed on GitHub Pages with a custom domain (laikahkeen.com), by
+`.github/workflows/deploy.yml` on every push to `master`.
 
-- **Build command**: `npm run build`
+- **Build command**: `npm run build` (runs `vue-tsc` first — a type error fails the deploy)
 - **Output directory**: `dist/`
-- **CNAME**: Configured in `public/CNAME`
+- **Install in CI**: `npm ci`, not `npm install` — a lockfile exists and CI must honour it
+- **Custom domain**: held in the repo's **Pages settings**, not in the tree. There is
+  **no `public/CNAME`**; the workflow writes `dist/CNAME` at build time. If you go looking
+  for `public/CNAME` because this file used to claim it existed, that is why.
+- **Publish mechanism**: GitHub's own `actions/upload-pages-artifact` + `actions/deploy-pages`,
+  with Pages source set to *GitHub Actions*. It was the third-party `peaceiris/actions-gh-pages`
+  pushing a `gh-pages` branch until 2026-08. That branch is now **stale** — do not read it as
+  the live site, and do not restore branch-based publishing without also flipping the Pages
+  source setting back.
 
 ## Important Notes
 
