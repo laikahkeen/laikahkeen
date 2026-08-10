@@ -43,13 +43,17 @@ basics:
 # self-assessment — the strongest single claim available. Do not soften it back
 # into "software engineer building SaaS application software", which was true of
 # a hundred thousand people.
+# The adoption phrasing here must stay in step with the first EXPERIENCE bullet.
+# They said different things for a while ("across the engineering team" here vs
+# beyond it there), which is exactly the CV-vs-itself contradiction to avoid.
 profile: >-
   Software engineer who builds the AI agent tooling other engineers adopt, and
   ships the product frontend on top of it. Wrote the Go MCP server now used
-  across the engineering team to connect coding agents to the company's task
-  tracker, with two more shipped — one inside a commercial product, one a
-  41-tool personal system. Strongest on production frontends — Vue 3, React,
-  React Native — and owns the billing and Go APIs behind them.
+  beyond engineering — by product and non-technical business teams — to connect
+  AI agents to the company's task tracker, with two more shipped: one inside a
+  commercial product, one a 41-tool personal system. Strongest on production
+  frontends — Vue 3, React, React Native — and owns the billing and Go APIs
+  behind them.
 
 # Paid work only. Unpaid own products go under `projects`.
 experience:
@@ -58,15 +62,20 @@ experience:
     dates: Sept 2025 – Present
     meta: Remote | part-time and contract Apr 2024 – Aug 2025
     # MCP bullet leads deliberately — it carries the positioning. Frontend second
-    # (range), billing third (trust). TODO: none of these three state a Result.
-    # Missing numbers, in order of value: engineers on the team who use the MCP
-    # server, tenants or users on the frontend, subscriptions or MRR in the
+    # (range), billing third (trust).
+    #
+    # 2026-08: the MCP bullet's Result is now *breadth of adoption*, not a count —
+    # it reaches past engineering into product and the non-technical business
+    # team, which is a stronger claim than a headcount and is why "coding agents"
+    # widened to "AI agents" (non-engineers are not running coding agents).
+    # TODO, still open: bullets 2 and 3 state no Result. Missing numbers are
+    # tenants or users on the frontend, and subscriptions or MRR in the currency
     # migration. Add the figures; do NOT add a fourth unquantified bullet.
     bullets:
       - >-
-        Wrote an **internal MCP server in Go**, now hosted and **adopted across
-        the engineering team** to connect AI coding agents to the company's task
-        tracker.
+        Wrote and hosts an **internal MCP server in Go**, adopted **beyond
+        engineering — by the product and non-technical business teams** — to
+        connect their AI agents to the company's task tracker.
       - >-
         Build and ship product features on a multi-tenant **SaaS frontend**
         (Vue 3, Pinia, PrimeVue, Tailwind), carrying work from requirement

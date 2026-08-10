@@ -11,7 +11,7 @@ export const journeyMilestones: JourneyMilestone[] = [
     year: '2026',
     title: 'Agent tooling as the main line of work',
     description:
-      'The MCP server I wrote for my engineering team got adopted as shared tooling, which changed what I think my job is. Shipped two more since: the finance engine inside propbook, and a 41-tool server behind keen-ops, the life OS I run my own days on. Started contracting for Boostomatic in March, replacing 30+ hand-maintained Notion rules with one Go service a non-developer can operate.',
+      'The MCP server I wrote for my engineering team spread past it — product and the non-technical business team run their AI agents through it too, which changed what I think my job is. Shipped two more since: the finance engine inside propbook, and a 41-tool server behind keen-ops, the life OS I run my own days on. Started contracting for Boostomatic in March, replacing 30+ hand-maintained Notion rules with one Go service a non-developer can operate.',
     type: 'career',
   },
   {

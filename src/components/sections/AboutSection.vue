@@ -25,9 +25,9 @@
           <div class="space-y-4 leading-relaxed text-gray-600">
             <p ref="p1">
               I'm a software engineer who builds things with intention. Most of my work sits where AI tooling meets
-              production frontends: I wrote the Go MCP server my engineering team now uses to connect coding agents to
-              our task tracker, and I've shipped two more since — one inside a commercial product, one running my own
-              day to day. On the product side I work in Vue, React and React Native, and I own the billing and Go APIs
+              production frontends: I wrote the Go MCP server that now reaches past engineering into product and the
+              non-technical business team, connecting their AI agents to our task tracker, and I've shipped two more
+              since — one inside a commercial product, one running my own day to day. On the product side I work in Vue, React and React Native, and I own the billing and Go APIs
               behind them. I enjoy turning messy requirements into calm, usable systems — whether that's a UI flow, a
               form that actually makes sense, or an interface that doesn't fight the user. I value maintainability,
               good structure, and decisions that age well.
