@@ -19,7 +19,7 @@ export const experiences: Experience[] = [
       'Building a multi-tenant SaaS product — and the internal AI tooling the company uses to build and run it. Part-time and contract here from Apr 2024 to Aug 2025 before going full-time.',
     responsibilities: [
       'Wrote an internal MCP server in Go, now hosted and adopted beyond engineering — by the product and non-technical business teams — to connect their AI agents to the company task tracker',
-      'Build and ship product features on a multi-tenant SaaS frontend in Vue 3, Pinia, PrimeVue and Tailwind, carrying work from requirement through to production',
+      'Build and ship product features on a multi-tenant SaaS frontend serving 1,400 companies, in Vue 3, Pinia, PrimeVue and Tailwind, carrying work from requirement through to production',
       'Own billing and subscriptions across the frontend and the Go API behind it, including a silent MYR to TWD migration that moved live subscriptions across plans with no customer-facing disruption',
     ],
     current: true,

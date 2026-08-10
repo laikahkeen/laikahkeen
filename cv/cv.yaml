@@ -68,18 +68,24 @@ experience:
     # it reaches past engineering into product and the non-technical business
     # team, which is a stronger claim than a headcount and is why "coding agents"
     # widened to "AI agents" (non-engineers are not running coding agents).
-    # TODO, still open: bullets 2 and 3 state no Result. Missing numbers are
-    # tenants or users on the frontend, and subscriptions or MRR in the currency
-    # migration. Add the figures; do NOT add a fourth unquantified bullet.
+    # Bullet 3 is deliberately unquantified. The owner was asked for the count of
+    # live subscriptions or the MRR moved in the MYR->TWD migration and chose to
+    # skip it (2026-08-10) rather than publish a figure that could not be defended
+    # under questioning — which is the "no unverifiable numbers" rule in cv/README.md
+    # working as intended, not an oversight. This is closed. Do not reopen it as a
+    # TODO, and do not fill it with an estimate.
+    #
+    # Bullet 2's "1,400 companies" is tenants, not seats — say companies, since
+    # "1,400 tenants" invites the reader to guess which one is meant.
     bullets:
       - >-
         Wrote and hosts an **internal MCP server in Go**, adopted **beyond
         engineering — by the product and non-technical business teams** — to
         connect their AI agents to the company's task tracker.
       - >-
-        Build and ship product features on a multi-tenant **SaaS frontend**
-        (Vue 3, Pinia, PrimeVue, Tailwind), carrying work from requirement
-        through to production.
+        Build and ship product features on a multi-tenant **SaaS frontend
+        serving 1,400 companies** (Vue 3, Pinia, PrimeVue, Tailwind), carrying
+        work from requirement through to production.
       - >-
         Own **billing and subscriptions** across the frontend and the Go API
         behind it, including a silent MYR→TWD migration that moved live
