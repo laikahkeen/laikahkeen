@@ -1,5 +1,8 @@
 <template>
-  <section id="about" class="bg-gray-50 py-24">
+  <!-- overflow-hidden: the two columns reveal from x: ±50 and would otherwise
+       push the whole page sideways on narrow viewports until this section
+       scrolls in. Measured 2026-09-19: 26px of page scroll at 500px wide. -->
+  <section id="about" class="overflow-hidden bg-gray-50 py-24">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="grid items-center gap-12 md:grid-cols-2">
         <!-- Profile Photo -->
@@ -27,10 +30,10 @@
               I'm a software engineer who builds things with intention. Most of my work sits where AI tooling meets
               production frontends: I wrote the Go MCP server that now reaches past engineering into product and the
               non-technical business team, connecting their AI agents to our task tracker, and I've shipped two more
-              since — one inside a commercial product, one running my own day to day. On the product side I work in Vue, React and React Native, and I own the billing and Go APIs
-              behind them. I enjoy turning messy requirements into calm, usable systems — whether that's a UI flow, a
-              form that actually makes sense, or an interface that doesn't fight the user. I value maintainability,
-              good structure, and decisions that age well.
+              since — one inside a commercial product, one running my own day to day. On the product side I work in Vue,
+              React and React Native, and I own the billing and Go APIs behind them. I enjoy turning messy requirements
+              into calm, usable systems — whether that's a UI flow, a form that actually makes sense, or an interface
+              that doesn't fight the user. I value maintainability, good structure, and decisions that age well.
             </p>
             <p ref="p2">
               Personally, I'm driven by curiosity and a need to understand how things really work — systems, people, and

@@ -4,7 +4,7 @@
       <!-- Section Header -->
       <div ref="header" class="mb-16 text-center">
         <h2 class="mb-4 text-4xl font-bold md:text-5xl">Work Experience</h2>
-        <p class="mx-auto max-w-2xl text-lg text-gray-600">Professional experience and career progression</p>
+        <p class="mx-auto max-w-2xl text-lg text-gray-600">Where I have worked, and what I actually owned there</p>
       </div>
 
       <!-- Experience Items -->

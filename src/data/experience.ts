@@ -12,15 +12,17 @@ export const experiences: Experience[] = [
   {
     id: 1,
     company: 'ABC Sales AI',
-    role: 'Full Stack Developer',
-    period: 'Sept 2025 - Present',
+    role: 'Frontend Developer → Senior Software Engineer',
+    period: 'Aug 2025 - Present',
     location: 'Remote',
     description:
-      'Building a multi-tenant SaaS product — and the internal AI tooling the company uses to build and run it. Part-time and contract here from Apr 2024 to Aug 2025 before going full-time.',
+      'Building a multi-tenant SaaS product — and the internal AI tooling the company uses to build and run it. Part-time and contract here from May 2024 to Jul 2025, full-time since, and Senior Software Engineer since September 2026.',
     responsibilities: [
       'Wrote an internal MCP server in Go, now hosted and adopted beyond engineering — by the product and non-technical business teams — to connect their AI agents to the company task tracker',
       'Build and ship product features on a multi-tenant SaaS frontend serving 1,400 companies, in Vue 3, Pinia, PrimeVue and Tailwind, carrying work from requirement through to production',
       'Own billing and subscriptions across the frontend and the Go API behind it, including a silent MYR to TWD migration that moved live subscriptions across plans with no customer-facing disruption',
+      'Built the review and QA tooling the rest of the team ships through — an automated per-merge-request review layer, a pre-merge frontend QA gate, and cron-driven test generation',
+      'Coordinate releases end to end: sequencing changes across the team, checking migrations before they run, and owning the cut',
     ],
     current: true,
   },
@@ -37,6 +39,26 @@ export const experiences: Experience[] = [
       'Added a Gemini-backed Slack assistant for reading and writing Notion tasks, designed so a non-developer operates it without touching code',
     ],
     current: true,
+  },
+  // Paid contract work, in Experience here while cv/cv.yaml keeps it under
+  // Projects at the owner's instruction — the site has room, the one-page CV
+  // does not. Dates and substance must still match the CV line.
+  //
+  // "Automation Contractor" is a descriptor, not a title the firm issued; the
+  // journal records the engagement only as part-time workflow automation.
+  {
+    id: 6,
+    company: 'CSI Prop',
+    role: 'Automation Contractor',
+    period: 'May 2024 - Feb 2026',
+    location: 'Kuala Lumpur, MY',
+    description:
+      'Property firm, contracted part-time alongside the day job. Standardising the automation workflows the business ran on, built with the non-technical people who would own them afterwards.',
+    responsibilities: [
+      'Standardised automation workflows for a property firm, designed with non-technical stakeholders so they could run and change them without me',
+      'Carried it as a concurrent contract from the Kloudius period through the move to full-time engineering, and handed it over cleanly at the end',
+    ],
+    current: false,
   },
   {
     id: 3,

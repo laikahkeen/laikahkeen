@@ -4,7 +4,9 @@
       <!-- Section Header -->
       <div ref="header" class="mb-16 text-center">
         <h2 class="mb-4 text-4xl font-bold md:text-5xl">My Journey</h2>
-        <p class="mx-auto max-w-2xl text-lg text-gray-600">Key milestones in my professional and educational path</p>
+        <p class="mx-auto max-w-2xl text-lg text-gray-600">
+          How I got from an architecture degree to writing agent tooling
+        </p>
       </div>
 
       <!-- Timeline -->

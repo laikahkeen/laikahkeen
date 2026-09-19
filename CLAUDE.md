@@ -72,6 +72,13 @@ See `cv/README.md`.
 tagline and description, the hero metric tiles, and `AboutSection.vue`'s opening
 paragraph. `keen-ops` is in `src/data/projects.ts` alongside propbook.
 
+**One surface lagged until 2026-09-19: `public/og-image.png`.** The meta tags were
+repositioned in Aug 2026; the image they point at still read "Full Stack Developer" for
+another month, because it is a picture and nothing greps it. It now has a source
+(`scripts/og-template.html`) and a build (`scripts/build-og.sh`) so it changes with
+everything else. A repositioning that skips it ships the old claim to every Slack, Twitter
+and LinkedIn preview.
+
 Before this, all of them said "full stack developer" and none mentioned AI, MCP or agent
 tooling — so a visitor arriving from the CV landed on a generic portfolio and the
 differentiator vanished. If you find yourself reintroducing generic "full-stack
@@ -121,8 +128,11 @@ laikahkeen/
 │   └── archive/         # retired sources and previous live CVs
 ├── scripts/
 │   ├── build-cv.sh      # cv.yaml -> html -> pdf, then verifies the output
-│   └── cv-render.py     # CV presentation + content validation
-├── public/              # Static assets (images, resume.pdf). No CNAME — see "Deployment"
+│   ├── cv-render.py     # CV presentation + content validation
+│   ├── build-og.sh      # og-template.html -> public/og-image.png, verified at 1200x630
+│   └── og-template.html # source for the social card — subtitle tracks cv.yaml basics.role
+├── public/              # Static assets (images, resume.pdf, generated og-image.png).
+│                        # No CNAME — see "Deployment"
 ├── src/
 │   ├── assets/          # Styles (main.css with Tailwind directives)
 │   ├── components/
@@ -263,6 +273,7 @@ npm run preview
 **Update Journey**: Edit `src/data/journey.ts`
 **Update Experience**: Edit `src/data/experience.ts`
 **Update CV**: Edit `cv/cv.yaml`, run `./scripts/build-cv.sh`, then promote deliberately (see "The CV")
+**Update the social card**: Edit `scripts/og-template.html`, run `./scripts/build-og.sh` (writes `public/og-image.png` directly)
 **Change Colors**: Modify `tailwind.config.js` (stick to monochrome)
 **Add Meta Tags**: Update `index.html`
 **Modify Navigation**: Edit `src/components/layout/Navigation.vue`
@@ -394,4 +405,4 @@ When working on this project:
 
 ---
 
-Last updated: 2026-08-09
+Last updated: 2026-09-19

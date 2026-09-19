@@ -6,9 +6,7 @@
        box-sizing is border-box globally, this padding lives INSIDE min-h-screen,
        so the content centres in the space left between the nav and the
        indicator and can collide with neither. -->
-  <section
-    class="relative flex min-h-screen items-center justify-center overflow-hidden bg-white pb-24 pt-24"
-  >
+  <section class="relative flex min-h-screen items-center justify-center overflow-hidden bg-white pb-24 pt-24">
     <!-- Parallax Background Shapes -->
     <div class="absolute inset-0 overflow-hidden">
       <div ref="shape1" class="absolute left-10 top-20 h-64 w-64 rotate-12 border border-gray-200"></div>
@@ -41,23 +39,24 @@
         <!-- Description -->
         <div class="mb-10 overflow-hidden">
           <p ref="description" class="mx-auto max-w-3xl text-base leading-8 text-gray-500 md:text-lg">
-            Three MCP servers shipped — one adopted across my engineering team, one inside a commercial product, one
-            running my own life. Vue, React and Go, from product shape through to the billing behind it.
+            Three MCP servers shipped — one adopted beyond engineering, by product and the non-technical business team,
+            one inside a commercial product, one running my own life. Vue, React and Go, from product shape through to
+            the billing behind it.
           </p>
         </div>
 
         <div ref="metrics" class="mx-auto mb-10 grid max-w-3xl grid-cols-1 gap-3 text-left sm:grid-cols-3">
           <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
-            <p class="text-2xl font-semibold">04</p>
-            <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Product builds</p>
+            <p class="text-2xl font-semibold">03</p>
+            <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">MCP servers shipped</p>
           </div>
           <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
             <p class="text-2xl font-semibold">Go + TS</p>
             <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Core stack</p>
           </div>
           <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
-            <p class="text-2xl font-semibold">MCP</p>
-            <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Agent tooling</p>
+            <p class="text-2xl font-semibold">Billing</p>
+            <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Owned end to end</p>
           </div>
         </div>
 

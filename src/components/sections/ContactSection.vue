@@ -1,11 +1,12 @@
 <template>
-  <section id="contact" class="bg-white py-24">
+  <!-- overflow-hidden: same x: ±50 reveal as AboutSection — see the note there. -->
+  <section id="contact" class="overflow-hidden bg-white py-24">
     <div class="mx-auto max-w-4xl px-6 lg:px-8">
       <!-- Section Header -->
       <div ref="header" class="mb-16 text-center">
         <h2 class="mb-4 text-4xl font-bold md:text-5xl">Get In Touch</h2>
         <p class="mx-auto max-w-2xl text-lg text-gray-600">
-          Have a project in mind or just want to chat? I'd love to hear from you.
+          A role, a build, or something you are stuck on — this reaches me directly.
         </p>
       </div>
 

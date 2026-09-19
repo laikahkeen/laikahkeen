@@ -11,15 +11,15 @@ export const journeyMilestones: JourneyMilestone[] = [
     year: '2026',
     title: 'Agent tooling as the main line of work',
     description:
-      'The MCP server I wrote for my engineering team spread past it — product and the non-technical business team run their AI agents through it too, which changed what I think my job is. Shipped two more since: the finance engine inside propbook, and a 41-tool server behind keen-ops, the life OS I run my own days on. Started contracting for Boostomatic in March, replacing 30+ hand-maintained Notion rules with one Go service a non-developer can operate.',
+      'The MCP server I wrote for my engineering team spread past it — product and the non-technical business team run their AI agents through it too, which changed what I think my job is. Shipped two more since: the finance engine inside propbook, and a 41-tool server behind keen-ops, the life OS I run my own days on. Started contracting for Boostomatic in March, replacing 30+ hand-maintained Notion rules with one Go service a non-developer can operate. At work the same instinct became the review layer the rest of the team ships through — automated per-merge-request review, a pre-merge QA gate, generated tests — and I took over running releases. Promoted to Senior Software Engineer in September.',
     type: 'career',
   },
   {
     id: 1,
     year: '2025',
-    title: 'Full Stack Developer, full-time',
+    title: 'Full-time at ABC Sales AI',
     description:
-      'Went full-time at ABC Sales AI in September after eighteen months part-time and on contract. Building product features on a multi-tenant SaaS frontend in Vue 3, and taking ownership of billing and subscriptions across the frontend and the Go API behind it — including a live currency migration that moved paying customers across plans without them noticing.',
+      'Went full-time at ABC Sales AI in August as a frontend developer, after fifteen months part-time and on contract. Building product features on a multi-tenant SaaS frontend in Vue 3, and taking ownership of billing and subscriptions across the frontend and the Go API behind it — including a live currency migration that moved paying customers across plans without them noticing.',
     type: 'career',
   },
   {

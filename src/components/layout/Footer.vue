@@ -5,7 +5,7 @@
         <!-- Brand -->
         <div class="text-center md:flex-1 md:text-left">
           <p class="text-lg font-semibold">Lai Kah Keen</p>
-          <p class="mt-1 text-sm text-gray-400">Full Stack Developer</p>
+          <p class="mt-1 text-sm text-gray-400">Senior Software Engineer</p>
         </div>
 
         <!-- Social Links -->

@@ -53,6 +53,8 @@ export const projects: Project[] = [
     featured: false,
     status: 'archived',
   },
+  // No liveUrl: the deployment was shut down Jan 2026 and the host now serves a
+  // 404. The card stays as evidence of the build; do not restore the dead link.
   {
     id: 3,
     title: 'ideahook',
@@ -67,7 +69,6 @@ export const projects: Project[] = [
     role: 'Full-stack SaaS build, Reddit scraping, LLM workflow, payments integration',
     image: '/images/ideahook.png',
     tags: ['React', 'TypeScript', 'Go', 'Redis', 'Stripe', 'LLM'],
-    liveUrl: 'https://ideahook.laikahkeen.com',
     featured: false,
     status: 'archived',
   },

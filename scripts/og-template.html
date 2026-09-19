@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <!-- Source for public/og-image.png. Rendered by scripts/build-og.sh at
+       1200x630 — the body is sized to exactly that, so any change here must
+       keep those dimensions or the crop moves.
+
+       The subtitle is the positioning line, and it must match cv/cv.yaml's
+       basics.role. The retired image said "Full Stack Developer" and survived
+       the 2026-08 repositioning because it is a picture, not text: nothing
+       greps it. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fcfcfc;
+      background-image:
+        linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+        linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+      background-size: 60px 60px;
+      font-family: Inter, -apple-system, "Segoe UI", sans-serif;
+      color: #000;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .card {
+      text-align: center;
+    }
+
+    .mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 96px;
+      height: 96px;
+      background: #e3e3e3;
+      font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+      font-weight: 500;
+      font-size: 34px;
+      letter-spacing: 0.06em;
+    }
+
+    .name {
+      margin-top: 28px;
+      font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+      font-weight: 700;
+      font-size: 68px;
+      letter-spacing: 0.02em;
+    }
+
+    .role {
+      margin-top: 18px;
+      font-size: 30px;
+      font-weight: 400;
+      color: #333;
+    }
+
+    .site {
+      margin-top: 34px;
+      font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 18px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #8a8a8a;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="mark">LKK</div>
+    <div class="name">Lai Kah Keen</div>
+    <div class="role">AI agent tooling and SaaS frontend</div>
+    <div class="site">laikahkeen.com</div>
+  </div>
+</body>
+
+</html>
