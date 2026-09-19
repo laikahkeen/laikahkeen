@@ -30,9 +30,7 @@ export interface Web3FormsResponse {
  * @returns Promise with the API response
  * @throws Error if submission fails
  */
-export const submitContactForm = async (
-  formData: ContactFormData
-): Promise<Web3FormsResponse> => {
+export const submitContactForm = async (formData: ContactFormData): Promise<Web3FormsResponse> => {
   try {
     const response = await apiClient.post<Web3FormsResponse>(WEB3FORMS_API_URL, {
       access_key: import.meta.env.VITE_WEB3FORMS_ACCESS_TOKEN,

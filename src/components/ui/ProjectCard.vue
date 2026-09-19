@@ -14,11 +14,7 @@
       <!-- No screenshot: for a private system there is nothing to show. Set the
            title as deliberate blank type rather than leaving an empty panel.
            Dropping an image into public/images/ takes over automatically. -->
-      <div
-        v-else
-        class="flex h-full w-full items-center justify-center p-8"
-        aria-hidden="true"
-      >
+      <div v-else class="flex h-full w-full items-center justify-center p-8" aria-hidden="true">
         <span class="text-center text-2xl font-semibold tracking-tight text-gray-300 md:text-3xl">
           {{ project.title }}
         </span>

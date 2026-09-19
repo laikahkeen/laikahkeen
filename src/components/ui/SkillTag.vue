@@ -5,17 +5,16 @@
     </div>
 
     <!-- Progress bar tooltip on hover -->
-    <div class="pointer-events-none absolute left-1/2 top-full z-10 mt-2 w-48 -translate-x-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+    <div
+      class="pointer-events-none absolute left-1/2 top-full z-10 mt-2 w-48 -translate-x-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+    >
       <div class="rounded-lg border border-gray-300 bg-white p-3 shadow-lg">
         <div class="mb-2 flex items-center justify-between text-xs">
           <span class="font-medium capitalize text-gray-700">{{ levelText }}</span>
           <span class="text-gray-500">{{ levelPercentage }}%</span>
         </div>
         <div class="h-2 w-full overflow-hidden rounded-full bg-gray-200">
-          <div
-            class="h-full bg-black transition-all duration-500"
-            :style="{ width: levelPercentage + '%' }"
-          ></div>
+          <div class="h-full bg-black transition-all duration-500" :style="{ width: levelPercentage + '%' }"></div>
         </div>
       </div>
       <!-- Tooltip arrow -->

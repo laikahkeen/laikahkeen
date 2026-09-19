@@ -7,8 +7,16 @@ if (import.meta.env.PROD) {
   script.async = true;
   script.src = 'https://plausible.laikahkeen.com/js/pa-CXXt-fiIsovNAv9vxckaf.js';
   document.head.appendChild(script);
-  window.plausible = window.plausible || function (...args) { (window.plausible.q = window.plausible.q || []).push(args); };
-  window.plausible.init = window.plausible.init || function (i?: object) { window.plausible.o = i || {}; };
+  window.plausible =
+    window.plausible ||
+    function (...args) {
+      (window.plausible.q = window.plausible.q || []).push(args);
+    };
+  window.plausible.init =
+    window.plausible.init ||
+    function (i?: object) {
+      window.plausible.o = i || {};
+    };
   window.plausible.init();
 }
 
