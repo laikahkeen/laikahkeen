@@ -32,8 +32,10 @@ served from laikahkeen.com. Promoting a new build is deliberate:
 cp cv/build/resume.pdf public/resume.pdf
 ```
 
-The previous live CV is preserved at `cv/archive/resume-2025-12-original.pdf`,
-and the retired hand-written HTML source at `cv/archive/index-2026-08-retired.html`.
+Each superseded live CV is preserved in `cv/archive/`, named for the month it
+was live: `resume-2025-12-original.pdf` (pre-YAML), `resume-2026-08-live.pdf`
+(+ `.html`), and the retired hand-written HTML source `index-2026-08-retired.html`.
+Archive the outgoing `public/resume.pdf` before promoting a new one.
 
 ### Manual fallback
 

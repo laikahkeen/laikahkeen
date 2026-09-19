@@ -2,13 +2,15 @@
 # CV content — the single source of truth.
 #
 # This file holds WHAT the CV says. It says nothing about how it looks.
-# Two renderers consume it:
+# One renderer consumes it:
 #
-#   scripts/cv-render.py       -> HTML -> PDF   (full fidelity, R4)
-#   scripts/cv-to-rendercv.py  -> rendercv YAML (lossy, see that script, R2)
+#   scripts/cv-render.py  -> HTML -> PDF
 #
-# Inline emphasis: **bold** works in bullets and values. Both renderers
-# understand it. Nothing else is markup — write plain prose.
+# (A second path to rendercv YAML was evaluated and rejected — see README.md,
+# "Why not rendercv". No such script exists in the tree.)
+#
+# Inline emphasis: **bold** works in bullets and values. The renderer
+# understands it. Nothing else is markup — write plain prose.
 #
 # Before editing, read README.md. The constraints there are evidence from
 # primary sources (cited in research.md), not house style. In particular:
@@ -23,7 +25,7 @@ basics:
   # combination and the whole positioning. "MCP" deliberately stays out of this
   # line and lives in the body instead: a non-specialist recruiter may not parse
   # the acronym, and the headline is the wrong place to lose them.
-  role: Software Engineer — AI agent tooling and SaaS frontend
+  role: Senior Software Engineer — AI agent tooling and SaaS frontend
   email: laikahkeen@gmail.com
   phone: "+60 16-215 9518"
   location: Cheras, Selangor, Malaysia
@@ -57,10 +59,14 @@ profile: >-
 
 # Paid work only. Unpaid own products go under `projects`.
 experience:
-  - title: Full Stack Developer
+  # Title and dates come from the work journal (2026-09-19), not the retired HTML
+  # CV, which had Apr 2024 / Sept 2025 / "Full Stack Developer" — all three
+  # unverified. Journal: part-time from May 2024, full-time from Aug 2025, joined
+  # as a frontend developer, Senior Software Engineer settled 3 Sep 2026.
+  - title: Frontend Developer → Senior Software Engineer
     org: ABC Sales AI
-    dates: Sept 2025 – Present
-    meta: Remote | part-time and contract Apr 2024 – Aug 2025
+    dates: Aug 2025 – Present
+    meta: Remote | part-time and contract May 2024 – Jul 2025
     # MCP bullet leads deliberately — it carries the positioning. Frontend second
     # (range), billing third (trust).
     #
@@ -144,7 +150,7 @@ projects:
   # knowingly broken.
   - label: CSI Prop
     value: >-
-      Property firm, Apr 2024 – Feb 2026 — standardised automation workflows,
+      Property firm, May 2024 – Feb 2026 — standardised automation workflows,
       built with non-technical stakeholders
   - label: Earlier
     value: >-
