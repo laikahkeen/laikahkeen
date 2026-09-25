@@ -1,8 +1,9 @@
-import type { Project } from '../types';
+import type { Project } from '../types/index.ts';
 
 export const projects: Project[] = [
   {
     id: 1,
+    slug: 'propbook',
     title: 'propbook',
     description:
       'A full-stack property investment tracker for Malaysian investors, built around an event-sourced Go financial engine and a Next.js AI chat web app.',
@@ -21,15 +22,25 @@ export const projects: Project[] = [
   },
   {
     id: 4,
+    slug: 'keen-ops',
     title: 'keen-ops',
     description:
       'A personal life OS I use every day — one event store for health, reading, and finance, captured through a Telegram bot and reviewed in a Next.js dashboard.',
     problem:
       'The things worth tracking across a life were scattered across ten mediocre apps, none of which talked to each other, and none of which could answer a question that spanned two of them.',
+    // No tool count here on purpose. The number was "41"; the registry actually
+    // declares 45 (21 read, 24 write) and keen-ops' own comment says 38. A figure
+    // with nothing keeping it fresh goes stale silently, and an indefensible
+    // number is worse than none.
     solution:
-      'Built three Go binaries and a Next.js PWA around a single events table: a Telegram bot with a Gemini-backed planner for capture, a read-only API, and a 41-tool finance MCP server. Every mutation records an edit batch, so any write can be replayed in reverse.',
+      'Built three Go binaries and a Next.js PWA around a single events table: a Telegram bot with a Gemini-backed planner for capture, a read-only API, and a finance MCP server. Every operation computes its own inverse before it runs and both directions are stored, so a write can be replayed backwards. The single store is what would make a question spanning two domains answerable; the tooling built on it so far is finance.',
+    // Softened 2026-09-25 (issue #17). This previously claimed "no correction is
+    // ever destructive" and that cross-domain questions were answerable. The repo
+    // contradicts the first (finance.go:2441-2455 records data lost on 2026-04-22
+    // when an untracked mutation made /undo reverse an older batch) and does not
+    // yet support the second. The honest version is also the more interesting one.
     impact:
-      'In daily use and still growing — the reversibility contract means no correction is ever destructive, and the shared store is what makes cross-domain questions answerable at all.',
+      'In daily use and still growing. Reversibility holds for writes that go through the ops executor — one that bypassed it made the next undo reverse an older batch and lose data, which is why every path outside the executor now records an inverse of its own.',
     role: 'Solo build — Go services, event-sourced data model, MCP tooling, Next.js dashboard, deploys',
     tags: ['Go', 'MCP', 'SQLite', 'Next.js', 'TypeScript', 'Gemini'],
     featured: true,
@@ -37,6 +48,7 @@ export const projects: Project[] = [
   },
   {
     id: 2,
+    slug: 'batch-video',
     title: 'batch.video',
     description:
       'A video processing experiment focused on batch workflows, FFmpeg integration, and 360-degree video handling.',
@@ -57,6 +69,7 @@ export const projects: Project[] = [
   // 404. The card stays as evidence of the build; do not restore the dead link.
   {
     id: 3,
+    slug: 'ideahook',
     title: 'ideahook',
     description:
       'A SaaS tool for turning real Reddit conversations into validated hook ideas for solopreneurs and content creators.',

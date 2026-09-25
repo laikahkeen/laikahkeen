@@ -83,7 +83,14 @@
       <p class="mb-5 text-xs uppercase tracking-[0.18em] text-gray-500">{{ project.role }}</p>
 
       <!-- Links -->
-      <div class="mt-auto flex gap-4">
+      <div class="mt-auto flex flex-wrap items-center gap-4">
+        <RouterLink
+          :to="`/work/${project.slug}`"
+          class="inline-flex items-center gap-1 text-sm font-medium text-black hover:underline"
+        >
+          Read case study
+          <span aria-hidden="true">&rarr;</span>
+        </RouterLink>
         <a
           v-if="project.liveUrl"
           :href="project.liveUrl"

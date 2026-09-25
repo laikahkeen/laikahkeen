@@ -1,4 +1,4 @@
-import type { Experience } from '../types';
+import type { Experience } from '../types/index.ts';
 
 // Titles, companies and periods must agree with cv/cv.yaml — if the CV and the
 // site disagree about a role or a date, that is a defect, not a difference of

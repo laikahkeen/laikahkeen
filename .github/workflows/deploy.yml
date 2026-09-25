@@ -3,6 +3,11 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [master]
+  # Runs the build and tests on PRs too. Without this the test gate only fires
+  # after merge, which is the wrong end — the deploy job is guarded below so a PR
+  # never publishes.
+  pull_request:
+    branches: [master]
   # Lets a deploy be re-run without an empty commit — useful when only a repo
   # setting or secret changed.
   workflow_dispatch:
@@ -34,12 +39,23 @@ jobs:
           node-version: '22'
           cache: npm
 
-      - name: Install and Build
-        env:
-          VITE_WEB3FORMS_ACCESS_TOKEN: ${{ secrets.VITE_WEB3FORMS_ACCESS_TOKEN }}
+      - name: Install
         run: |
           npm ci
-          npm run build
+          npm ci --prefix mcp
+
+      # Gates the deploy. vue-tsc alone used to be the only thing between a bad
+      # edit and production; these cover the site and the MCP server, including a
+      # real MCP client completing a session over HTTP.
+      - name: Test
+        run: |
+          npm run test:run
+          npm run test:mcp
+
+      - name: Build
+        env:
+          VITE_WEB3FORMS_ACCESS_TOKEN: ${{ secrets.VITE_WEB3FORMS_ACCESS_TOKEN }}
+        run: npm run build
 
       # The live custom domain is held in the repo's Pages settings, not here.
       # This file only keeps the artifact self-describing; there is no
@@ -57,6 +73,9 @@ jobs:
 
   deploy:
     needs: build
+    # Never publish from a pull request — it would push a branch's build to the
+    # live domain.
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

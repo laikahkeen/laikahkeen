@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    // DOM.Iterable: the node:http -> fetch bridge in realclient.test.ts iterates Headers.
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    // "node" is required: the real-client test runs an http server and uses Buffer.
+    "types": ["vitest/globals", "node"]
+  },
+  // ../src/data and ../src/types are the site's own content files. Reading them
+  // directly is the point: the server and the site cannot report different work.
+  "include": ["src", "../src/data/**/*.ts", "../src/types/**/*.ts"],
+  "exclude": ["node_modules", "../src/data/**/*.test.ts"]
+}
