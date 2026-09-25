@@ -37,13 +37,14 @@ Not in the original plan, added on request: **Vitest** (33 tests, from zero) and
 
 **Open decisions blocking work** — full detail in `PLAN.md`:
 
-1. `src/data/projects.ts` claims more about keen-ops' reversibility than the repo
-   supports. This blocks the case study. Evidence: `docs/keen-ops-evidence.md`.
-2. No cross-domain query was found to support the "one shared store" claim.
-3. Tests do not run in CI, so nothing automatic enforces them.
+All three earlier blockers are resolved: the claims are softened on both surfaces
+(issue #17), the cross-domain claim is dropped, and CI now gates on tests. What remains
+is the deploy, and your eye on the layout.
+
+**Shipped as PR #18** (`revamp/v1-foundation`) — build changes, not visual ones.
 
 **Needs your hands, not mine:** deploying the MCP server, the registry listing and the
-post, and sign-off on every case-study claim.
+post, and your eye on the layout once it exists.
 
 **v2:** blog (sourced from the keen journal), RSS, boostomatic as a project entry,
 a11y punch-list, and the inference features — chat and generative charts.

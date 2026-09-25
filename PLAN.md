@@ -100,12 +100,21 @@ defect:
 CV rebuilt and verified: 1 page, CID fonts, 0 broken words. **Not promoted** to
 `public/resume.pdf` — that stays a deliberate manual step.
 
+### Shipped as a pull request
+
+Everything above is on `revamp/v1-foundation` as **PR #18**. It changes the build, not the
+appearance — no component is restyled. CI runs build and tests on the PR itself; the
+deploy job is guarded to `push` only, so a PR can never publish to the live domain.
+
 ### Open — still blocking
 
 1. **The deploy.** Blocks the live MCP panel (nothing to point it at) and all
-   distribution. Infrastructure is owner-only by standing rule.
-2. **Should tests gate `deploy.yml`?** They currently do not run in CI, so the suite
-   protects nothing automatic.
+   distribution. Infrastructure is owner-only by standing rule. The MCP server is
+   verified against a real client but has never run anywhere.
+2. **The layout brief.** "Varied section shapes with real density differences" is a
+   judgement call. A first pass is possible; getting it right needs the owner's eye.
+
+Resolved: tests now gate the deploy (`.github/workflows/deploy.yml`).
 
 ---
 
