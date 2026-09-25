@@ -62,7 +62,7 @@ Also settled:
 | 2 | Issue cull | **done** — 6 closed, rest annotated |
 | 3 | `vue-router` + `/work/<slug>` | **done** — prerendered, not a stub |
 | 4-6 | MCP server | **built; verified against the SDK's real client over HTTP** — needs deploy |
-| 7 | keen-ops case study | **blocked** — see "Open decisions" |
+| 7 | keen-ops case study | **done** — written, diagrammed, checked in a browser |
 | 8 | Dark theme + gold accent | **tokens only.** Components not flipped |
 | 9 | Motion strip + layout | not started |
 | 10 | Live MCP panel | not started — needs a deployed endpoint |
@@ -149,7 +149,17 @@ therefore `mcp/` inside this repo, as its own npm package. That also removes the
    is the part that must not be rushed.
    *(recommendation)* Cloudflare Workers + Durable Objects or KV for the counters.
 
-**Week 4 — the case study** — *blocked on open decision 1*
+**Week 4 — the case study** — *done 2026-09-25*
+
+Written from `docs/keen-ops-evidence.md`, so every claim is sourced. It leads on the
+reversibility contract and then on the hole in it, because the incident is the part a
+peer engineer learns from — see `src/data/caseStudies.ts`. A test asserts the incident
+section survives, so the page cannot drift back to the flattering version.
+
+The architecture diagram is `EventFlowDiagram.vue`, inline SVG in `currentColor` so it
+survives the dark flip untouched. It was checked against a browser, which caught three
+things the build could not: clipped labels at both viewBox edges, a stray line to
+nowhere, and colliding annotations.
 7. `/work/keen-ops`: the reversibility contract, the event model, the single-writer
    invariant, with a real architecture diagram. This is also the "demonstrate BE
    understanding with a diagram" item from GOALS.md — one artifact, both jobs.

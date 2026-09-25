@@ -25,7 +25,7 @@ list is the summary.
 - [x] Public MCP server — three tools, per-IP rate limited. In `mcp/` in **this** repo,
       not its own, so it reads `src/data/` directly and cannot drift from the site
 - [x] JSON-LD
-- [ ] keen-ops case study + backend diagram — **blocked**, see Open decisions
+- [x] keen-ops case study + backend diagram, at `/work/keen-ops`
 - [~] Dark-only theme + gold accent — token layer done, components not yet flipped
 - [ ] Motion stripped back, layout varied
 - [ ] Live MCP panel — needs a deployed endpoint first

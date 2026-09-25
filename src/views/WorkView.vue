@@ -32,10 +32,22 @@
         </div>
       </header>
 
-      <!-- Content comes from src/data/projects.ts, so this page and the card on
-           the home page cannot disagree. Longer prose per project lands here in
-           week 4 (PLAN.md); until then this renders what is actually known. -->
-      <dl class="mt-12 space-y-10">
+      <!-- With a case study, the long form replaces the summary fields rather than
+           repeating them. Without one, the page still stands on projects.ts. -->
+      <template v-if="study">
+        <p class="mt-12 text-xl leading-9 text-gray-800">{{ study.standfirst }}</p>
+
+        <EventFlowDiagram v-if="study.diagram === 'event-flow'" :caption="study.diagramCaption" />
+
+        <section v-for="section in study.sections" :key="section.heading" class="mt-12">
+          <h2 class="text-2xl font-bold tracking-tight">{{ section.heading }}</h2>
+          <p v-for="(para, i) in section.body" :key="i" class="mt-5 text-base leading-8 text-gray-700">
+            {{ para }}
+          </p>
+        </section>
+      </template>
+
+      <dl v-else class="mt-12 space-y-10">
         <div v-for="row in rows" :key="row.term">
           <dt class="text-xs font-medium uppercase tracking-[0.3em] text-gray-500">{{ row.term }}</dt>
           <dd class="mt-3 text-base leading-8 text-gray-700">{{ row.value }}</dd>
@@ -57,10 +69,13 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { projects } from '../data/projects';
+import { caseStudyFor } from '../data/caseStudies';
+import EventFlowDiagram from '../components/ui/EventFlowDiagram.vue';
 
 const route = useRoute();
 
 const project = computed(() => projects.find((p) => p.slug === route.params.slug));
+const study = computed(() => (project.value ? caseStudyFor(project.value.slug) : undefined));
 
 const rows = computed(() =>
   project.value
