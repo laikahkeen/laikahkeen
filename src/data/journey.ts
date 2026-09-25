@@ -1,4 +1,4 @@
-import type { JourneyMilestone } from '../types';
+import type { JourneyMilestone } from '../types/index.ts';
 
 // Reverse-chronological. Keep this in step with cv/cv.yaml and experience.ts —
 // the site tells the longer version of the same story, never a different one.

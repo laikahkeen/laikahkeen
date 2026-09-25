@@ -5,27 +5,36 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vue-tsc && vite-ssg build",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,vue,html,css,scss,md}\"",
-    "type-check": "vue-tsc --noEmit"
+    "type-check": "vue-tsc --noEmit",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:mcp": "npm --prefix mcp run test:run",
+    "test:all": "npm run test:run && npm run test:mcp"
   },
   "dependencies": {
     "axios": "1.13.2",
     "gsap": "^3.12.5",
     "lenis": "^1.0.42",
-    "vue": "^3.4.0"
+    "vue": "^3.4.0",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
-    "@vitejs/plugin-vue": "^5.0.0",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "@vue/test-utils": "^2.5.1",
     "autoprefixer": "^10.4.16",
     "chrome-devtools-mcp": "^0.12.1",
+    "jsdom": "^29.1.1",
     "postcss": "^8.4.32",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.9.3",
-    "vite": "^5.0.0",
+    "vite": "^8.3.1",
+    "vite-ssg": "^28.3.0",
+    "vitest": "^5.0.1",
     "vue-tsc": "^3.2.0"
   }
 }

@@ -1,10 +1,23 @@
-/** @type {import('tailwindcss').Config} */
+import type { Config } from 'tailwindcss';
+
 export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     colors: {
       black: '#000000',
       white: '#FFFFFF',
+      // The only non-neutral in the palette, and it carries a rule: the accent
+      // means "this is a live system" — the MCP surface and nothing else. Static
+      // content stays neutral. Taken from propbook, where it is already the
+      // interactive token (frontend/src/app/globals.css:17).
+      //
+      // 7.5:1 on black, 2.8:1 on white. The white figure is why there is no light
+      // theme: it fails AA for text and the 3:1 floor for UI. Pinned by
+      // src/theme.test.ts — changing this hex without re-measuring fails the build.
+      accent: {
+        DEFAULT: '#C4922A',
+        hover: '#D4A84A',
+      },
       gray: {
         50: '#FAFAFA',
         100: '#F5F5F5',
@@ -55,5 +68,4 @@ export default {
     },
   },
   plugins: [],
-}
-
+} satisfies Config;

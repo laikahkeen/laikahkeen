@@ -14,6 +14,9 @@ export interface SkillCategory {
 // Project types
 export interface Project {
   id: number;
+  // URL segment for /work/<slug>. Permanent once shared — rename only with a
+  // redirect, never in place.
+  slug: string;
   title: string;
   description: string;
   problem: string;

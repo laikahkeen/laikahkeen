@@ -50,6 +50,36 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+
+    <!-- JSON-LD. Every field here must be checkable against src/data/ or the CV;
+         a schema is a machine-readable claim and an unverifiable one is worse
+         than an absent one. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Lai Kah Keen",
+        "url": "https://laikahkeen.com/",
+        "image": "https://laikahkeen.com/og-image.png",
+        "email": "mailto:laikahkeen@gmail.com",
+        "jobTitle": "Senior Software Engineer",
+        "worksFor": { "@type": "Organization", "name": "ABC Sales AI" },
+        "description": "Builds the AI agent tooling other engineers adopt, and ships the product frontend on top of it.",
+        "knowsAbout": [
+          "Model Context Protocol",
+          "AI agent tooling",
+          "Go",
+          "Vue",
+          "React",
+          "TypeScript",
+          "Event sourcing"
+        ],
+        "sameAs": [
+          "https://github.com/laikahkeen",
+          "https://www.linkedin.com/in/lai-kah-keen"
+        ]
+      }
+    </script>
   </head>
 
   <body>

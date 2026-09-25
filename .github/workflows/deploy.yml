@@ -34,12 +34,23 @@ jobs:
           node-version: '22'
           cache: npm
 
-      - name: Install and Build
-        env:
-          VITE_WEB3FORMS_ACCESS_TOKEN: ${{ secrets.VITE_WEB3FORMS_ACCESS_TOKEN }}
+      - name: Install
         run: |
           npm ci
-          npm run build
+          npm ci --prefix mcp
+
+      # Gates the deploy. vue-tsc alone used to be the only thing between a bad
+      # edit and production; these cover the site and the MCP server, including a
+      # real MCP client completing a session over HTTP.
+      - name: Test
+        run: |
+          npm run test:run
+          npm run test:mcp
+
+      - name: Build
+        env:
+          VITE_WEB3FORMS_ACCESS_TOKEN: ${{ secrets.VITE_WEB3FORMS_ACCESS_TOKEN }}
+        run: npm run build
 
       # The live custom domain is held in the repo's Pages settings, not here.
       # This file only keeps the artifact self-describing; there is no
