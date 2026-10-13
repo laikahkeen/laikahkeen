@@ -45,7 +45,7 @@ usePageMeta(() =>
     ? {
         title: `${post.value.title} - Lai Kah Keen`,
         description: post.value.summary,
-        path: `/writing/${post.value.slug}`,
+        path: `/writing/${post.value.slug}/`,
         published: post.value.date,
       }
     : undefined

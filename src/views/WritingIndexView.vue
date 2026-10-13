@@ -31,6 +31,6 @@ import { usePageMeta } from '../composables/usePageMeta';
 usePageMeta({
   title: 'Writing - Lai Kah Keen',
   description: 'Writing by Lai Kah Keen.',
-  path: '/writing',
+  path: '/writing/',
 });
 </script>

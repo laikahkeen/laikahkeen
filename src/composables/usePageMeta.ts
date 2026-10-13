@@ -6,7 +6,8 @@ const SITE = 'https://laikahkeen.com';
 export interface PageMeta {
   title: string;
   description: string;
-  // Site-relative, e.g. /writing/<slug>
+  // Site-relative with the trailing slash, e.g. /writing/<slug>/ — Pages 301s the
+  // slashless form to it, and a canonical should not point at a redirect.
   path: string;
   // YYYY-MM-DD; marks the page as an article.
   published?: string;
