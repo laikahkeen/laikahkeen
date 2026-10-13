@@ -44,13 +44,13 @@ jobs:
           npm ci
           npm ci --prefix mcp
 
-      # Gates the deploy. vue-tsc alone used to be the only thing between a bad
-      # edit and production; these cover the site and the MCP server, including a
-      # real MCP client completing a session over HTTP.
-      - name: Test
-        run: |
-          npm run test:run
-          npm run test:mcp
+      # Gates the deploy, and is the same command the pre-push hook runs. Covers
+      # the site and the MCP server, including a real MCP client over HTTP.
+      - name: Check
+        run: npm run check
+
+      - name: Audit
+        run: npm run audit
 
       - name: Build
         env:

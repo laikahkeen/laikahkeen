@@ -1,3 +1,5 @@
+/// <reference types="gsap" />
+
 // Skill types
 export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';
 
@@ -76,27 +78,16 @@ export interface Experience {
 }
 
 // GSAP Animation options
-export interface ScrollTriggerOptions {
-  trigger?: any;
-  start?: string;
-  end?: string;
-  scrub?: boolean;
-  toggleActions?: string;
-  [key: string]: any;
-}
-
 export interface AnimationOptions {
-  scrollTrigger?: ScrollTriggerOptions;
-  animation?: Record<string, any>;
-  stagger?: number;
-  [key: string]: any;
+  scrollTrigger?: ScrollTrigger.Vars;
+  animation?: gsap.TweenVars;
 }
 
 export interface ParallaxOptions {
   speed?: number;
   direction?: 'up' | 'down';
-  trigger?: any;
-  scrollTrigger?: ScrollTriggerOptions;
-  animation?: Record<string, any>;
+  trigger?: gsap.DOMTarget;
+  scrollTrigger?: ScrollTrigger.Vars;
+  animation?: gsap.TweenVars;
   strength?: number;
 }
