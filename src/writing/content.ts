@@ -30,6 +30,11 @@ function requireString(data: Record<string, unknown>, key: string, file: string)
   return value.trim();
 }
 
+function isCalendarDate(date: string): boolean {
+  const parsed = new Date(`${date}T00:00:00Z`);
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === date;
+}
+
 export function parsePost(source: string, file: string): ParsedPost {
   const match = FRONTMATTER.exec(source);
   if (!match) throw new Error(`${file}: missing --- frontmatter block`);
@@ -48,11 +53,13 @@ export function parsePost(source: string, file: string): ParsedPost {
   if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) throw new Error(`${file}: slug "${slug}" is not URL-safe`);
 
   const date = requireString(fm, 'date', file);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(`${date}T00:00:00Z`))) {
-    throw new Error(`${file}: date "${date}" must be YYYY-MM-DD`);
+  // Round-tripped because Date.parse rolls 2026-02-30 over to March rather than rejecting it.
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !isCalendarDate(date)) {
+    throw new Error(`${file}: date "${date}" must be a real YYYY-MM-DD date`);
   }
 
-  const draft = fm.draft ?? false;
+  // Not `?? false`: a bare `draft:` parses as null and would publish the draft.
+  const draft = 'draft' in fm ? fm.draft : false;
   if (typeof draft !== 'boolean') throw new Error(`${file}: "draft" must be true or false`);
 
   const body = match[2].trim();

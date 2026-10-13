@@ -24,7 +24,7 @@ declare module '*.vue' {
 
 // Served by src/writing/plugin.ts. Published posts only, newest first.
 declare module 'virtual:writing' {
-  import type { PostMeta } from './types/index.ts';
+  import type { PostMeta } from '@/types/index.ts';
   export const posts: PostMeta[];
 }
 

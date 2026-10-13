@@ -17,7 +17,11 @@ describe('parsePost', () => {
     ['a missing slug', 'title: T\ndate: 2026-01-01\nsummary: S', /"slug"/],
     ['a URL-unsafe slug', 'title: T\ndate: 2026-01-01\nsummary: S\nslug: Not Safe', /not URL-safe/],
     ['a non-ISO date', 'title: T\ndate: 1 Jan 2026\nsummary: S\nslug: s', /YYYY-MM-DD/],
+    ['an impossible date', 'title: T\ndate: 2026-02-30\nsummary: S\nslug: s', /real YYYY-MM-DD/],
     ['a string draft flag', `${valid}\ndraft: "yes"`, /"draft"/],
+    ['an empty draft flag', `${valid}\ndraft:`, /x\.md: "draft"/],
+    ['a tilde draft flag', `${valid}\ndraft: ~`, /x\.md: "draft"/],
+    ['a null draft flag', `${valid}\ndraft: null`, /x\.md: "draft"/],
     ['a misspelt key', `${valid}\ndrafts: true`, /unknown frontmatter key "drafts"/],
   ])('rejects %s', (_case, frontmatter, error) => {
     expect(() => parsePost(post(frontmatter), 'x.md')).toThrow(error);
