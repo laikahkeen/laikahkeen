@@ -58,9 +58,9 @@ const buttonClasses = computed(() => {
   };
 
   return [
-    // `transition`, not `transition-all`: the latter fades the focus ring in from
-    // currentColor, which on a primary button is white on white.
-    'inline-flex items-center justify-center font-medium transition duration-300',
+    // `transition-colors`: `transition-all` fades the outline in from currentColor
+    // and `transition` animates the box-shadow ring, so the focus ring lags 300ms.
+    'inline-flex items-center justify-center font-medium transition-colors duration-300',
     'disabled:opacity-50 disabled:cursor-not-allowed',
     variants[props.variant],
     sizes[props.size],

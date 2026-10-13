@@ -17,7 +17,7 @@
             target="_blank"
             rel="noopener noreferrer"
             :aria-label="social.name"
-            class="text-gray-400 transition-colors hover:text-white focus-visible:outline-white"
+            class="text-gray-400 transition-colors hover:text-white"
           >
             <component :is="social.icon" class="h-5 w-5" />
           </a>
