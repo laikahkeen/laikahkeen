@@ -114,3 +114,79 @@ describe('MCP endpoint', () => {
 });
 
 const RATE = { limit: 100, windowMs: 60_000 };
+
+const SITE = 'https://laikahkeen.com';
+
+function preflight(handler: (r: Request) => Promise<Response>, origin: string) {
+  return handler(
+    new Request('https://mcp.example/mcp', {
+      method: 'OPTIONS',
+      headers: {
+        origin,
+        'access-control-request-method': 'POST',
+        'access-control-request-headers': 'content-type, mcp-protocol-version',
+        'x-real-ip': '203.0.113.50',
+      },
+    }),
+  );
+}
+
+function post(handler: (r: Request) => Promise<Response>, origin: string, ip = '203.0.113.51') {
+  return handler(
+    new Request('https://mcp.example/mcp', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', accept: ACCEPT, 'x-real-ip': ip, origin },
+      body: JSON.stringify(INITIALIZE),
+    }),
+  );
+}
+
+describe('CORS', () => {
+  it('answers a preflight from the site with what the panel sends', async () => {
+    const res = await preflight(createMcpHandler(new RateLimiter(RATE)), SITE);
+    expect(res.status).toBe(204);
+    expect(res.headers.get('access-control-allow-origin')).toBe(SITE);
+    expect(res.headers.get('access-control-allow-methods')).toContain('POST');
+    const allowed = res.headers.get('access-control-allow-headers') ?? '';
+    for (const h of ['content-type', 'accept', 'mcp-protocol-version']) expect(allowed).toContain(h);
+    expect(res.headers.get('vary')).toContain('Origin');
+  });
+
+  it('allows the Vite dev server', async () => {
+    const res = await preflight(createMcpHandler(new RateLimiter(RATE)), 'http://localhost:5173');
+    expect(res.headers.get('access-control-allow-origin')).toBe('http://localhost:5173');
+  });
+
+  it('grants nothing to another origin', async () => {
+    const handler = createMcpHandler(new RateLimiter(RATE));
+    const pre = await preflight(handler, 'https://elsewhere.example');
+    expect(pre.headers.get('access-control-allow-origin')).toBeNull();
+    expect(pre.headers.get('access-control-allow-methods')).toBeNull();
+    // CORS is enforced by the browser, so the server still answers — it just
+    // does not let a foreign page read the response.
+    const res = await post(handler, 'https://elsewhere.example');
+    expect(res.status).toBe(200);
+    expect(res.headers.get('access-control-allow-origin')).toBeNull();
+  });
+
+  it('lets the site read the actual response', async () => {
+    const res = await post(createMcpHandler(new RateLimiter(RATE)), SITE);
+    expect(res.status).toBe(200);
+    expect(res.headers.get('access-control-allow-origin')).toBe(SITE);
+    expect((await res.json()).result?.serverInfo?.name).toBe('laikahkeen');
+  });
+
+  it('does not count preflights against the limit', async () => {
+    const handler = createMcpHandler(new RateLimiter({ limit: 1, windowMs: 60_000 }));
+    for (let i = 0; i < 5; i++) expect((await preflight(handler, SITE)).status).toBe(204);
+    expect((await post(handler, SITE, '203.0.113.50')).status).toBe(200);
+  });
+
+  it('lets the site read a 429, so the panel sees a status rather than a network error', async () => {
+    const handler = createMcpHandler(new RateLimiter({ limit: 1, windowMs: 60_000 }));
+    await post(handler, SITE, '198.51.100.20');
+    const blocked = await post(handler, SITE, '198.51.100.20');
+    expect(blocked.status).toBe(429);
+    expect(blocked.headers.get('access-control-allow-origin')).toBe(SITE);
+  });
+});

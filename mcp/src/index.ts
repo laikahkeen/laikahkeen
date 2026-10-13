@@ -28,6 +28,36 @@ function clientIp(request: Request): string {
   return request.headers.get('x-real-ip') ?? 'unknown';
 }
 
+// CORS is not access control: the endpoint is public and curl ignores it. It only
+// stops other sites spending their visitors' allowance here. localhost:5173 is the
+// Vite dev server, which can then read the real endpoint; that grants nothing curl lacks.
+const ALLOWED_ORIGINS = new Set(['https://laikahkeen.com', 'http://localhost:5173']);
+
+function allowedOrigin(request: Request): string | undefined {
+  const origin = request.headers.get('origin');
+  return origin && ALLOWED_ORIGINS.has(origin) ? origin : undefined;
+}
+
+function preflight(request: Request): Response {
+  const headers = new Headers({ vary: 'Origin' });
+  const origin = allowedOrigin(request);
+  if (origin) {
+    headers.set('access-control-allow-origin', origin);
+    headers.set('access-control-allow-methods', 'POST');
+    headers.set('access-control-allow-headers', 'content-type, accept, mcp-protocol-version');
+    headers.set('access-control-max-age', '7200'); // Chrome's cap
+  }
+  return new Response(null, { status: 204, headers });
+}
+
+function withCors(request: Request, response: Response): Response {
+  const res = new Response(response.body, response);
+  res.headers.append('vary', 'Origin');
+  const origin = allowedOrigin(request);
+  if (origin) res.headers.set('access-control-allow-origin', origin);
+  return res;
+}
+
 function tooMany(resetAt: number): Response {
   const retryAfter = Math.max(1, Math.ceil((resetAt - Date.now()) / 1000));
   return new Response(
@@ -63,8 +93,12 @@ export async function handleMcpRequest(request: Request): Promise<Response> {
 }
 
 async function handleWith(limiter: RateLimiter, request: Request): Promise<Response> {
+  // Before the limiter: a preflight does no work (it costs what a 429 does), and
+  // counting it would spend a visitor's allowance on browser mechanics.
+  if (request.method === 'OPTIONS') return preflight(request);
+
   const { allowed, resetAt } = limiter.check(clientIp(request));
-  if (!allowed) return tooMany(resetAt);
+  if (!allowed) return withCors(request, tooMany(resetAt));
 
   // Transport and server are per-request because a transport carries the state of
   // one exchange. keen-ops shares one server across requests and measured 5.05ms /
@@ -80,7 +114,7 @@ async function handleWith(limiter: RateLimiter, request: Request): Promise<Respo
   await server.connect(transport);
 
   try {
-    return await transport.handleRequest(request);
+    return withCors(request, await transport.handleRequest(request));
   } finally {
     await transport.close();
   }
