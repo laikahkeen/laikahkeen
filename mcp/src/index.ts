@@ -1,11 +1,9 @@
 import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js';
+import ipaddr from 'ipaddr.js';
 import { RateLimiter } from './ratelimit.ts';
 import { buildServer } from './server.ts';
 
 /**
- * Fetch-standard MCP endpoint. Runs anywhere `Request -> Response` runs —
- * Workers, Vercel Edge, Deno, Node 18+.
- *
  * Public and unauthenticated by design: "paste this URL into your client" only
  * works without a credential. That makes the rate limiter the only thing between
  * this endpoint and abuse, which is why it is the piece to review hardest.
@@ -19,13 +17,18 @@ const defaultLimiter = new RateLimiter(RATE_LIMIT);
 /** 1 MiB. A tool call on this server is a few hundred bytes; nothing legitimate is near this. */
 const MAX_BODY_BYTES = 1_048_576;
 
-function clientIp(request: Request): string {
+function clientKey(request: Request): string {
   // Railway's edge sets X-Real-IP and, per Railway staff (2026-10), overwrites a
   // caller-supplied one; its docs say only that it carries the client IP. Every
   // other forwarding header is caller-controlled here — trusting one lets any
   // client mint a fresh allowance per request. Re-verify with a spoofed header
   // after any change of host or proxy (orange-clouding the DNS breaks this).
-  return request.headers.get('x-real-ip') ?? 'unknown';
+  const raw = request.headers.get('x-real-ip');
+  if (!raw || !ipaddr.isValid(raw)) return 'unknown';
+  const addr = ipaddr.process(raw); // ::ffff:a.b.c.d comes back as IPv4
+  if (addr.kind() === 'ipv4') return addr.toString();
+  // One IPv6 subscriber is routinely handed a whole /64; per-address keying gives it 2^64 allowances.
+  return `${(addr as ipaddr.IPv6).parts.slice(0, 4).map((p) => p.toString(16)).join(':')}::/64`;
 }
 
 // CORS is not access control: the endpoint is public and curl ignores it. It only
@@ -97,7 +100,7 @@ async function handleWith(limiter: RateLimiter, request: Request): Promise<Respo
   // counting it would spend a visitor's allowance on browser mechanics.
   if (request.method === 'OPTIONS') return preflight(request);
 
-  const { allowed, resetAt } = limiter.check(clientIp(request));
+  const { allowed, resetAt } = limiter.check(clientKey(request));
   if (!allowed) return withCors(request, tooMany(resetAt));
 
   // Transport and server are per-request because a transport carries the state of
@@ -119,5 +122,3 @@ async function handleWith(limiter: RateLimiter, request: Request): Promise<Respo
     await transport.close();
   }
 }
-
-export default { fetch: handleMcpRequest };

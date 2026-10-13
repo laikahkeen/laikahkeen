@@ -9,6 +9,8 @@
     // That needs `.ts` import paths and type-only imports marked `type`.
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
+    // Node's type stripping rejects enums, namespaces and parameter properties at load.
+    "erasableSyntaxOnly": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
