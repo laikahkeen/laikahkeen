@@ -450,8 +450,15 @@ npm run test:run        # or, from the repo root: npm run test:mcp
 - **Rate limiting is the risk surface**, because there is no credential. keen-ops has no
   rate limiting to copy, so `src/ratelimit.ts` is written from scratch. Read its
   `KNOWN LIMIT` note before trusting it: bounded memory and exact accounting cannot both
-  hold, so an IP spray can evict a victim's counter and forgive its usage. Edge rate
-  limiting in front of the process is the real defence; this is the second layer.
+  hold, so an IP spray can evict a victim's counter and forgive its usage. On the
+  current deploy there is **no** edge rate limiting in front of it — this is the only layer.
+- **Deploy: Railway, one Node process, DNS-only** (decided 2026-10-13, `PLAN.md`).
+  `mcp/Dockerfile` builds from the **repo root** (it needs `src/data`); the service's
+  config path is `/mcp/railway.toml` with no root directory. No build step: Node 22.18+
+  strips types and runs `src/serve.ts` directly, which is why imports use `.ts` paths.
+- **The limiter keys on `X-Real-IP` only.** Any other forwarding header is
+  caller-controlled on Railway. Orange-clouding the DNS turns `X-Real-IP` into a
+  Cloudflare IP and puts every caller in one bucket — change the keying with it.
 
 ## Deployment
 

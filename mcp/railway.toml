@@ -1,0 +1,10 @@
+# Railway service settings: config file path "/mcp/railway.toml", root directory
+# left empty — the image needs src/data from the repo root.
+[build]
+builder = "dockerfile"
+dockerfilePath = "mcp/Dockerfile"
+# src/data changes what the tools return, so it redeploys the server too.
+watchPatterns = ["/mcp/**", "/src/data/**", "/src/types/**"]
+
+[deploy]
+restartPolicyType = "always"

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { RateLimiter } from './ratelimit.js';
-import { createMcpHandler } from './index.js';
+import { RateLimiter } from './ratelimit.ts';
+import { createMcpHandler } from './index.ts';
 
 const ACCEPT = 'application/json, text/event-stream';
 
@@ -8,7 +8,7 @@ function rpc(handler: (r: Request) => Promise<Response>, body: unknown, ip = '20
   return handler(
     new Request('https://mcp.example/mcp', {
       method: 'POST',
-      headers: { 'content-type': 'application/json', accept: ACCEPT, 'cf-connecting-ip': ip },
+      headers: { 'content-type': 'application/json', accept: ACCEPT, 'x-real-ip': ip },
       body: JSON.stringify(body),
     }),
   );
@@ -90,6 +90,26 @@ describe('MCP endpoint', () => {
 
     // A different caller is unaffected.
     expect((await rpc(handler, INITIALIZE, '198.51.100.8')).status).toBe(200);
+  });
+
+  it('ignores caller-supplied forwarding headers when keying the limit', async () => {
+    const handler = createMcpHandler(new RateLimiter({ limit: 1, windowMs: 60_000 }));
+    const spoofed = (n: number) =>
+      handler(
+        new Request('https://mcp.example/mcp', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            accept: ACCEPT,
+            'x-real-ip': '198.51.100.9',
+            'cf-connecting-ip': `203.0.113.${n}`,
+            'x-forwarded-for': `203.0.113.${n}`,
+          },
+          body: JSON.stringify(INITIALIZE),
+        }),
+      );
+    expect((await spoofed(1)).status).toBe(200);
+    expect((await spoofed(2)).status).toBe(429);
   });
 });
 

@@ -5,6 +5,10 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "bundler",
+    // Production runs the source under Node's type stripping, with no build step.
+    // That needs `.ts` import paths and type-only imports marked `type`.
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

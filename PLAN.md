@@ -61,13 +61,13 @@ Also settled:
 | 1 | Decision record in `CLAUDE.md` | **done** |
 | 2 | Issue cull | **done** — 6 closed, rest annotated |
 | 3 | `vue-router` + `/work/<slug>` | **done** — prerendered, not a stub |
-| 4-6 | MCP server | **built; verified against the SDK's real client over HTTP** — needs deploy |
+| 4-6 | MCP server | **built; Railway config in `mcp/`, image verified locally** — needs the service created |
 | 7 | keen-ops case study | **done** — written, diagrammed, checked in a browser |
 | 8 | Dark theme + gold accent | **tokens only.** Components not flipped |
 | 9 | Motion strip + layout | not started |
 | 10 | Live MCP panel | not started — needs a deployed endpoint |
 | 11 | JSON-LD / 404 | JSON-LD **done**; 404 not started |
-| 12 | Distribution | not started — yours |
+| 12 | Distribution | not started — the post is the keen-ops case study; listing is yours |
 
 Added along the way, not in the original plan:
 
@@ -106,11 +106,24 @@ Everything above is on `revamp/v1-foundation` as **PR #18**. It changes the buil
 appearance — no component is restyled. CI runs build and tests on the PR itself; the
 deploy job is guarded to `push` only, so a PR can never publish to the live domain.
 
+### Decided 2026-10-13 — owner
+
+- **MCP host: Railway**, one Node process at `mcp.laikahkeen.com`, **DNS-only** (grey
+  cloud). One process means the in-memory limiter is the whole count. The limiter keys
+  on Railway's `X-Real-IP` only; there is no edge rate limiting in front of it. Moving
+  to an orange cloud later makes `X-Real-IP` a Cloudflare IP, so the keying must change
+  with it.
+- **The v1 post is the keen-ops case study** (`/work/keen-ops`). #1 stays v2.
+- **#16 and #13 closed.** boostomatic is covered in Experience and is client work; tag
+  filtering does not serve a reader arriving from a link.
+
 ### Open — still blocking
 
-1. **The deploy.** Blocks the live MCP panel (nothing to point it at) and all
-   distribution. Infrastructure is owner-only by standing rule. The MCP server is
-   verified against a real client but has never run anywhere.
+1. **The deploy.** Config is in `mcp/` (`Dockerfile`, `railway.toml`) and the image is
+   verified locally. Remaining is owner-only: create the Railway service with config
+   path `/mcp/railway.toml` and no root directory, add the custom domain, add the DNS
+   record. Then confirm a spoofed `X-Real-IP` cannot reset the limit — Railway's docs
+   do not promise it is overwritten; only a staff forum reply does.
 2. **The layout brief.** "Varied section shapes with real density differences" is a
    judgement call. A first pass is possible; getting it right needs the owner's eye.
 
@@ -147,7 +160,7 @@ therefore `mcp/` inside this repo, as its own npm package. That also removes the
    because it is the only piece with no prior art in your own code, and it guards a public
    endpoint. keen-ops has no rate limiting anywhere to copy. If the six weeks slip, this
    is the part that must not be rushed.
-   *(recommendation)* Cloudflare Workers + Durable Objects or KV for the counters.
+   ~~*(recommendation)* Cloudflare Workers + Durable Objects or KV.~~ Decided 2026-10-13: Railway, single process.
 
 **Week 4 — the case study** — *done 2026-09-25*
 
@@ -181,7 +194,7 @@ screenshots — not from the diff.
     gold. This is what makes the endpoint visible to a visitor who would otherwise never
     know it exists.
 11. JSON-LD (#8), static `404.html` (#15).
-12. Distribution: list the endpoint, write the post.
+12. Distribution: list the endpoint; the post is the keen-ops case study.
 
 Honest read on the budget: 48-60 hours for all twelve items is tight. If something has to
 go, drop 8-9 (the redesign) before dropping 4-6 or 7 — the MCP server and the case study
@@ -269,7 +282,7 @@ into the motion work)
 boostomatic entry), #2 (narrowed: card links to `/work/<slug>`; expand-in-place dies with
 routes), #10 a11y (*after* the redesign, or it gets churned)
 
-**Park:** #13 tag filtering — premature at 4 projects
+**Park:** #13 tag filtering — premature at 4 projects. Closed 2026-10-13, as was #16.
 
 Closing #5 does **not** mean the hero copy is settled. Decisions #3 and #4 both change what
 the hero has to do. That is new work, not a reopened issue.

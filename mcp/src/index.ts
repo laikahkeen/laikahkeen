@@ -1,6 +1,6 @@
 import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js';
-import { RateLimiter } from './ratelimit.js';
-import { buildServer } from './server.js';
+import { RateLimiter } from './ratelimit.ts';
+import { buildServer } from './server.ts';
 
 /**
  * Fetch-standard MCP endpoint. Runs anywhere `Request -> Response` runs —
@@ -13,20 +13,19 @@ import { buildServer } from './server.js';
 
 export const RATE_LIMIT = { limit: 30, windowMs: 60_000 } as const;
 
-/** Module scope, so it survives across requests within one isolate. */
+/** Module scope: one Node process on Railway, so this is the whole count. */
 const defaultLimiter = new RateLimiter(RATE_LIMIT);
 
 /** 1 MiB. A tool call on this server is a few hundred bytes; nothing legitimate is near this. */
 const MAX_BODY_BYTES = 1_048_576;
 
 function clientIp(request: Request): string {
-  // Workers set CF-Connecting-IP. X-Forwarded-For is comma-separated with the
-  // client first, and is only trustworthy behind a proxy that overwrites it.
-  const cf = request.headers.get('cf-connecting-ip');
-  if (cf) return cf;
-  const fwd = request.headers.get('x-forwarded-for');
-  if (fwd) return fwd.split(',')[0]?.trim() || 'unknown';
-  return 'unknown';
+  // Railway's edge sets X-Real-IP and, per Railway staff (2026-10), overwrites a
+  // caller-supplied one; its docs say only that it carries the client IP. Every
+  // other forwarding header is caller-controlled here — trusting one lets any
+  // client mint a fresh allowance per request. Re-verify with a spoofed header
+  // after any change of host or proxy (orange-clouding the DNS breaks this).
+  return request.headers.get('x-real-ip') ?? 'unknown';
 }
 
 function tooMany(resetAt: number): Response {

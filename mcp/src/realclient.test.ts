@@ -3,8 +3,8 @@ import type { AddressInfo } from 'node:net';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
-import { createMcpHandler } from './index.js';
-import { RateLimiter } from './ratelimit.js';
+import { createMcpHandler } from './index.ts';
+import { RateLimiter } from './ratelimit.ts';
 
 /**
  * End-to-end against the SDK's OWN client over real HTTP.
