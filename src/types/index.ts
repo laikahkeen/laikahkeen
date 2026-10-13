@@ -100,3 +100,19 @@ export interface ParallaxOptions {
   animation?: Record<string, any>;
   strength?: number;
 }
+
+// MCP panel. There is deliberately no tool list in here — the panel shows only
+// what the live endpoint returns.
+export type McpPanelState = 'checking' | 'live' | 'unreachable';
+
+export interface McpPanelCopy {
+  endpoint: string;
+  eyebrow: string;
+  heading: string;
+  intro: string;
+  endpointLabel: string;
+  toolsLabel: string;
+  status: Record<McpPanelState, string>;
+  sourceLabel: string;
+  sourceUrl: string;
+}

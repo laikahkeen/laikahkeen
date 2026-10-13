@@ -459,6 +459,10 @@ npm run test:run        # or, from the repo root: npm run test:mcp
 - **The limiter keys on `X-Real-IP` only.** Any other forwarding header is
   caller-controlled on Railway. Orange-clouding the DNS turns `X-Real-IP` into a
   Cloudflare IP and puts every caller in one bucket — change the keying with it.
+- **CORS allows `https://laikahkeen.com` and `http://localhost:5173` only**, for the live
+  panel (`McpSection.vue`). Preflights are answered before the limiter and do not count.
+  A new site origin (a `www.` host, a preview domain) has to be added there or the panel
+  reads as unreachable.
 
 ## Deployment
 
