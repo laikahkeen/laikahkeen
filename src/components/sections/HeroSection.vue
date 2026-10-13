@@ -62,8 +62,8 @@
 
         <!-- CTA Buttons -->
         <div ref="cta" class="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button variant="primary" size="lg" @click="scrollToProjects"> View My Work </Button>
-          <Button variant="secondary" size="lg" @click="scrollToContact"> Get In Touch </Button>
+          <Button variant="primary" size="lg" @click="scrollToSection('projects')"> View My Work </Button>
+          <Button variant="secondary" size="lg" @click="scrollToSection('contact')"> Get In Touch </Button>
         </div>
       </div>
     </div>
@@ -90,6 +90,7 @@ import { ref, onMounted } from 'vue';
 import gsap from 'gsap';
 import Button from '../ui/Button.vue';
 import { useMouseParallax } from '../../composables/useParallax';
+import { scrollToSection } from '../../composables/useLenis';
 
 const name = ref<HTMLElement | null>(null);
 const eyebrow = ref<HTMLElement | null>(null);
@@ -106,14 +107,6 @@ const shape3 = ref<HTMLElement | null>(null);
 useMouseParallax(shape1, { strength: 150 });
 useMouseParallax(shape2, { strength: -200 });
 useMouseParallax(shape3, { strength: 100 });
-
-const scrollToProjects = () => {
-  document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-};
-
-const scrollToContact = () => {
-  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-};
 
 onMounted(() => {
   // Hero entrance animation

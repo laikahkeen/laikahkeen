@@ -15,6 +15,7 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import Navigation from './components/layout/Navigation.vue';
 import Footer from './components/layout/Footer.vue';
+import { setLenis } from './composables/useLenis';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -52,10 +53,12 @@ onMounted(() => {
   tick = (time: number) => lenis?.raf(time * 1000); // ticker gives seconds, Lenis wants ms
   gsap.ticker.add(tick);
   gsap.ticker.lagSmoothing(0);
+  setLenis(lenis);
 });
 
 onBeforeUnmount(() => {
   if (tick) gsap.ticker.remove(tick);
+  setLenis(null);
   lenis?.destroy();
   lenis = null;
 });

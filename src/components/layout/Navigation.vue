@@ -9,8 +9,8 @@
       <div class="flex h-20 items-center justify-between">
         <!-- Logo -->
         <a
-          href="#hero"
-          @click.prevent="scrollToSection('hero')"
+          href="/#hero"
+          @click.prevent="goToSection('hero')"
           class="text-xl font-semibold transition-colors hover:text-gray-600"
         >
           LKK
@@ -21,8 +21,8 @@
           <a
             v-for="link in navLinks"
             :key="link.id"
-            :href="`#${link.id}`"
-            @click.prevent="scrollToSection(link.id)"
+            :href="`/#${link.id}`"
+            @click.prevent="goToSection(link.id)"
             :class="[
               'text-sm font-medium transition-colors hover:text-gray-600',
               activeSection === link.id ? 'text-black' : 'text-gray-500',
@@ -66,9 +66,9 @@
           <a
             v-for="link in navLinks"
             :key="link.id"
-            :href="`#${link.id}`"
+            :href="`/#${link.id}`"
             @click.prevent="
-              scrollToSection(link.id);
+              goToSection(link.id);
               mobileMenuOpen = false;
             "
             :class="[
@@ -87,6 +87,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { scrollToSection } from '../../composables/useLenis';
 
 interface NavLink {
   id: string;
@@ -109,16 +110,15 @@ const isScrolled = ref<boolean>(false);
 const activeSection = ref<string>('hero');
 const mobileMenuOpen = ref<boolean>(false);
 
-const scrollToSection = (sectionId: string): void => {
-  // Off the home page these are cross-route links, not anchors — the sections
-  // do not exist in the DOM to scroll to. Router scrollBehavior (main.ts)
-  // handles the hash once home has rendered.
+const goToSection = (sectionId: string): void => {
+  // Off the home page the sections are not in the DOM yet; the router's
+  // scrollBehavior scrolls once home has rendered.
   if (route.path !== '/') {
     void router.push({ path: '/', hash: `#${sectionId}` });
     return;
   }
 
-  document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+  scrollToSection(sectionId);
 };
 
 const handleScroll = (): void => {

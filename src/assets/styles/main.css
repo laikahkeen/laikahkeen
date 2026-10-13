@@ -5,6 +5,10 @@
 @layer base {
   html {
     scroll-behavior: auto;
+    /* Clears the fixed h-20 nav. Chrome re-applies a URL's #fragment jump through
+       load, overriding any JS scroll, so a direct hit can only be offset here.
+       useLenis reads this back, because Lenis ignores it. */
+    @apply scroll-pt-20;
   }
 
   body {
