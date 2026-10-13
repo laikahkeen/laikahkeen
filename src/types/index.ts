@@ -14,6 +14,9 @@ export interface SkillCategory {
 // Project types
 export interface Project {
   id: number;
+  // URL segment for /work/<slug>. Permanent once shared — rename only with a
+  // redirect, never in place.
+  slug: string;
   title: string;
   description: string;
   problem: string;
@@ -29,6 +32,24 @@ export interface Project {
   githubUrl?: string;
   featured: boolean;
   status: 'active' | 'archived';
+}
+
+// Case study types — the long form behind a project card, at /work/<slug>.
+export interface CaseStudySection {
+  heading: string;
+  // One string per paragraph. Prose only; no markup.
+  body: string[];
+}
+
+export interface CaseStudy {
+  // Must match a Project.slug — enforced by src/data/caseStudies.test.ts.
+  slug: string;
+  standfirst: string;
+  sections: CaseStudySection[];
+  // Named rather than inlined as SVG: a diagram is presentation, so it lives in a
+  // component and the data only says which one.
+  diagram?: 'event-flow';
+  diagramCaption?: string;
 }
 
 // Journey types

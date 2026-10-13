@@ -1,14 +1,8 @@
 <template>
-  <div id="app" class="bg-white text-black">
+  <div class="bg-white text-black">
     <Navigation />
     <main>
-      <HeroSection id="hero" />
-      <AboutSection id="about" />
-      <JourneySection id="journey" />
-      <SkillsetSection id="skills" />
-      <ProjectsSection id="projects" />
-      <ExperienceSection id="experience" />
-      <ContactSection id="contact" />
+      <RouterView />
     </main>
     <Footer />
   </div>
@@ -21,13 +15,6 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import Navigation from './components/layout/Navigation.vue';
 import Footer from './components/layout/Footer.vue';
-import HeroSection from './components/sections/HeroSection.vue';
-import AboutSection from './components/sections/AboutSection.vue';
-import JourneySection from './components/sections/JourneySection.vue';
-import SkillsetSection from './components/sections/SkillsetSection.vue';
-import ProjectsSection from './components/sections/ProjectsSection.vue';
-import ExperienceSection from './components/sections/ExperienceSection.vue';
-import ContactSection from './components/sections/ContactSection.vue';
 
 gsap.registerPlugin(ScrollTrigger);
 

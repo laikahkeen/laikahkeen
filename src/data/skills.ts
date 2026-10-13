@@ -1,4 +1,4 @@
-import type { SkillCategory } from '../types';
+import type { SkillCategory } from '../types/index.ts';
 
 // Categories and their ORDER mirror the CV (cv/cv.yaml): AI first, then
 // Frontend, Backend, Infra. The site carries more depth than the CV can fit on

@@ -1,0 +1,21 @@
+{
+  "name": "laikahkeen-mcp",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Public MCP server exposing this site's work history. Lives in this repo so it reads src/data/ directly and cannot drift from the site.",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.1",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.1"
+  }
+}

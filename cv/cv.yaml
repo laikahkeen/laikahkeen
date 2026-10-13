@@ -53,7 +53,7 @@ profile: >-
   ships the product frontend on top of it. Wrote the Go MCP server now used
   beyond engineering — by product and non-technical business teams — to connect
   AI agents to the company's task tracker, with two more shipped: one inside a
-  commercial product, one a 41-tool personal system. Strongest on production
+  commercial product, one a personal system in daily use. Strongest on production
   frontends — Vue 3, React, React Native — and owns the billing and Go APIs
   behind them.
 
@@ -139,12 +139,21 @@ projects:
     value: >-
       Property-analytics product, built solo and live — Go engine, MCP server,
       Next.js, Stripe billing
-  # Scale figures verified 2026-08-09 against the repo: 45.5k lines of non-test
-  # Go beside 40.6k of tests, 15.6k TypeScript, 41 MCP tools, 752 commits.
+  # Scale figures, as dated readings — kept as rows, not overwritten, because the
+  # drift between them is the useful part. Re-take with `grep -c 'typedReg\['`
+  # inside registry() for tools, `find . -name '*.go' -not -name '*_test.go' |
+  # xargs wc -l` for Go. A mismatch means commits landed, not that anything broke.
+  #   2026-08-09: 45.5k non-test Go, 40.6k tests, 15.6k TypeScript, 41 MCP tools,
+  #               752 commits.
+  #   2026-09-25: 58.6k non-test Go; 45 MCP tools (21 read, 24 write) counted
+  #               inside registry() at internal/mcp/registry.go:150-381.
+  # No count appears in the rendered CV any more: a bare figure in a published
+  # artifact goes stale silently, and "41" was already wrong by six weeks. Same
+  # reasoning as the FAR Capital removal in README.md.
   - label: keen-ops
     value: >-
-      Personal life-OS in daily use — Go Telegram bot, **41-tool finance MCP
-      server**, Next.js PWA, event-sourced SQLite where every write is reversible
+      Personal life-OS in daily use — Go Telegram bot, **finance MCP server**,
+      Next.js PWA, event-sourced SQLite where writes carry their own inverse
   # NOTE: paid client work, sitting in Projects at the owner's instruction. This
   # is the one place the "paid work goes in Experience" rule in README.md is
   # knowingly broken.

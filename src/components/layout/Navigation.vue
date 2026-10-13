@@ -86,6 +86,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 interface NavLink {
   id: string;
@@ -101,19 +102,32 @@ const navLinks: NavLink[] = [
   { id: 'contact', label: 'Contact' },
 ];
 
+const route = useRoute();
+const router = useRouter();
+
 const isScrolled = ref<boolean>(false);
 const activeSection = ref<string>('hero');
 const mobileMenuOpen = ref<boolean>(false);
 
 const scrollToSection = (sectionId: string): void => {
-  const element = document.getElementById(sectionId);
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' });
+  // Off the home page these are cross-route links, not anchors — the sections
+  // do not exist in the DOM to scroll to. Router scrollBehavior (main.ts)
+  // handles the hash once home has rendered.
+  if (route.path !== '/') {
+    void router.push({ path: '/', hash: `#${sectionId}` });
+    return;
   }
+
+  document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
 };
 
 const handleScroll = (): void => {
   isScrolled.value = window.scrollY > 50;
+
+  if (route.path !== '/') {
+    activeSection.value = '';
+    return;
+  }
 
   // Detect active section
   const sections = navLinks.map((link) => link.id);
