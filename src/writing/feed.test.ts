@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { FIXTURE_DIR, loadPosts } from './content';
-import { renderFeed, SITE_URL } from './feed';
+import { renderFeed } from './feed';
+import { SITE_URL } from '../data/site';
 
 const parse = (xml: string) => new DOMParser().parseFromString(xml, 'application/xml');
 const text = (el: Element, tag: string) => el.getElementsByTagName(tag)[0]?.textContent;
@@ -32,9 +33,21 @@ describe('renderFeed', () => {
     expect(renderFeed(posts)).not.toContain('fixture-draft');
   });
 
-  it('escapes markup in titles rather than breaking the document', () => {
+  it('sends titles as plain text, with hex character references', () => {
     const first = doc.getElementsByTagName('item')[0];
     expect(text(first, 'title')).toBe('Fixture newer post & <escaping>');
+    expect(renderFeed(posts)).toContain('<title>Fixture newer post &#x26; &#x3C;escaping&#x3E;</title>');
+  });
+
+  it('double-escapes a summary, because readers parse the description as HTML', () => {
+    const summary = 'Array<T> vs the <script> tag';
+    const xml = renderFeed([{ slug: 's', title: 'T', date: '2026-01-01', summary }]);
+    expect(xml).toContain('<description>Array&#x26;lt;T&#x26;gt; vs the &#x26;lt;script&#x26;gt; tag</description>');
+
+    const item = parse(xml).getElementsByTagName('item')[0];
+    const html = new DOMParser().parseFromString(text(item, 'description')!, 'text/html');
+    expect(html.querySelector('script')).toBeNull();
+    expect(html.body.textContent).toBe(summary);
   });
 
   it('dates items in RFC 822, as RSS 2.0 requires', () => {

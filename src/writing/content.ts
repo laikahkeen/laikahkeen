@@ -27,6 +27,9 @@ const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
 function requireString(data: Record<string, unknown>, key: string, file: string): string {
   const value = data[key];
   if (typeof value !== 'string' || !value.trim()) throw new Error(`${file}: "${key}" must be a non-empty string`);
+  // XML 1.0 forbids these outright: one in a title or summary makes the whole feed unparseable.
+  if (/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(value))
+    throw new Error(`${file}: "${key}" contains a control character, which XML cannot carry`);
   return value.trim();
 }
 

@@ -1,7 +1,6 @@
 import { computed, toValue, type MaybeRefOrGetter } from 'vue';
 import { useHead } from '@unhead/vue';
-
-const SITE = 'https://laikahkeen.com';
+import { SITE_URL } from '../data/site';
 
 export interface PageMeta {
   title: string;
@@ -21,7 +20,7 @@ export function usePageMeta(source: MaybeRefOrGetter<PageMeta | undefined>): voi
     computed(() => {
       const m = toValue(source);
       if (!m) return {};
-      const url = `${SITE}${m.path}`;
+      const url = `${SITE_URL}${m.path}`;
       return {
         title: m.title,
         link: [{ rel: 'canonical', href: url }],
