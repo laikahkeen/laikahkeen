@@ -55,10 +55,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 import { mcpPanel } from '../../data/mcp';
 import { fetchMcpTools, type McpTool } from '../../api/mcp';
 import type { McpPanelState } from '../../types';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const TIMEOUT_MS = 8000;
 
@@ -80,6 +84,11 @@ onMounted(async () => {
     state.value = 'unreachable';
   } finally {
     clearTimeout(timer);
+  }
+  // The tool list lands ~350px tall after later sections' triggers were measured.
+  if (state.value === 'live') {
+    await nextTick();
+    ScrollTrigger.refresh();
   }
 });
 

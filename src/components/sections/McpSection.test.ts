@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { flushPromises, mount } from '@vue/test-utils';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import McpSection from './McpSection.vue';
@@ -30,6 +31,7 @@ function liveServer() {
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 describe('McpSection', () => {
@@ -75,6 +77,24 @@ describe('McpSection', () => {
     expect(JSON.parse(first!.init.body as string).method).toBe('initialize');
     expect(JSON.parse(second!.init.body as string).method).toBe('tools/list');
     expect((second!.init.headers as Record<string, string>)['mcp-protocol-version']).toBe('2025-06-18');
+  });
+
+  it('re-measures scroll triggers once the tool list has rendered, and only then', async () => {
+    let toolsInDomAtRefresh = -1;
+    const refresh = vi.spyOn(ScrollTrigger, 'refresh').mockImplementation(() => {
+      toolsInDomAtRefresh = wrapper.findAll('li').length;
+    });
+    vi.stubGlobal('fetch', liveServer());
+    const wrapper = mount(McpSection);
+    await flushPromises();
+    expect(refresh).toHaveBeenCalledTimes(1);
+    expect(toolsInDomAtRefresh).toBe(SERVED.length);
+
+    refresh.mockClear();
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
+    mount(McpSection);
+    await flushPromises();
+    expect(refresh).not.toHaveBeenCalled();
   });
 
   it('falls back to a neutral unreachable state when the request fails', async () => {

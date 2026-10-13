@@ -457,10 +457,13 @@ npm run test:run        # or, from the repo root: npm run test:mcp
   config path is `/mcp/railway.toml` with no root directory. No build step: Node 22.18+
   strips types and runs `src/serve.ts` directly, which is why imports use `.ts` paths.
 - **The limiter keys on `X-Real-IP` only**, IPv6 by its /64 (one subscriber holds a whole
-  /64). Any other forwarding header is caller-controlled on Railway. Orange-clouding the DNS turns `X-Real-IP` into a
-  Cloudflare IP and puts every caller in one bucket — change the keying with it.
+  /64). Any other forwarding header is caller-controlled on Railway. Orange-clouding the
+  DNS turns `X-Real-IP` into a Cloudflare IP and puts every caller in one bucket — change
+  the keying with it.
 - **CORS allows `https://laikahkeen.com` and `http://localhost:5173` only**, for the live
   panel (`McpSection.vue`). Preflights are answered before the limiter and do not count.
+  Any other `Origin` gets a 403 before the limiter, uncounted — otherwise a foreign page's
+  no-cors POST (no preflight) spends its visitor's allowance. No `Origin` is served as normal.
   A new site origin (a `www.` host, a preview domain) has to be added there or the panel
   reads as unreachable.
 

@@ -31,14 +31,25 @@ function clientKey(request: Request): string {
   return `${(addr as ipaddr.IPv6).parts.slice(0, 4).map((p) => p.toString(16)).join(':')}::/64`;
 }
 
-// CORS is not access control: the endpoint is public and curl ignores it. It only
-// stops other sites spending their visitors' allowance here. localhost:5173 is the
-// Vite dev server, which can then read the real endpoint; that grants nothing curl lacks.
+// Not access control: curl sends no Origin and gets in. A foreign Origin is refused
+// before the limiter, since a no-cors POST needs no preflight and would otherwise spend
+// the visitor's allowance. localhost:5173 is the Vite dev server.
 const ALLOWED_ORIGINS = new Set(['https://laikahkeen.com', 'http://localhost:5173']);
 
 function allowedOrigin(request: Request): string | undefined {
   const origin = request.headers.get('origin');
   return origin && ALLOWED_ORIGINS.has(origin) ? origin : undefined;
+}
+
+function forbiddenOrigin(origin: string): Response {
+  return new Response(
+    JSON.stringify({
+      jsonrpc: '2.0',
+      error: { code: -32000, message: `Invalid Origin header: ${origin}` },
+      id: null,
+    }),
+    { status: 403, headers: { 'content-type': 'application/json' } },
+  );
 }
 
 function preflight(request: Request): Response {
@@ -96,6 +107,9 @@ export async function handleMcpRequest(request: Request): Promise<Response> {
 }
 
 async function handleWith(limiter: RateLimiter, request: Request): Promise<Response> {
+  const origin = request.headers.get('origin');
+  if (origin !== null && !ALLOWED_ORIGINS.has(origin)) return forbiddenOrigin(origin);
+
   // Before the limiter: a preflight does no work (it costs what a 429 does), and
   // counting it would spend a visitor's allowance on browser mechanics.
   if (request.method === 'OPTIONS') return preflight(request);

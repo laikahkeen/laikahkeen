@@ -171,14 +171,43 @@ describe('CORS', () => {
     expect(res.headers.get('access-control-allow-origin')).toBe('http://localhost:5173');
   });
 
-  it('grants nothing to another origin', async () => {
+  it('refuses another origin with 403 and grants it nothing', async () => {
     const handler = createMcpHandler(new RateLimiter(RATE));
     const pre = await preflight(handler, 'https://elsewhere.example');
+    expect(pre.status).toBe(403);
     expect(pre.headers.get('access-control-allow-origin')).toBeNull();
     expect(pre.headers.get('access-control-allow-methods')).toBeNull();
-    // CORS is enforced by the browser, so the server still answers — it just
-    // does not let a foreign page read the response.
+
     const res = await post(handler, 'https://elsewhere.example');
+    expect(res.status).toBe(403);
+    expect(res.headers.get('access-control-allow-origin')).toBeNull();
+    const body = await res.json();
+    expect(body.jsonrpc).toBe('2.0');
+    expect(body.error?.code).toBe(-32000);
+  });
+
+  it('does not let a foreign page spend a visitor\'s allowance', async () => {
+    // A no-cors text/plain POST is a simple request: the browser sends it without a preflight.
+    const handler = createMcpHandler(new RateLimiter({ limit: 1, windowMs: 60_000 }));
+    for (let i = 0; i < 3; i++) {
+      const res = await handler(
+        new Request('https://mcp.example/mcp', {
+          method: 'POST',
+          headers: {
+            'content-type': 'text/plain',
+            origin: 'https://elsewhere.example',
+            'x-real-ip': '203.0.113.60',
+          },
+          body: '{}',
+        }),
+      );
+      expect(res.status).toBe(403);
+    }
+    expect((await post(handler, SITE, '203.0.113.60')).status).toBe(200);
+  });
+
+  it('serves a request with no Origin, as non-browser MCP clients send', async () => {
+    const res = await rpc(createMcpHandler(new RateLimiter(RATE)), INITIALIZE);
     expect(res.status).toBe(200);
     expect(res.headers.get('access-control-allow-origin')).toBeNull();
   });
