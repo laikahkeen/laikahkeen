@@ -1,5 +1,6 @@
 import type { Plugin } from 'vite';
 import { loadPosts } from './content.ts';
+import { FEED_PATH, FEED_TITLE, renderFeed } from './feed.ts';
 
 // Metadata and bodies are separate modules so the nav and the index never carry
 // post HTML. Bodies load with the post view's lazy chunk — all posts in one
@@ -7,9 +8,15 @@ import { loadPosts } from './content.ts';
 const META = 'virtual:writing';
 const BODIES = 'virtual:writing/bodies';
 
+// No posts, no feed and no <link rel="alternate">: an empty feed would advertise a
+// subscription to nothing, the same reason /writing is not prerendered while empty.
 export function writing(dir: string): Plugin {
+  let ssr = false;
   return {
     name: 'writing',
+    configResolved(config) {
+      ssr = Boolean(config.build.ssr);
+    },
     resolveId(id) {
       if (id === META || id === BODIES) return `\0${id}`;
     },
@@ -23,7 +30,29 @@ export function writing(dir: string): Plugin {
         return `export const bodies = ${JSON.stringify(bodies)};`;
       }
     },
+    transformIndexHtml() {
+      if (!loadPosts(dir).length) return;
+      return [
+        {
+          tag: 'link',
+          attrs: { rel: 'alternate', type: 'application/rss+xml', title: FEED_TITLE, href: FEED_PATH },
+          injectTo: 'head',
+        },
+      ];
+    },
+    generateBundle() {
+      // vite-ssg builds twice; the feed belongs to the client output in dist/.
+      const posts = loadPosts(dir);
+      if (ssr || !posts.length) return;
+      this.emitFile({ type: 'asset', fileName: FEED_PATH.slice(1), source: renderFeed(posts) });
+    },
     configureServer(server) {
+      server.middlewares.use(FEED_PATH, (_req, res, next) => {
+        const posts = loadPosts(dir);
+        if (!posts.length) return next();
+        res.setHeader('Content-Type', 'application/rss+xml; charset=utf-8');
+        res.end(renderFeed(posts));
+      });
       server.watcher.add(dir);
       const onChange = (file: string) => {
         if (!file.startsWith(dir) || !file.endsWith('.md')) return;
