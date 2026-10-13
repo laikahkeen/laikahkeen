@@ -52,6 +52,17 @@ describe('scrollToSection', () => {
     expect(scrollTo).toHaveBeenCalledWith({ top: 500 + window.scrollY - NAV_OFFSET, behavior: 'instant' });
   });
 
+  it('moves focus to the section without letting the browser scroll to it', () => {
+    section.tabIndex = -1;
+    const focus = vi.spyOn(section, 'focus');
+    vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+
+    scrollToSection('contact');
+
+    expect(focus).toHaveBeenCalledWith({ preventScroll: true });
+    expect(document.activeElement).toBe(section);
+  });
+
   it('does nothing for an id that is not on the page', () => {
     const { lenis } = fakeLenis();
     setLenis(lenis as unknown as Lenis);

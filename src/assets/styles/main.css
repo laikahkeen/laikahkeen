@@ -14,4 +14,16 @@
   body {
     @apply bg-white font-mono text-black antialiased;
   }
+
+  /* Keyboard focus only: a mouse click matches :focus, not :focus-visible. Black
+     clears 3:1 on every light surface; the black footer overrides to white. */
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-black;
+  }
+
+  /* Skip-link and section targets take focus so Tab continues from there. They
+     are not controls, so no ring. */
+  [tabindex='-1']:focus {
+    @apply outline-none;
+  }
 }

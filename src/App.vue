@@ -1,7 +1,13 @@
 <template>
   <div class="bg-white text-black">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium"
+    >
+      Skip to content
+    </a>
     <Navigation />
-    <main>
+    <main id="main" tabindex="-1">
       <RouterView />
     </main>
     <Footer />
