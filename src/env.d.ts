@@ -21,3 +21,13 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>;
   export default component;
 }
+
+// Served by src/writing/plugin.ts. Published posts only, newest first.
+declare module 'virtual:writing' {
+  import type { PostMeta } from './types/index.ts';
+  export const posts: PostMeta[];
+}
+
+declare module 'virtual:writing/bodies' {
+  export const bodies: Record<string, string>;
+}

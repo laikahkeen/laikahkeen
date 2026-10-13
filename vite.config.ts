@@ -4,9 +4,11 @@ import vue from "@vitejs/plugin-vue";
 // Explicit .ts extension: Vite 8 loads this config with a native loader that does
 // not resolve extensionless paths. allowImportingTsExtensions in tsconfig permits it.
 import { projects } from "./src/data/projects.ts";
+import { loadPosts, writingDir, writingRoutes } from "./src/writing/content.ts";
+import { writing } from "./src/writing/plugin.ts";
 
-export default defineConfig(({ isSsrBuild }) => ({
-  plugins: [vue()],
+export default defineConfig(({ isSsrBuild, mode }) => ({
+  plugins: [vue(), writing(writingDir(mode))],
   // GitHub Pages has no SPA fallback, so a direct hit on /work/<slug> would
   // return GitHub's 404 rather than the app. Prerendering emits a real
   // dist/work/<slug>/index.html per route, which is also what makes those pages
@@ -17,8 +19,9 @@ export default defineConfig(({ isSsrBuild }) => ({
     // mapping extensionless URLs to .html.
     dirStyle: "nested",
     includedRoutes: (paths: string[]) => [
-      ...paths.filter((p) => !p.includes(":")),
+      ...paths.filter((p) => !p.includes(":") && !p.startsWith("/writing")),
       ...projects.map((p) => `/work/${p.slug}`),
+      ...writingRoutes(loadPosts(writingDir(mode))),
     ],
   },
   build: {

@@ -30,6 +30,16 @@
           >
             {{ link.label }}
           </a>
+          <RouterLink
+            v-if="hasWriting"
+            to="/writing"
+            :class="[
+              'text-sm font-medium transition-colors hover:text-gray-600',
+              onWriting ? 'text-black' : 'text-gray-500',
+            ]"
+          >
+            Writing
+          </RouterLink>
         </div>
 
         <!-- Mobile Menu Button -->
@@ -78,6 +88,17 @@
           >
             {{ link.label }}
           </a>
+          <RouterLink
+            v-if="hasWriting"
+            to="/writing"
+            @click="mobileMenuOpen = false"
+            :class="[
+              'block py-2 text-sm font-medium transition-colors hover:text-gray-600',
+              onWriting ? 'text-black' : 'text-gray-500',
+            ]"
+          >
+            Writing
+          </RouterLink>
         </div>
       </div>
     </Transition>
@@ -85,8 +106,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { posts } from 'virtual:writing';
 
 interface NavLink {
   id: string;
@@ -104,6 +126,10 @@ const navLinks: NavLink[] = [
 
 const route = useRoute();
 const router = useRouter();
+
+// No link until a post is published, so the nav never points at an empty page.
+const hasWriting = posts.length > 0;
+const onWriting = computed(() => route.path.startsWith('/writing'));
 
 const isScrolled = ref<boolean>(false);
 const activeSection = ref<string>('hero');
