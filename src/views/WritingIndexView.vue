@@ -1,7 +1,9 @@
 <template>
   <section class="bg-white pb-24 pt-32 text-black">
     <div class="mx-auto max-w-3xl px-6 lg:px-8">
-      <h1 class="border-b border-gray-200 pb-10 text-4xl font-bold tracking-tight md:text-5xl">Writing</h1>
+      <h1 class="border-b border-gray-200 pb-10 text-4xl font-bold tracking-tight md:text-5xl">
+        {{ writingIndex.heading }}
+      </h1>
 
       <ol v-if="posts.length" class="divide-y divide-gray-200">
         <li v-for="post in posts" :key="post.slug" class="py-10">
@@ -18,7 +20,7 @@
       </ol>
 
       <!-- Not prerendered while empty (see writingRoutes), so this only shows in dev. -->
-      <p v-else class="mt-10 text-gray-600">Nothing is published here yet.</p>
+      <p v-else class="mt-10 text-gray-600">{{ writingIndex.empty }}</p>
     </div>
   </section>
 </template>
@@ -27,10 +29,11 @@
 import { posts } from 'virtual:writing';
 import { formatDate } from '../writing/date';
 import { usePageMeta } from '../composables/usePageMeta';
+import { writingIndex } from '../data/writingPages';
 
 usePageMeta({
-  title: 'Writing - Lai Kah Keen',
-  description: 'Writing by Lai Kah Keen.',
+  title: writingIndex.title,
+  description: writingIndex.description,
   path: '/writing/',
 });
 </script>

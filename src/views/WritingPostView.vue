@@ -2,7 +2,7 @@
   <article v-if="post" class="bg-white pb-24 pt-32 text-black">
     <div class="mx-auto max-w-3xl px-6 lg:px-8">
       <RouterLink to="/writing" class="text-sm text-gray-500 underline-offset-4 hover:text-black hover:underline">
-        ← All writing
+        {{ writingPost.backLink }}
       </RouterLink>
 
       <header class="mt-8 border-b border-gray-200 pb-10">
@@ -19,8 +19,8 @@
 
   <section v-else class="bg-white pb-24 pt-32 text-black">
     <div class="mx-auto max-w-3xl px-6 lg:px-8">
-      <h1 class="text-3xl font-bold tracking-tight">No such post</h1>
-      <p class="mt-4 text-gray-600">Nothing is published at this address.</p>
+      <h1 class="text-3xl font-bold tracking-tight">{{ writingPost.notFoundHeading }}</h1>
+      <p class="mt-4 text-gray-600">{{ writingPost.notFoundBody }}</p>
     </div>
   </section>
 </template>
@@ -32,6 +32,7 @@ import { posts } from 'virtual:writing';
 import { bodies } from 'virtual:writing/bodies';
 import { formatDate } from '../writing/date';
 import { usePageMeta } from '../composables/usePageMeta';
+import { writingPost } from '../data/writingPages';
 
 const route = useRoute();
 
@@ -43,7 +44,7 @@ const post = computed(() => {
 usePageMeta(() =>
   post.value
     ? {
-        title: `${post.value.title} - Lai Kah Keen`,
+        title: `${post.value.title}${writingPost.titleSuffix}`,
         description: post.value.summary,
         path: `/writing/${post.value.slug}/`,
         published: post.value.date,
