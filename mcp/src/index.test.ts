@@ -111,6 +111,20 @@ describe('MCP endpoint', () => {
     expect((await spoofed(1)).status).toBe(200);
     expect((await spoofed(2)).status).toBe(429);
   });
+
+  it('keys IPv6 on its /64, so one subscriber cannot rotate addresses for fresh allowances', async () => {
+    const handler = createMcpHandler(new RateLimiter({ limit: 1, windowMs: 60_000 }));
+    expect((await rpc(handler, INITIALIZE, '2001:db8:1:2::1')).status).toBe(200);
+    expect((await rpc(handler, INITIALIZE, '2001:0db8:0001:0002:ffff:0:0:9')).status).toBe(429);
+    expect((await rpc(handler, INITIALIZE, '2001:db8:1:3::1')).status).toBe(200);
+  });
+
+  it('keys an IPv4-mapped IPv6 address as the IPv4 address it carries', async () => {
+    const handler = createMcpHandler(new RateLimiter({ limit: 1, windowMs: 60_000 }));
+    expect((await rpc(handler, INITIALIZE, '::ffff:198.51.100.20')).status).toBe(200);
+    expect((await rpc(handler, INITIALIZE, '198.51.100.20')).status).toBe(429);
+    expect((await rpc(handler, INITIALIZE, '198.51.100.21')).status).toBe(200);
+  });
 });
 
 const RATE = { limit: 100, windowMs: 60_000 };

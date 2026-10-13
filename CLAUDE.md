@@ -428,8 +428,8 @@ npm run test:run        # or, from the repo root: npm run test:mcp
 ```
 
 - **Transport**: `WebStandardStreamableHTTPServerTransport` — a plain
-  `Request -> Response` handler, so it runs on Workers, Vercel Edge, Deno or Node with
-  no adapter. Stateless (`sessionIdGenerator: undefined`), `enableJsonResponse: true`.
+  `Request -> Response` handler, served on Node by `@hono/node-server` (`src/serve.ts`).
+  Stateless (`sessionIdGenerator: undefined`), `enableJsonResponse: true`.
 - **Three tools, and it stays three**: `list_projects`, `get_project`, `get_experience`.
   A test asserts exactly that set — a fourth tool should have to delete an assertion.
   The descriptions are the interface: an agent decides whether to call a tool from the
@@ -456,8 +456,8 @@ npm run test:run        # or, from the repo root: npm run test:mcp
   `mcp/Dockerfile` builds from the **repo root** (it needs `src/data`); the service's
   config path is `/mcp/railway.toml` with no root directory. No build step: Node 22.18+
   strips types and runs `src/serve.ts` directly, which is why imports use `.ts` paths.
-- **The limiter keys on `X-Real-IP` only.** Any other forwarding header is
-  caller-controlled on Railway. Orange-clouding the DNS turns `X-Real-IP` into a
+- **The limiter keys on `X-Real-IP` only**, IPv6 by its /64 (one subscriber holds a whole
+  /64). Any other forwarding header is caller-controlled on Railway. Orange-clouding the DNS turns `X-Real-IP` into a
   Cloudflare IP and puts every caller in one bucket — change the keying with it.
 
 ## Deployment
