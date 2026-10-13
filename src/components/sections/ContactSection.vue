@@ -20,6 +20,7 @@
                 id="name"
                 v-model="formData.name"
                 type="text"
+                autocomplete="name"
                 required
                 class="w-full border border-gray-300 px-4 py-3 outline-none transition-colors focus:border-black focus:ring-1 focus:ring-black"
                 placeholder="Your name"
@@ -32,6 +33,7 @@
                 id="email"
                 v-model="formData.email"
                 type="email"
+                autocomplete="email"
                 required
                 class="w-full border border-gray-300 px-4 py-3 outline-none transition-colors focus:border-black focus:ring-1 focus:ring-black"
                 placeholder="your.email@example.com"
@@ -54,13 +56,16 @@
               {{ isSubmitting ? 'Sending...' : 'Send Message' }}
             </Button>
 
-            <p
-              v-if="submitMessage"
-              :class="submitMessage.type === 'success' ? 'text-green-600' : 'text-red-600'"
-              class="text-center text-sm"
-            >
-              {{ submitMessage.text }}
-            </p>
+            <!-- The live region must exist before its text does, or it is not announced. -->
+            <div role="status">
+              <p
+                v-if="submitMessage"
+                :class="submitMessage.type === 'success' ? 'text-green-600' : 'text-red-600'"
+                class="text-center text-sm"
+              >
+                {{ submitMessage.text }}
+              </p>
+            </div>
           </form>
         </div>
 

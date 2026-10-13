@@ -37,6 +37,12 @@ describe.each(['/', '/work/keen-ops'])('App shell at %s', (path) => {
     // -1 so it can take focus from the skip link without becoming a Tab stop.
     expect(target?.getAttribute('tabindex')).toBe('-1');
   });
+
+  it('nests no control inside another', async () => {
+    // One action, one Tab stop. The resume link used to wrap a <button>.
+    const app = await mountAt(path);
+    expect(app.findAll('a button, button a, a a, button button')).toHaveLength(0);
+  });
 });
 
 describe('App shell on the home page', () => {
@@ -46,5 +52,11 @@ describe('App shell on the home page', () => {
 
     expect(ids.length).toBeGreaterThan(0);
     for (const id of ids) expect(document.getElementById(id)?.getAttribute('tabindex'), id).toBe('-1');
+  });
+
+  it('has the contact status region in place before anything is submitted', async () => {
+    // A live region inserted together with its text is not reliably announced.
+    const app = await mountAt('/');
+    expect(app.find('#contact [role="status"]').exists()).toBe(true);
   });
 });
