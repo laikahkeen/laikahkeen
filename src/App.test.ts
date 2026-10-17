@@ -48,7 +48,7 @@ describe.each(['/', '/work/keen-ops'])('App shell at %s', (path) => {
 describe('App shell on the home page', () => {
   it('lets every nav target take focus, so Tab continues from the section', async () => {
     const app = await mountAt('/');
-    const ids = app.findAll('nav a').map((a) => a.attributes('href')!.replace('/#', ''));
+    const ids = app.findAll('nav a[href^="/#"]').map((a) => a.attributes('href')!.replace('/#', ''));
 
     expect(ids.length).toBeGreaterThan(0);
     for (const id of ids) expect(document.getElementById(id)?.getAttribute('tabindex'), id).toBe('-1');
