@@ -47,9 +47,10 @@ A modern, single-page developer portfolio for Lai Kah Keen built with Vue 3, Tai
 
 **Live Site**: https://laikahkeen.com
 
-**A revamp is decided but unbuilt — see `PLAN.md` and "Reversed 2026-09-25" below.**
-Four things this file previously called settled have been overturned. The description
-above still describes the *live* site; do not read it as the target.
+**A revamp is decided and partly built — see `PLAN.md` and "Reversed 2026-09-25" below.**
+Built: routing, the MCP server and its live panel, writing and RSS (empty until a first
+post). Not built: the dark theme (tokens only) and the motion and layout rework. The
+description above still describes the *live* look; do not read it as the target.
 
 ## What this site is for
 
@@ -112,7 +113,7 @@ not a judgement call to make mid-task:
 - **Content lives in `src/data/`**, never hardcoded in components.
 - **Minimal dependencies.** The bundle is small on purpose; adding a library needs a reason.
 
-### Reversed 2026-09-25 — decided by the owner, not yet built
+### Reversed 2026-09-25 — decided by the owner
 
 Four entries above were overturned in one session. They are recorded here so the next
 session reads them as decisions rather than drift, and does not "fix" the site back.
@@ -373,7 +374,7 @@ were verified by mutation: breaking each one does fail the suite.
 **Publish a post**: Add `src/data/writing/<slug>.md` — see "Writing"
 **Update CV**: Edit `cv/cv.yaml`, run `./scripts/build-cv.sh`, then promote deliberately (see "The CV")
 **Update the social card**: Edit `scripts/og-template.html`, run `./scripts/build-og.sh` (writes `public/og-image.png` directly)
-**Change Colors**: Modify `tailwind.config.ts` (stick to monochrome)
+**Change Colors**: Modify `tailwind.config.ts` (neutrals plus the one accent — see "The accent")
 **Add Meta Tags**: Update `index.html`
 **Modify Navigation**: Edit `src/components/layout/Navigation.vue`
 
@@ -570,8 +571,8 @@ broke.
 
 ### Design System
 
-- Maintain strict monochrome theme - no colors outside black/white/gray
-- All hover states use grayscale transitions
+- Neutrals everywhere; the one accent marks a live system and nothing else (see "The accent")
+- Hover states stay neutral — "accent = clickable" is the failure mode
 - Consistent spacing using Tailwind's spacing scale
 - Typography: System fonts with fallbacks defined in Tailwind config
 
@@ -586,7 +587,7 @@ broke.
 
 The contact form is fully integrated with **Web3Forms** for email delivery:
 
-1. Form submissions handled via `src/api.ts`
+1. Form submissions handled via `src/api/index.ts`
 2. Uses Web3Forms API with access token from environment variable
 3. Access token configured via `VITE_WEB3FORMS_ACCESS_TOKEN` in `.env`
 4. Includes form validation, loading states, and success/error messaging
@@ -604,7 +605,7 @@ Target modern browsers with ES6+ support:
 
 When working on this project:
 
-1. **Respect the monochrome theme** - Never suggest adding colors
+1. **Respect the palette** - One accent, reserved for live systems; never add another colour
 2. **Use Tailwind utilities** - Avoid custom CSS unless absolutely necessary
 3. **Keep animations smooth** - Test scroll performance with GSAP changes
 4. **Maintain Vue 3 patterns** - Use Composition API and `<script setup>`
@@ -614,8 +615,8 @@ When working on this project:
 8. **Follow component structure** - Sections vs UI components vs Layout
 9. **For the CV, read `cv/README.md` first** - Edit `cv/cv.yaml`, never the generated
    HTML or PDF, and treat its constraints as evidence rather than preference
-10. **Know what the site is for** - It is the depth layer behind the CV (see "What this
-    site is for"). Keep the two consistent, and treat positioning copy as the owner's
+10. **Know what the site is for** - It is the primary artifact; the CV is an export of it
+    (see "What this site is for"). Keep the two consistent, and treat positioning copy as the owner's
     decision rather than something to reword in passing
 
 ## Contact
@@ -626,4 +627,4 @@ When working on this project:
 
 ---
 
-Last updated: 2026-09-19
+Last updated: 2026-10-17
