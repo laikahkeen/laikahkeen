@@ -1,9 +1,12 @@
 <template>
   <nav
+    ref="nav"
     :class="[
       'fixed left-0 right-0 top-0 z-50 transition-all duration-300',
       isScrolled ? 'bg-white/90 shadow-sm backdrop-blur-md' : 'bg-transparent',
     ]"
+    @keydown.esc="closeMenuToToggle"
+    @focusout="closeMenuIfFocusLeft"
   >
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="flex h-20 items-center justify-between">
@@ -44,9 +47,12 @@
 
         <!-- Mobile Menu Button -->
         <button
-          @click="mobileMenuOpen = !mobileMenuOpen"
+          ref="toggle"
+          @click="toggleMenu"
           class="rounded-lg p-2 transition-colors hover:bg-gray-100 md:hidden"
           aria-label="Toggle menu"
+          :aria-expanded="mobileMenuOpen"
+          aria-controls="mobile-menu"
         >
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -71,10 +77,12 @@
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 -translate-y-4"
     >
-      <div v-if="mobileMenuOpen" class="border-t border-gray-200 bg-white md:hidden">
+      <!-- v-show, not v-if: aria-controls must reference an element that exists. -->
+      <div v-show="mobileMenuOpen" id="mobile-menu" class="border-t border-gray-200 bg-white md:hidden">
         <div class="space-y-3 px-6 py-4">
           <a
             v-for="link in navLinks"
+            ref="menuLinks"
             :key="link.id"
             :href="`/#${link.id}`"
             @click.prevent="
@@ -106,7 +114,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
+import { computed, ref, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { scrollToSection } from '../../composables/useLenis';
 import { posts } from 'virtual:writing';
@@ -135,6 +143,31 @@ const onWriting = computed(() => route.path.startsWith('/writing'));
 const isScrolled = ref<boolean>(false);
 const activeSection = ref<string>('hero');
 const mobileMenuOpen = ref<boolean>(false);
+
+const nav = ref<HTMLElement | null>(null);
+const toggle = ref<HTMLButtonElement | null>(null);
+const menuLinks = ref<HTMLAnchorElement[]>([]);
+
+const toggleMenu = async (): Promise<void> => {
+  mobileMenuOpen.value = !mobileMenuOpen.value;
+  if (!mobileMenuOpen.value) return;
+  await nextTick();
+  menuLinks.value[0]?.focus();
+};
+
+const closeMenuToToggle = (): void => {
+  if (!mobileMenuOpen.value) return;
+  mobileMenuOpen.value = false;
+  toggle.value?.focus();
+};
+
+// A disclosure, not a modal: no trap. Tabbing out of the nav closes the menu so
+// focus never sits behind it. A null relatedTarget is a click on nothing focusable
+// (Safari does not focus buttons on click), which must not close it.
+const closeMenuIfFocusLeft = (e: FocusEvent): void => {
+  const next = e.relatedTarget as Node | null;
+  if (mobileMenuOpen.value && next && !nav.value?.contains(next)) mobileMenuOpen.value = false;
+};
 
 const goToSection = (sectionId: string): void => {
   // Off the home page the sections are not in the DOM yet; the router's

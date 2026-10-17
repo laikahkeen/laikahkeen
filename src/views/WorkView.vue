@@ -2,7 +2,7 @@
   <article v-if="project" class="bg-white pb-24 pt-32 text-black">
     <div class="mx-auto max-w-3xl px-6 lg:px-8">
       <RouterLink to="/#projects" class="text-sm text-gray-500 underline-offset-4 hover:text-black hover:underline">
-        ← All work
+        <span aria-hidden="true">←</span> All work
       </RouterLink>
 
       <header class="mt-8 border-b border-gray-200 pb-10">
@@ -60,7 +60,9 @@
     <div class="mx-auto max-w-3xl px-6 lg:px-8">
       <h1 class="text-3xl font-bold tracking-tight">No such project</h1>
       <p class="mt-4 text-gray-600">Nothing is published at this address.</p>
-      <RouterLink to="/#projects" class="mt-8 inline-block underline">See the work that is →</RouterLink>
+      <RouterLink to="/#projects" class="mt-8 inline-block underline">
+        See the work that is <span aria-hidden="true">→</span>
+      </RouterLink>
     </div>
   </section>
 </template>
