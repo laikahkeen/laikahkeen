@@ -6,6 +6,8 @@ import { scrollToSection } from '../../composables/useLenis';
 import Navigation from './Navigation.vue';
 
 vi.mock('../../composables/useLenis', () => ({ scrollToSection: vi.fn() }));
+// The production state today: nothing published.
+vi.mock('virtual:writing', () => ({ posts: [] }));
 
 async function mountAt(path: string) {
   const router = createRouter({ history: createMemoryHistory(), routes });
@@ -101,5 +103,13 @@ describe('Navigation mobile menu', () => {
     await toggle().trigger('click');
     await menu().find('a').trigger('focusout', { relatedTarget: null });
     expect(isOpen()).toBe(true);
+  });
+});
+
+describe('Navigation with no published posts', () => {
+  it('has no link to /writing', async () => {
+    const { wrapper } = await mountAt('/');
+    expect(wrapper.text()).not.toContain('Writing');
+    expect(wrapper.find('a[href="/writing"]').exists()).toBe(false);
   });
 });

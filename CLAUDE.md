@@ -175,10 +175,12 @@ laikahkeen/
 │   │   ├── layout/      # Navigation.vue, Footer.vue
 │   │   ├── sections/    # HeroSection, AboutSection, etc.
 │   │   └── ui/          # Reusable components (Button, ProjectCard, etc.)
-│   ├── composables/     # Vue composables for scroll animations
+│   ├── composables/     # Scroll animations; usePageMeta (per-page title/OG tags)
 │   ├── data/            # Content data (projects, skills, journey, experience)
-│   ├── router/          # Route table. Home is '/', depth is '/work/<slug>'
-│   ├── views/           # HomeView (the scroll page), WorkView (a case study)
+│   │   └── writing/     # Posts, one <slug>.md each — see "Writing". Absent until the first post
+│   ├── writing/         # Build-time markdown pipeline + Vite plugin. Node only
+│   ├── router/          # Route table. Home is '/', depth is '/work/<slug>', '/writing/<slug>'
+│   ├── views/           # HomeView (the scroll page), WorkView (a case study), Writing*View
 │   ├── App.vue          # Shell: Navigation + RouterView + Footer + Lenis
 │   ├── main.ts          # ViteSSG entry — NOT createApp().mount()
 │   └── api/index.ts     # API integration (Web3Forms)
@@ -368,11 +370,40 @@ were verified by mutation: breaking each one does fail the suite.
 **Update Skills**: Edit `src/data/skills.ts`
 **Update Journey**: Edit `src/data/journey.ts`
 **Update Experience**: Edit `src/data/experience.ts`
+**Publish a post**: Add `src/data/writing/<slug>.md` — see "Writing"
 **Update CV**: Edit `cv/cv.yaml`, run `./scripts/build-cv.sh`, then promote deliberately (see "The CV")
 **Update the social card**: Edit `scripts/og-template.html`, run `./scripts/build-og.sh` (writes `public/og-image.png` directly)
 **Change Colors**: Modify `tailwind.config.ts` (stick to monochrome)
 **Add Meta Tags**: Update `index.html`
 **Modify Navigation**: Edit `src/components/layout/Navigation.vue`
+
+## Writing
+
+Posts are markdown files in `src/data/writing/`, rendered at build time — no post is
+committed yet, and none should be written by an assistant. Frontmatter, all validated
+by `src/writing/content.ts`; anything else fails the build:
+
+```yaml
+---
+title: Plain text
+date: 2026-10-13        # YYYY-MM-DD, sorts the index newest first
+summary: One or two sentences — the index, meta description and og:description
+slug: url-safe-slug     # /writing/<slug>; permanent once shared
+draft: true             # optional, default false. Drafts are never emitted to dist/
+---
+```
+
+- **Zero published posts means no trace**: no nav link, no `/writing` page, nothing
+  prerendered. The first non-draft post brings all of it in with no code change.
+- **Unknown keys are an error**, because `drafts: true` would otherwise publish a draft.
+- **Raw HTML in a post is escaped** (`markdown-it`, `html: false`). No syntax highlighting.
+- **markdown-it and yaml never reach the browser.** `src/writing/plugin.ts` serves
+  `virtual:writing` (metadata, in the home bundle for the nav) and
+  `virtual:writing/bodies` (HTML, in the post view's lazy chunk). Do not import
+  `src/writing/content.ts` from a component.
+- **Tests read `src/test/fixtures/writing/`**, selected by Vitest's `test` mode in
+  `writingDir()`. Every other mode, including the build, reads `src/data/writing/`;
+  `content.test.ts` pins that, and that drafts and fixtures stay out of the route list.
 
 ## The CV
 
@@ -494,7 +525,8 @@ The site is deployed on GitHub Pages with a custom domain (laikahkeen.com), by
   would return GitHub's 404. `ssgOptions.dirStyle: "nested"` emits directory indexes
   rather than `<slug>.html`, so a shared link resolves without relying on the host
   mapping extensionless URLs to `.html`. Route list comes from `src/data/projects.ts`
-  via `ssgOptions.includedRoutes`, so adding a project adds its page automatically.
+  and the published posts in `src/data/writing/` via `ssgOptions.includedRoutes`, so
+  adding a project or a post adds its page automatically.
 - **`manualChunks` has two constraints, both learned by breaking them.** It must stay off
   the SSR pass (there `gsap` and `vue` resolve as external, and naming an external is a
   hard bundler error — hence the `isSsrBuild` branch), and it must be a **function, not an
@@ -517,6 +549,8 @@ broke.
 | 2026-09-25 | 113.9 KB | before routing |
 | 2026-09-25 | 130.9 KB | `vue-router` + prerendering added |
 | 2026-09-25 | ~123.9 KB | Vite 5 → 8. Smaller despite no code change: better minification, and the chunk split shifted — ScrollTrigger now lands in the `gsap` chunk rather than `app` |
+| 2026-10-13 | 133.0 KB | `master` at `28004b9`, re-read before the writing pipeline. Method: sum of the gzip column `npm run build` prints for the `app`, `vendor`, `gsap` JS and `app` CSS that `dist/index.html` loads. The row above recorded no method, so the gap to it is unattributed |
+| 2026-10-13 | 133.7 KB | Writing pipeline, zero posts: nav link + routes + `@unhead/vue` `useHead`. Post HTML and its CSS ship only in the post view's chunk |
 - **Output directory**: `dist/`
 - **Install in CI**: `npm ci`, not `npm install` — a lockfile exists and CI must honour it
 - **Custom domain**: held in the repo's **Pages settings**, not in the tree. There is

@@ -9,4 +9,6 @@ export default defineConfigWithVueTs(
   vueTsConfigs.recommended,
   // Guards against clashes with native elements in in-DOM templates; this repo is SFC-only.
   { rules: { 'vue/multi-word-component-names': 'off' } },
+  // Dropping a key by rest destructure is the omit idiom, not an unused variable.
+  { rules: { '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }] } },
 )

@@ -54,6 +54,20 @@ export interface CaseStudy {
   diagramCaption?: string;
 }
 
+// Writing — one markdown file per post in src/data/writing/, rendered at build
+// time by src/writing/content.ts. The frontmatter contract is in CLAUDE.md.
+export interface PostMeta {
+  slug: string;
+  title: string;
+  // YYYY-MM-DD
+  date: string;
+  summary: string;
+}
+
+export interface Post extends PostMeta {
+  html: string;
+}
+
 // Journey types
 export type MilestoneType = 'career' | 'education' | 'learning' | 'achievement';
 

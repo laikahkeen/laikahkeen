@@ -15,3 +15,13 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+// Served by src/writing/plugin.ts. Published posts only, newest first.
+declare module 'virtual:writing' {
+  import type { PostMeta } from '@/types/index.ts';
+  export const posts: PostMeta[];
+}
+
+declare module 'virtual:writing/bodies' {
+  export const bodies: Record<string, string>;
+}

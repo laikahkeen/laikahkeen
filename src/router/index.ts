@@ -19,6 +19,18 @@ export const routes: RouteRecordRaw[] = [
     name: 'work',
     component: () => import('../views/WorkView.vue'),
   },
+  // Always routed, but prerendered only once a post is published — see
+  // writingRoutes in src/writing/content.ts.
+  {
+    path: '/writing',
+    name: 'writing',
+    component: () => import('../views/WritingIndexView.vue'),
+  },
+  {
+    path: '/writing/:slug',
+    name: 'post',
+    component: () => import('../views/WritingPostView.vue'),
+  },
 ];
 
 // Only the hash case animates, so only it goes through Lenis. Page changes and
