@@ -1,5 +1,12 @@
 <template>
-  <component :is="tag" :href="href" :to="to" :type="type" :class="buttonClasses" @click="handleClick">
+  <component
+    :is="tag"
+    :href="href"
+    :to="to"
+    :type="tag === 'button' ? type : undefined"
+    :class="buttonClasses"
+    @click="handleClick"
+  >
     <slot />
   </component>
 </template>
@@ -51,8 +58,9 @@ const buttonClasses = computed(() => {
   };
 
   return [
-    'inline-flex items-center justify-center font-medium transition-all duration-300',
-    'focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2',
+    // `transition-colors`: `transition-all` fades the outline in from currentColor
+    // and `transition` animates the box-shadow ring, so the focus ring lags 300ms.
+    'inline-flex items-center justify-center font-medium transition-colors duration-300',
     'disabled:opacity-50 disabled:cursor-not-allowed',
     variants[props.variant],
     sizes[props.size],

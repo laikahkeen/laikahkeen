@@ -15,6 +15,10 @@ export function scrollToSection(id: string): void {
   const el = document.getElementById(id);
   if (!el) return;
 
+  // What a native anchor would do: the next Tab continues from the section, not
+  // from the link that was activated (which may be in a menu that just closed).
+  el.focus({ preventScroll: true });
+
   if (lenis) {
     // Lenis clamps to a scroll limit it refreshes on a 250ms debounce, so right
     // after a route change from a short /work page it would stop short.
