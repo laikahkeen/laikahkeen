@@ -312,7 +312,11 @@ npm run type-check
 
 # Tests (Vitest + @vue/test-utils + jsdom)
 npm test          # watch
-npm run test:run  # once, for CI
+npm run test:run  # once
+
+# What pre-push and CI run (lefthook.yml, deploy.yml)
+npm run check     # lint + both type-checks + all tests
+npm run audit     # audit-ci, high+, site and mcp/
 
 # Build for production
 npm run build
@@ -320,6 +324,13 @@ npm run build
 # Preview production build
 npm run preview
 ```
+
+### Hooks and audit
+
+Follows https://github.com/laikahkeen/dev-standards: lefthook installs on `npm install`;
+pre-commit lints staged files, pre-push runs `check` and `audit`, CI runs the same two.
+`audit-ci.jsonc` allowlists by GHSA. Each entry names why and when it goes — an entry
+with no patched release pending is the only legitimate kind.
 
 ### Testing
 
