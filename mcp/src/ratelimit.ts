@@ -11,9 +11,9 @@
  * KNOWN LIMIT: bounded memory and exact accounting are mutually exclusive. Once
  * maxTrackedIps bites, some live counter is dropped — so an IP spray can evict a
  * specific victim and hand it a fresh allowance. Raising the cap raises the cost
- * of that, never removes it. Edge rate limiting in front of this process is the
- * actual defence; this is the second layer, not the only one. Covered by a test
- * named KNOWN LIMIT so it cannot quietly become a claim of safety.
+ * of that, never removes it. The Railway deploy has no edge rate limiting, so this
+ * is the only layer. Covered by a test named KNOWN LIMIT so it cannot quietly
+ * become a claim of safety.
  */
 export interface RateLimitResult {
   allowed: boolean;

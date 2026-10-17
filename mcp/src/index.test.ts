@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { RateLimiter } from './ratelimit.js';
-import { createMcpHandler } from './index.js';
+import { RateLimiter } from './ratelimit.ts';
+import { createMcpHandler } from './index.ts';
 
 const ACCEPT = 'application/json, text/event-stream';
 
@@ -8,7 +8,7 @@ function rpc(handler: (r: Request) => Promise<Response>, body: unknown, ip = '20
   return handler(
     new Request('https://mcp.example/mcp', {
       method: 'POST',
-      headers: { 'content-type': 'application/json', accept: ACCEPT, 'cf-connecting-ip': ip },
+      headers: { 'content-type': 'application/json', accept: ACCEPT, 'x-real-ip': ip },
       body: JSON.stringify(body),
     }),
   );
@@ -90,6 +90,40 @@ describe('MCP endpoint', () => {
 
     // A different caller is unaffected.
     expect((await rpc(handler, INITIALIZE, '198.51.100.8')).status).toBe(200);
+  });
+
+  it('ignores caller-supplied forwarding headers when keying the limit', async () => {
+    const handler = createMcpHandler(new RateLimiter({ limit: 1, windowMs: 60_000 }));
+    const spoofed = (n: number) =>
+      handler(
+        new Request('https://mcp.example/mcp', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            accept: ACCEPT,
+            'x-real-ip': '198.51.100.9',
+            'cf-connecting-ip': `203.0.113.${n}`,
+            'x-forwarded-for': `203.0.113.${n}`,
+          },
+          body: JSON.stringify(INITIALIZE),
+        }),
+      );
+    expect((await spoofed(1)).status).toBe(200);
+    expect((await spoofed(2)).status).toBe(429);
+  });
+
+  it('keys IPv6 on its /64, so one subscriber cannot rotate addresses for fresh allowances', async () => {
+    const handler = createMcpHandler(new RateLimiter({ limit: 1, windowMs: 60_000 }));
+    expect((await rpc(handler, INITIALIZE, '2001:db8:1:2::1')).status).toBe(200);
+    expect((await rpc(handler, INITIALIZE, '2001:0db8:0001:0002:ffff:0:0:9')).status).toBe(429);
+    expect((await rpc(handler, INITIALIZE, '2001:db8:1:3::1')).status).toBe(200);
+  });
+
+  it('keys an IPv4-mapped IPv6 address as the IPv4 address it carries', async () => {
+    const handler = createMcpHandler(new RateLimiter({ limit: 1, windowMs: 60_000 }));
+    expect((await rpc(handler, INITIALIZE, '::ffff:198.51.100.20')).status).toBe(200);
+    expect((await rpc(handler, INITIALIZE, '198.51.100.20')).status).toBe(429);
+    expect((await rpc(handler, INITIALIZE, '198.51.100.21')).status).toBe(200);
   });
 });
 

@@ -1,11 +1,9 @@
 import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js';
-import { RateLimiter } from './ratelimit.js';
-import { buildServer } from './server.js';
+import ipaddr from 'ipaddr.js';
+import { RateLimiter } from './ratelimit.ts';
+import { buildServer } from './server.ts';
 
 /**
- * Fetch-standard MCP endpoint. Runs anywhere `Request -> Response` runs —
- * Workers, Vercel Edge, Deno, Node 18+.
- *
  * Public and unauthenticated by design: "paste this URL into your client" only
  * works without a credential. That makes the rate limiter the only thing between
  * this endpoint and abuse, which is why it is the piece to review hardest.
@@ -13,20 +11,24 @@ import { buildServer } from './server.js';
 
 export const RATE_LIMIT = { limit: 30, windowMs: 60_000 } as const;
 
-/** Module scope, so it survives across requests within one isolate. */
+/** Module scope: one Node process on Railway, so this is the whole count. */
 const defaultLimiter = new RateLimiter(RATE_LIMIT);
 
 /** 1 MiB. A tool call on this server is a few hundred bytes; nothing legitimate is near this. */
 const MAX_BODY_BYTES = 1_048_576;
 
-function clientIp(request: Request): string {
-  // Workers set CF-Connecting-IP. X-Forwarded-For is comma-separated with the
-  // client first, and is only trustworthy behind a proxy that overwrites it.
-  const cf = request.headers.get('cf-connecting-ip');
-  if (cf) return cf;
-  const fwd = request.headers.get('x-forwarded-for');
-  if (fwd) return fwd.split(',')[0]?.trim() || 'unknown';
-  return 'unknown';
+function clientKey(request: Request): string {
+  // Railway's edge sets X-Real-IP and, per Railway staff (2026-10), overwrites a
+  // caller-supplied one; its docs say only that it carries the client IP. Every
+  // other forwarding header is caller-controlled here — trusting one lets any
+  // client mint a fresh allowance per request. Re-verify with a spoofed header
+  // after any change of host or proxy (orange-clouding the DNS breaks this).
+  const raw = request.headers.get('x-real-ip');
+  if (!raw || !ipaddr.isValid(raw)) return 'unknown';
+  const addr = ipaddr.process(raw); // ::ffff:a.b.c.d comes back as IPv4
+  if (addr.kind() === 'ipv4') return addr.toString();
+  // One IPv6 subscriber is routinely handed a whole /64; per-address keying gives it 2^64 allowances.
+  return `${(addr as ipaddr.IPv6).parts.slice(0, 4).map((p) => p.toString(16)).join(':')}::/64`;
 }
 
 function tooMany(resetAt: number): Response {
@@ -64,7 +66,7 @@ export async function handleMcpRequest(request: Request): Promise<Response> {
 }
 
 async function handleWith(limiter: RateLimiter, request: Request): Promise<Response> {
-  const { allowed, resetAt } = limiter.check(clientIp(request));
+  const { allowed, resetAt } = limiter.check(clientKey(request));
   if (!allowed) return tooMany(resetAt);
 
   // Transport and server are per-request because a transport carries the state of
@@ -86,5 +88,3 @@ async function handleWith(limiter: RateLimiter, request: Request): Promise<Respo
     await transport.close();
   }
 }
-
-export default { fetch: handleMcpRequest };

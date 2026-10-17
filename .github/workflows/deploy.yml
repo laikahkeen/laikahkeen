@@ -5,9 +5,8 @@ on:
     branches: [master]
   # Runs the build and tests on PRs too. Without this the test gate only fires
   # after merge, which is the wrong end — the deploy job is guarded below so a PR
-  # never publishes.
+  # never publishes. No branch filter: stacked PRs target other branches.
   pull_request:
-    branches: [master]
   # Lets a deploy be re-run without an empty commit — useful when only a repo
   # setting or secret changed.
   workflow_dispatch:
@@ -19,12 +18,6 @@ permissions:
   contents: read
   pages: write
   id-token: write
-
-# Queue deploys rather than cancelling them, so an in-flight publish is never
-# left half-applied to the live site.
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 jobs:
   build:
@@ -52,6 +45,13 @@ jobs:
       - name: Audit
         run: npm run audit
 
+      # src/data edits redeploy the MCP server (mcp/railway.toml watchPatterns), and
+      # vitest's transform hides load-time failures that Node's type stripping hits.
+      - name: Check MCP server
+        run: |
+          npm --prefix mcp run type-check
+          npm --prefix mcp run smoke
+
       - name: Build
         env:
           VITE_WEB3FORMS_ACCESS_TOKEN: ${{ secrets.VITE_WEB3FORMS_ACCESS_TOKEN }}
@@ -76,6 +76,12 @@ jobs:
     # Never publish from a pull request — it would push a branch's build to the
     # live domain.
     if: github.event_name != 'pull_request'
+    # Job-level, not workflow-level: a group holds one pending run and a newer one
+    # replaces it, so PR builds sharing it could cancel a queued deploy. Deploys
+    # queue rather than cancel, so a publish is never left half-applied.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     environment:
       name: github-pages

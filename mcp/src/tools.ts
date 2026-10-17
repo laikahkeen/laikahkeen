@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { projects } from '../../src/data/projects';
-import { experiences } from '../../src/data/experience';
+import { projects } from '../../src/data/projects.ts';
+import { experiences } from '../../src/data/experience.ts';
 
 /**
  * Tool payloads. Shaped from the site's own data files, so a visiting agent and
