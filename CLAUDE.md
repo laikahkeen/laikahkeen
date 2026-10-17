@@ -237,6 +237,10 @@ than quietly kept.
 - **Lenis**: Smooth scroll initialized in `App.vue` (**not** `main.ts`), driven from
   `gsap.ticker` rather than its own rAF loop, with `lenis.on('scroll', ScrollTrigger.update)`
   so reveal animations stay in step with the smoothed scroll position
+- **Scrolling to a section**: always `scrollToSection(id)` from `src/composables/useLenis.ts`,
+  never `scrollIntoView` — that bypasses Lenis. It falls back to an instant native jump when
+  there is no instance (reduced motion). The nav clearance is `scroll-padding-top` in
+  `main.css`, the only place a direct hit on `/#section` can be offset
 
 ### If the site "feels slow"
 
