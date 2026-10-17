@@ -54,6 +54,30 @@ Also settled:
 
 ---
 
+## Status — 2026-10-17
+
+All nine open PRs merged; #3 is the only open issue. Rows not listed are unchanged
+from the 2026-09-25 table below.
+
+| # | Item | State |
+|---|---|---|
+| 4-6 | MCP server | **merged** (#20). Railway service not created; `mcp.laikahkeen.com` did not resolve on 2026-10-17 |
+| 10 | Live MCP panel | **merged** (#22). The live site shows "not reachable" until the endpoint is deployed |
+| 11 | 404 | **done** (#21) |
+
+Shipped beyond the v1 list: Lenis-driven nav scroll (#24, closed #4), the a11y punch-list
+(#26, closed #10), writing and RSS (#23, #25, closed #1 and #14), and the dev standard
+(#27: lefthook, ESLint, gated audit).
+
+### Decided 2026-10-17 — owner
+
+- **Writing and RSS merged ahead of a first post.** Reverses "#1 stays v2" (2026-10-13).
+  Both render nothing until a non-draft post exists in `src/data/writing/`.
+- **MCP panel copy and placement approved as written** (after Projects, no nav link), and
+  merged before the deploy.
+- **ESLint `ignoreRestSiblings: true`**, so `({ draft, ...post }) => post` is the omit
+  idiom rather than an unused variable. Not yet in dev-standards.
+
 ## Status — 2026-09-25
 
 | # | Item | State |
@@ -294,14 +318,9 @@ the hero has to do. That is new work, not a reopened issue.
 Found while researching; none are portfolio work.
 
 **This repo:**
-- `src/composables/useScrollTo.ts` is dead code — nothing imports it, and it uses
-  `window.scrollTo`, not Lenis. Delete it during the motion work.
-- `App.vue:39` returns early under `prefers-reduced-motion`, so `lenis` is legitimately
-  `null`. Any shared accessor needs a native fallback.
-- `.no-scrollbar` in `src/assets/styles/main.css:15-22` is dead — defined in
-  `@layer utilities`, used by no component, so Tailwind purges it. Pre-existing.
-- `axios` (high) and `browserslist` (high) audit findings remain after the Vite upgrade;
-  neither is fixable by it. `axios` is a runtime dependency, so that one actually ships.
+- None open as of 2026-10-17. The four listed here on 2026-09-25 are resolved: `useScrollTo.ts`
+  and `.no-scrollbar` are deleted, `scrollToSection` falls back to a native jump when Lenis
+  is off (#24), and `npm run audit` passes with one allowlisted GHSA (`audit-ci.jsonc`).
 
 **propbook:**
 - `WallStrip.tsx:24` uses class `btn-cta`, defined nowhere.
