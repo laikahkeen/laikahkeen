@@ -393,8 +393,12 @@ draft: true             # optional, default false. Drafts are never emitted to d
 ---
 ```
 
-- **Zero published posts means no trace**: no nav link, no `/writing` page, nothing
-  prerendered. The first non-draft post brings all of it in with no code change.
+- **Zero published posts means no trace**: no nav link, no `/writing` page, no
+  `/rss.xml` and no `<link rel="alternate">`, nothing prerendered. The first non-draft
+  post brings all of it in with no code change.
+- **The feed is `/rss.xml`**, RSS 2.0, summaries only, built by `src/writing/feed.ts`
+  from the same posts. Item links use the trailing-slash URL, because Pages 301s the
+  slashless one.
 - **Unknown keys are an error**, because `drafts: true` would otherwise publish a draft.
 - **Raw HTML in a post is escaped** (`markdown-it`, `html: false`). No syntax highlighting.
 - **markdown-it and yaml never reach the browser.** `src/writing/plugin.ts` serves

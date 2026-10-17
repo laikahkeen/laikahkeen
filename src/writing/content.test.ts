@@ -22,9 +22,25 @@ describe('parsePost', () => {
     ['an empty draft flag', `${valid}\ndraft:`, /x\.md: "draft"/],
     ['a tilde draft flag', `${valid}\ndraft: ~`, /x\.md: "draft"/],
     ['a null draft flag', `${valid}\ndraft: null`, /x\.md: "draft"/],
+    [
+      'a control character in the title',
+      'title: "T\\x01"\ndate: 2026-01-01\nsummary: S\nslug: s',
+      /"title" contains a control/,
+    ],
+    [
+      'a control character in the summary',
+      'title: T\ndate: 2026-01-01\nsummary: "S\\x1f"\nslug: s',
+      /"summary" contains a control/,
+    ],
     ['a misspelt key', `${valid}\ndrafts: true`, /unknown frontmatter key "drafts"/],
   ])('rejects %s', (_case, frontmatter, error) => {
     expect(() => parsePost(post(frontmatter), 'x.md')).toThrow(error);
+  });
+
+  it('allows tab and newline, the control characters XML permits', () => {
+    expect(parsePost(post('title: T\ndate: 2026-01-01\nsummary: "a\\tb\\nc"\nslug: s'), 'x.md').summary).toBe(
+      'a\tb\nc'
+    );
   });
 
   it('rejects a file with no frontmatter or no body', () => {
