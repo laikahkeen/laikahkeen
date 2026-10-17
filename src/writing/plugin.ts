@@ -15,7 +15,7 @@ export function writing(dir: string): Plugin {
     },
     load(id) {
       if (id === `\0${META}`) {
-        const meta = loadPosts(dir).map(({ html: _html, ...rest }) => rest);
+        const meta = loadPosts(dir).map(({ html, ...rest }) => rest);
         return `export const posts = ${JSON.stringify(meta)};`;
       }
       if (id === `\0${BODIES}`) {
