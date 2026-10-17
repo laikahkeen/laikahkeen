@@ -16,12 +16,6 @@ interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
 
-declare module '*.vue' {
-  import type { DefineComponent } from 'vue';
-  const component: DefineComponent<{}, {}, any>;
-  export default component;
-}
-
 // Served by src/writing/plugin.ts. Published posts only, newest first.
 declare module 'virtual:writing' {
   import type { PostMeta } from '@/types/index.ts';

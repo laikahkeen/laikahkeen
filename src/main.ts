@@ -1,7 +1,7 @@
 import { ViteSSG } from 'vite-ssg';
 import './assets/styles/main.css';
 import App from './App.vue';
-import { routes } from './router';
+import { routes, scrollBehavior } from './router';
 
 // The prerender build runs this module in Node, where `document` does not
 // exist — hence the isClient gate rather than PROD alone.
@@ -27,14 +27,7 @@ export const createApp = ViteSSG(
   App,
   {
     routes,
-    // Native scrolling for route changes and hash targets. Unifying this with
-    // Lenis is issue #4, which lands with the motion rework — doing it here
-    // first would only be churned by that work.
-    scrollBehavior(to, _from, savedPosition) {
-      if (savedPosition) return savedPosition;
-      if (to.hash) return { el: to.hash, behavior: 'smooth' };
-      return { top: 0 };
-    },
+    scrollBehavior,
   },
   ({ isClient }) => {
     if (isClient && import.meta.env.PROD) loadPlausible();

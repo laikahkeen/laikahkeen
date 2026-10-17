@@ -6,7 +6,7 @@ import {
   getProjectInput,
   listProjects,
   listProjectsInput,
-} from './tools.js';
+} from './tools.ts';
 
 export const SERVER_INFO = { name: 'laikahkeen', version: '0.1.0' } as const;
 
