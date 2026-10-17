@@ -128,3 +128,108 @@ describe('MCP endpoint', () => {
 });
 
 const RATE = { limit: 100, windowMs: 60_000 };
+
+const SITE = 'https://laikahkeen.com';
+
+function preflight(handler: (r: Request) => Promise<Response>, origin: string) {
+  return handler(
+    new Request('https://mcp.example/mcp', {
+      method: 'OPTIONS',
+      headers: {
+        origin,
+        'access-control-request-method': 'POST',
+        'access-control-request-headers': 'content-type, mcp-protocol-version',
+        'x-real-ip': '203.0.113.50',
+      },
+    }),
+  );
+}
+
+function post(handler: (r: Request) => Promise<Response>, origin: string, ip = '203.0.113.51') {
+  return handler(
+    new Request('https://mcp.example/mcp', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', accept: ACCEPT, 'x-real-ip': ip, origin },
+      body: JSON.stringify(INITIALIZE),
+    }),
+  );
+}
+
+describe('CORS', () => {
+  it('answers a preflight from the site with what the panel sends', async () => {
+    const res = await preflight(createMcpHandler(new RateLimiter(RATE)), SITE);
+    expect(res.status).toBe(204);
+    expect(res.headers.get('access-control-allow-origin')).toBe(SITE);
+    expect(res.headers.get('access-control-allow-methods')).toContain('POST');
+    const allowed = res.headers.get('access-control-allow-headers') ?? '';
+    for (const h of ['content-type', 'accept', 'mcp-protocol-version']) expect(allowed).toContain(h);
+    expect(res.headers.get('vary')).toContain('Origin');
+  });
+
+  it('allows the Vite dev server', async () => {
+    const res = await preflight(createMcpHandler(new RateLimiter(RATE)), 'http://localhost:5173');
+    expect(res.headers.get('access-control-allow-origin')).toBe('http://localhost:5173');
+  });
+
+  it('refuses another origin with 403 and grants it nothing', async () => {
+    const handler = createMcpHandler(new RateLimiter(RATE));
+    const pre = await preflight(handler, 'https://elsewhere.example');
+    expect(pre.status).toBe(403);
+    expect(pre.headers.get('access-control-allow-origin')).toBeNull();
+    expect(pre.headers.get('access-control-allow-methods')).toBeNull();
+
+    const res = await post(handler, 'https://elsewhere.example');
+    expect(res.status).toBe(403);
+    expect(res.headers.get('access-control-allow-origin')).toBeNull();
+    const body = await res.json();
+    expect(body.jsonrpc).toBe('2.0');
+    expect(body.error?.code).toBe(-32000);
+  });
+
+  it('does not let a foreign page spend a visitor\'s allowance', async () => {
+    // A no-cors text/plain POST is a simple request: the browser sends it without a preflight.
+    const handler = createMcpHandler(new RateLimiter({ limit: 1, windowMs: 60_000 }));
+    for (let i = 0; i < 3; i++) {
+      const res = await handler(
+        new Request('https://mcp.example/mcp', {
+          method: 'POST',
+          headers: {
+            'content-type': 'text/plain',
+            origin: 'https://elsewhere.example',
+            'x-real-ip': '203.0.113.60',
+          },
+          body: '{}',
+        }),
+      );
+      expect(res.status).toBe(403);
+    }
+    expect((await post(handler, SITE, '203.0.113.60')).status).toBe(200);
+  });
+
+  it('serves a request with no Origin, as non-browser MCP clients send', async () => {
+    const res = await rpc(createMcpHandler(new RateLimiter(RATE)), INITIALIZE);
+    expect(res.status).toBe(200);
+    expect(res.headers.get('access-control-allow-origin')).toBeNull();
+  });
+
+  it('lets the site read the actual response', async () => {
+    const res = await post(createMcpHandler(new RateLimiter(RATE)), SITE);
+    expect(res.status).toBe(200);
+    expect(res.headers.get('access-control-allow-origin')).toBe(SITE);
+    expect((await res.json()).result?.serverInfo?.name).toBe('laikahkeen');
+  });
+
+  it('does not count preflights against the limit', async () => {
+    const handler = createMcpHandler(new RateLimiter({ limit: 1, windowMs: 60_000 }));
+    for (let i = 0; i < 5; i++) expect((await preflight(handler, SITE)).status).toBe(204);
+    expect((await post(handler, SITE, '203.0.113.50')).status).toBe(200);
+  });
+
+  it('lets the site read a 429, so the panel sees a status rather than a network error', async () => {
+    const handler = createMcpHandler(new RateLimiter({ limit: 1, windowMs: 60_000 }));
+    await post(handler, SITE, '198.51.100.20');
+    const blocked = await post(handler, SITE, '198.51.100.20');
+    expect(blocked.status).toBe(429);
+    expect(blocked.headers.get('access-control-allow-origin')).toBe(SITE);
+  });
+});

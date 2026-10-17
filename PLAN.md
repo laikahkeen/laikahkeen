@@ -65,7 +65,7 @@ Also settled:
 | 7 | keen-ops case study | **done** — written, diagrammed, checked in a browser |
 | 8 | Dark theme + gold accent | **tokens only.** Components not flipped |
 | 9 | Motion strip + layout | not started |
-| 10 | Live MCP panel | not started — needs a deployed endpoint |
+| 10 | Live MCP panel | **built**, stacked on #20 — shows "not reachable" until the endpoint is deployed |
 | 11 | JSON-LD / 404 | JSON-LD **done**; 404 not started |
 | 12 | Distribution | not started — the post is the keen-ops case study; listing is yours |
 

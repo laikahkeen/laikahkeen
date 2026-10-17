@@ -4,6 +4,7 @@
   <JourneySection id="journey" />
   <SkillsetSection id="skills" />
   <ProjectsSection id="projects" />
+  <McpSection id="mcp" />
   <ExperienceSection id="experience" />
   <ContactSection id="contact" />
 </template>
@@ -14,6 +15,7 @@ import AboutSection from '../components/sections/AboutSection.vue';
 import JourneySection from '../components/sections/JourneySection.vue';
 import SkillsetSection from '../components/sections/SkillsetSection.vue';
 import ProjectsSection from '../components/sections/ProjectsSection.vue';
+import McpSection from '../components/sections/McpSection.vue';
 import ExperienceSection from '../components/sections/ExperienceSection.vue';
 import ContactSection from '../components/sections/ContactSection.vue';
 </script>
