@@ -1,0 +1,14 @@
+# Standard: https://github.com/laikahkeen/dev-standards
+pre-commit:
+  jobs:
+    - name: lint
+      glob: "*.{ts,mts,vue}"
+      run: npx eslint --no-warn-ignored {staged_files}
+
+pre-push:
+  parallel: true
+  jobs:
+    - name: check
+      run: npm run check
+    - name: audit
+      run: npm run audit

@@ -316,7 +316,11 @@ npm run type-check
 
 # Tests (Vitest + @vue/test-utils + jsdom)
 npm test          # watch
-npm run test:run  # once, for CI
+npm run test:run  # once
+
+# What pre-push and CI run (lefthook.yml, deploy.yml)
+npm run check     # lint + both type-checks + all tests
+npm run audit     # audit-ci, high+, site and mcp/
 
 # Build for production
 npm run build
@@ -324,6 +328,13 @@ npm run build
 # Preview production build
 npm run preview
 ```
+
+### Hooks and audit
+
+Follows https://github.com/laikahkeen/dev-standards: lefthook installs on `npm install`;
+pre-commit lints staged files, pre-push runs `check` and `audit`, CI runs the same two.
+`audit-ci.jsonc` allowlists by GHSA. Each entry names why and when it goes — an entry
+with no patched release pending is the only legitimate kind.
 
 ### Testing
 
@@ -432,8 +443,8 @@ npm run test:run        # or, from the repo root: npm run test:mcp
 ```
 
 - **Transport**: `WebStandardStreamableHTTPServerTransport` — a plain
-  `Request -> Response` handler, so it runs on Workers, Vercel Edge, Deno or Node with
-  no adapter. Stateless (`sessionIdGenerator: undefined`), `enableJsonResponse: true`.
+  `Request -> Response` handler, served on Node by `@hono/node-server` (`src/serve.ts`).
+  Stateless (`sessionIdGenerator: undefined`), `enableJsonResponse: true`.
 - **Three tools, and it stays three**: `list_projects`, `get_project`, `get_experience`.
   A test asserts exactly that set — a fourth tool should have to delete an assertion.
   The descriptions are the interface: an agent decides whether to call a tool from the
@@ -454,8 +465,22 @@ npm run test:run        # or, from the repo root: npm run test:mcp
 - **Rate limiting is the risk surface**, because there is no credential. keen-ops has no
   rate limiting to copy, so `src/ratelimit.ts` is written from scratch. Read its
   `KNOWN LIMIT` note before trusting it: bounded memory and exact accounting cannot both
-  hold, so an IP spray can evict a victim's counter and forgive its usage. Edge rate
-  limiting in front of the process is the real defence; this is the second layer.
+  hold, so an IP spray can evict a victim's counter and forgive its usage. On the
+  current deploy there is **no** edge rate limiting in front of it — this is the only layer.
+- **Deploy: Railway, one Node process, DNS-only** (decided 2026-10-13, `PLAN.md`).
+  `mcp/Dockerfile` builds from the **repo root** (it needs `src/data`); the service's
+  config path is `/mcp/railway.toml` with no root directory. No build step: Node 22.18+
+  strips types and runs `src/serve.ts` directly, which is why imports use `.ts` paths.
+- **The limiter keys on `X-Real-IP` only**, IPv6 by its /64 (one subscriber holds a whole
+  /64). Any other forwarding header is caller-controlled on Railway. Orange-clouding the
+  DNS turns `X-Real-IP` into a Cloudflare IP and puts every caller in one bucket — change
+  the keying with it.
+- **CORS allows `https://laikahkeen.com` and `http://localhost:5173` only**, for the live
+  panel (`McpSection.vue`). Preflights are answered before the limiter and do not count.
+  Any other `Origin` gets a 403 before the limiter, uncounted — otherwise a foreign page's
+  no-cors POST (no preflight) spends its visitor's allowance. No `Origin` is served as normal.
+  A new site origin (a `www.` host, a preview domain) has to be added there or the panel
+  reads as unreachable.
 
 ## Deployment
 
