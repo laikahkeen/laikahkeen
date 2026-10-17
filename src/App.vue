@@ -1,7 +1,13 @@
 <template>
   <div class="bg-white text-black">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium"
+    >
+      Skip to content
+    </a>
     <Navigation />
-    <main>
+    <main id="main" tabindex="-1">
       <RouterView />
     </main>
     <Footer />
@@ -15,6 +21,7 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import Navigation from './components/layout/Navigation.vue';
 import Footer from './components/layout/Footer.vue';
+import { setLenis } from './composables/useLenis';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -52,10 +59,12 @@ onMounted(() => {
   tick = (time: number) => lenis?.raf(time * 1000); // ticker gives seconds, Lenis wants ms
   gsap.ticker.add(tick);
   gsap.ticker.lagSmoothing(0);
+  setLenis(lenis);
 });
 
 onBeforeUnmount(() => {
   if (tick) gsap.ticker.remove(tick);
+  setLenis(null);
   lenis?.destroy();
   lenis = null;
 });

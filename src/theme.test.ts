@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import config from '../tailwind.config';
 
@@ -55,5 +56,35 @@ describe('accent contrast', () => {
       (k) => !['black', 'white', 'gray', 'transparent', 'current'].includes(k),
     );
     expect(nonNeutral).toEqual(['accent']);
+  });
+});
+
+describe('focus indicator', () => {
+  // jsdom computes no styles, so this pins the rule text rather than a rendered ring.
+  // Read from disk (path from the repo root): Vitest blanks CSS imports, `?raw` included.
+  const mainCss = readFileSync('src/assets/styles/main.css', 'utf8');
+  const rule = mainCss.match(/:focus-visible\s*{([^}]*)}/)?.[1] ?? '';
+  const tone = (prefix: string) => {
+    const name = rule.match(new RegExp(`\\b${prefix}-(black|white|gray-\\d+)\\b`))?.[1];
+    if (!name) return undefined;
+    const [key, shade] = name.split('-') as [string, string?];
+    return shade ? (colors[key] as Record<string, string>)[shade] : (colors[key] as string);
+  };
+
+  it('is two-tone, so it shows on the black sections as well as the white ones', () => {
+    // C40: two colours at 9:1 or more guarantee one of them clears 3:1 on any
+    // background. A single black outline was invisible on #projects.
+    const outline = tone('outline');
+    const ring = tone('ring');
+    expect(outline, 'outline colour').toBeDefined();
+    expect(ring, 'ring colour').toBeDefined();
+    expect(contrast(outline!, ring!)).toBeGreaterThanOrEqual(9);
+  });
+
+  it('sizes the ring to fill the outline offset gap exactly', () => {
+    // Narrower leaves a gap of page colour; wider hides under the outline.
+    const offset = rule.match(/\boutline-offset-(\d+)\b/)?.[1];
+    expect(offset).toBeDefined();
+    expect(rule.match(/\bring-(\d+)\b/)?.[1]).toBe(offset);
   });
 });

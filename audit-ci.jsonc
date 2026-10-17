@@ -1,0 +1,7 @@
+{
+  "$schema": "https://github.com/IBM/audit-ci/raw/main/docs/schema.json",
+  "high": true,
+  "report-type": "summary",
+  // braces: no patched release exists (advisory 2026-09-18). Remove once one ships.
+  "allowlist": ["GHSA-vfj7-8cjw-p6xm"]
+}

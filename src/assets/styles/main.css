@@ -5,9 +5,25 @@
 @layer base {
   html {
     scroll-behavior: auto;
+    /* Clears the fixed h-20 nav. Chrome re-applies a URL's #fragment jump through
+       load, overriding any JS scroll, so a direct hit can only be offset here.
+       useLenis reads this back, because Lenis ignores it. */
+    @apply scroll-pt-20;
   }
 
   body {
     @apply bg-white font-mono text-black antialiased;
+  }
+
+  /* Keyboard only (a click matches :focus, not :focus-visible). Two tones, WCAG C40: the
+     white ring fills the offset gap, so one tone is 21:1 on any surface. See theme.test.ts. */
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-black ring-2 ring-white;
+  }
+
+  /* Skip-link and section targets take focus so Tab continues from there. They
+     are not controls, so no ring. */
+  [tabindex='-1']:focus {
+    @apply outline-none;
   }
 }

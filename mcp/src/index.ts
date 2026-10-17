@@ -1,11 +1,9 @@
 import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js';
-import { RateLimiter } from './ratelimit.js';
-import { buildServer } from './server.js';
+import ipaddr from 'ipaddr.js';
+import { RateLimiter } from './ratelimit.ts';
+import { buildServer } from './server.ts';
 
 /**
- * Fetch-standard MCP endpoint. Runs anywhere `Request -> Response` runs —
- * Workers, Vercel Edge, Deno, Node 18+.
- *
  * Public and unauthenticated by design: "paste this URL into your client" only
  * works without a credential. That makes the rate limiter the only thing between
  * this endpoint and abuse, which is why it is the piece to review hardest.
@@ -13,20 +11,65 @@ import { buildServer } from './server.js';
 
 export const RATE_LIMIT = { limit: 30, windowMs: 60_000 } as const;
 
-/** Module scope, so it survives across requests within one isolate. */
+/** Module scope: one Node process on Railway, so this is the whole count. */
 const defaultLimiter = new RateLimiter(RATE_LIMIT);
 
 /** 1 MiB. A tool call on this server is a few hundred bytes; nothing legitimate is near this. */
 const MAX_BODY_BYTES = 1_048_576;
 
-function clientIp(request: Request): string {
-  // Workers set CF-Connecting-IP. X-Forwarded-For is comma-separated with the
-  // client first, and is only trustworthy behind a proxy that overwrites it.
-  const cf = request.headers.get('cf-connecting-ip');
-  if (cf) return cf;
-  const fwd = request.headers.get('x-forwarded-for');
-  if (fwd) return fwd.split(',')[0]?.trim() || 'unknown';
-  return 'unknown';
+function clientKey(request: Request): string {
+  // Railway's edge sets X-Real-IP and, per Railway staff (2026-10), overwrites a
+  // caller-supplied one; its docs say only that it carries the client IP. Every
+  // other forwarding header is caller-controlled here — trusting one lets any
+  // client mint a fresh allowance per request. Re-verify with a spoofed header
+  // after any change of host or proxy (orange-clouding the DNS breaks this).
+  const raw = request.headers.get('x-real-ip');
+  if (!raw || !ipaddr.isValid(raw)) return 'unknown';
+  const addr = ipaddr.process(raw); // ::ffff:a.b.c.d comes back as IPv4
+  if (addr.kind() === 'ipv4') return addr.toString();
+  // One IPv6 subscriber is routinely handed a whole /64; per-address keying gives it 2^64 allowances.
+  return `${(addr as ipaddr.IPv6).parts.slice(0, 4).map((p) => p.toString(16)).join(':')}::/64`;
+}
+
+// Not access control: curl sends no Origin and gets in. A foreign Origin is refused
+// before the limiter, since a no-cors POST needs no preflight and would otherwise spend
+// the visitor's allowance. localhost:5173 is the Vite dev server.
+const ALLOWED_ORIGINS = new Set(['https://laikahkeen.com', 'http://localhost:5173']);
+
+function allowedOrigin(request: Request): string | undefined {
+  const origin = request.headers.get('origin');
+  return origin && ALLOWED_ORIGINS.has(origin) ? origin : undefined;
+}
+
+function forbiddenOrigin(origin: string): Response {
+  return new Response(
+    JSON.stringify({
+      jsonrpc: '2.0',
+      error: { code: -32000, message: `Invalid Origin header: ${origin}` },
+      id: null,
+    }),
+    { status: 403, headers: { 'content-type': 'application/json' } },
+  );
+}
+
+function preflight(request: Request): Response {
+  const headers = new Headers({ vary: 'Origin' });
+  const origin = allowedOrigin(request);
+  if (origin) {
+    headers.set('access-control-allow-origin', origin);
+    headers.set('access-control-allow-methods', 'POST');
+    headers.set('access-control-allow-headers', 'content-type, accept, mcp-protocol-version');
+    headers.set('access-control-max-age', '7200'); // Chrome's cap
+  }
+  return new Response(null, { status: 204, headers });
+}
+
+function withCors(request: Request, response: Response): Response {
+  const res = new Response(response.body, response);
+  res.headers.append('vary', 'Origin');
+  const origin = allowedOrigin(request);
+  if (origin) res.headers.set('access-control-allow-origin', origin);
+  return res;
 }
 
 function tooMany(resetAt: number): Response {
@@ -64,8 +107,15 @@ export async function handleMcpRequest(request: Request): Promise<Response> {
 }
 
 async function handleWith(limiter: RateLimiter, request: Request): Promise<Response> {
-  const { allowed, resetAt } = limiter.check(clientIp(request));
-  if (!allowed) return tooMany(resetAt);
+  const origin = request.headers.get('origin');
+  if (origin !== null && !ALLOWED_ORIGINS.has(origin)) return forbiddenOrigin(origin);
+
+  // Before the limiter: a preflight does no work (it costs what a 429 does), and
+  // counting it would spend a visitor's allowance on browser mechanics.
+  if (request.method === 'OPTIONS') return preflight(request);
+
+  const { allowed, resetAt } = limiter.check(clientKey(request));
+  if (!allowed) return withCors(request, tooMany(resetAt));
 
   // Transport and server are per-request because a transport carries the state of
   // one exchange. keen-ops shares one server across requests and measured 5.05ms /
@@ -81,10 +131,8 @@ async function handleWith(limiter: RateLimiter, request: Request): Promise<Respo
   await server.connect(transport);
 
   try {
-    return await transport.handleRequest(request);
+    return withCors(request, await transport.handleRequest(request));
   } finally {
     await transport.close();
   }
 }
-
-export default { fetch: handleMcpRequest };

@@ -48,9 +48,9 @@
 
       <!-- Download Resume -->
       <div ref="cta" class="mt-12 text-center">
-        <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">
-          <Button variant="primary" size="lg"> Download Resume (PDF) </Button>
-        </a>
+        <Button href="/resume.pdf" target="_blank" rel="noopener noreferrer" variant="primary" size="lg">
+          Download Resume (PDF)
+        </Button>
       </div>
     </div>
   </section>

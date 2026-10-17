@@ -95,7 +95,7 @@ export function loadPosts(dir: string): Post[] {
 
   return parsed
     .filter((p) => !p.draft)
-    .map(({ draft: _draft, ...post }) => post)
+    .map(({ draft, ...post }) => post)
     .sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
 }
 

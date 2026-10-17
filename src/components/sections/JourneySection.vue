@@ -16,7 +16,7 @@
           :key="milestone.id"
           :ref="
             (el) => {
-              if (el) timelineRefs[index] = el;
+              if (el) timelineRefs[index] = el as ComponentPublicInstance;
             }
           "
           :year="milestone.year"
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, type ComponentPublicInstance } from 'vue';
 import TimelineItem from '../ui/TimelineItem.vue';
 import { journeyMilestones } from '../../data/journey';
 import gsap from 'gsap';
@@ -40,7 +40,7 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const header = ref<HTMLElement | null>(null);
-const timelineRefs = ref<any[]>([]);
+const timelineRefs = ref<ComponentPublicInstance[]>([]);
 
 onMounted(() => {
   // Header animation
