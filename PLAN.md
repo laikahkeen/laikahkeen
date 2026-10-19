@@ -119,15 +119,17 @@ deploy job is guarded to `push` only, so a PR can never publish to the live doma
 
 ### Open — still blocking
 
-1. **The deploy.** Config is in `mcp/` (`Dockerfile`, `railway.toml`) and the image is
-   verified locally. Remaining is owner-only: create the Railway service with config
-   path `/mcp/railway.toml` and no root directory, add the custom domain, add the DNS
-   record. Then confirm a spoofed `X-Real-IP` cannot reset the limit — Railway's docs
-   do not promise it is overwritten; only a staff forum reply does.
-2. **The layout brief.** "Varied section shapes with real density differences" is a
+1. **The layout brief.** "Varied section shapes with real density differences" is a
    judgement call. A first pass is possible; getting it right needs the owner's eye.
 
 Resolved: tests now gate the deploy (`.github/workflows/deploy.yml`).
+
+Resolved 2026-10-19: **the MCP deploy.** Railway project `laikahkeen`, service `mcp`, from
+`.railway/railway.ts`; `mcp.laikahkeen.com` is a DNS-only CNAME to Railway, with a Let's
+Encrypt cert. Spoof check, sent straight to Railway in a fresh minute, each request with a
+different `X-Real-IP` and `X-Forwarded-For`: 30 × 200, then 429. So Railway overwrites the
+header. To re-take, run the same 31-request curl loop; a 200 on the 31st means the keying
+or the proxy mode changed.
 
 ---
 
