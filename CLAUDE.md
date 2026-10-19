@@ -503,8 +503,11 @@ npm run test:run        # or, from the repo root: npm run test:mcp
   hold, so an IP spray can evict a victim's counter and forgive its usage. On the
   current deploy there is **no** edge rate limiting in front of it — this is the only layer.
 - **Deploy: Railway, one Node process, DNS-only** (decided 2026-10-13, `PLAN.md`).
-  `mcp/Dockerfile` builds from the **repo root** (it needs `src/data`); the service's
-  config path is `/mcp/railway.toml` with no root directory. No build step: Node 22.18+
+  `mcp/Dockerfile` builds from the **repo root** (it needs `src/data`), so the service has
+  no root directory. Service settings live in `.railway/railway.ts`, applied with
+  `railway config apply` (CLI 5.x) — Railway reads nothing from the repo at deploy time, and
+  new services cannot use `railway.toml`. The custom domain is the exception: the engine
+  refuses it in the file, so it was added with `railway domain`. No build step: Node 22.18+
   strips types and runs `src/serve.ts` directly, which is why imports use `.ts` paths.
 - **The limiter keys on `X-Real-IP` only**, IPv6 by its /64 (one subscriber holds a whole
   /64). Any other forwarding header is caller-controlled on Railway. Orange-clouding the

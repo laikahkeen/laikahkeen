@@ -45,7 +45,7 @@ jobs:
       - name: Audit
         run: npm run audit
 
-      # src/data edits redeploy the MCP server (mcp/railway.toml watchPatterns), and
+      # src/data edits redeploy the MCP server (.railway/railway.ts watchPatterns), and
       # vitest's transform hides load-time failures that Node's type stripping hits.
       - name: Check MCP server
         run: |
