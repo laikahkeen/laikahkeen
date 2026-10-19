@@ -14,7 +14,7 @@ export const projects: Project[] = [
     impact:
       'Turns sparse property events into dashboards, cashflow timelines, break-even dates, IRR analysis, and what-if comparisons for a live multi-user web product.',
     role: 'Full-stack product engineering, Go financial engine, MCP tools, AI chat UX, billing',
-    image: '/images/propbook.png',
+    image: '/images/propbook.webp',
     tags: ['Go', 'MCP', 'SQLite', 'Next.js', 'TypeScript', 'Stripe'],
     liveUrl: 'https://propbook.laikahkeen.com',
     featured: true,
@@ -58,7 +58,7 @@ export const projects: Project[] = [
     impact:
       'Explored how a React, TypeScript, Tailwind, Electron, Zustand, and FFmpeg-based interface could make media processing more repeatable.',
     role: 'Frontend product build, FFmpeg workflow integration',
-    image: '/images/batchvideo.png',
+    image: '/images/batchvideo.webp',
     tags: ['React', 'Vite', 'TypeScript', 'FFmpeg', 'Electron'],
     liveUrl: 'https://batchvideo.laikahkeen.com',
     githubUrl: 'https://github.com/laikahkeen/batchvideo',

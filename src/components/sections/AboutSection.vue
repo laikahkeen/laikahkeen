@@ -13,7 +13,7 @@
             ></div>
             <div class="relative h-full w-full overflow-hidden bg-gray-300">
               <img
-                src="/images/profile.jpeg"
+                src="/images/profile.webp"
                 alt="Lai Kah Keen"
                 class="h-full w-full object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
                 loading="lazy"

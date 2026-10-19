@@ -21,10 +21,11 @@ async function rpc(endpoint: string, body: object, signal: AbortSignal, protocol
 }
 
 /**
- * initialize, then tools/list. The server is stateless, so notifications/initialized
- * is skipped: there is no session to confirm, and it would cost a rate-limit unit.
+ * initialize only. The server is stateless, so notifications/initialized is skipped:
+ * there is no session to confirm, and it would cost a rate-limit unit.
+ * Returns the protocol version later requests must send.
  */
-export async function fetchMcpTools(endpoint: string, signal: AbortSignal): Promise<McpTool[]> {
+export async function connectMcp(endpoint: string, signal: AbortSignal): Promise<string> {
   const init = await rpc(
     endpoint,
     {
@@ -39,7 +40,12 @@ export async function fetchMcpTools(endpoint: string, signal: AbortSignal): Prom
     },
     signal
   );
-  const listed = await rpc(endpoint, { jsonrpc: '2.0', id: 2, method: 'tools/list' }, signal, init.protocolVersion);
+  return init.protocolVersion;
+}
+
+export async function fetchMcpTools(endpoint: string, signal: AbortSignal): Promise<McpTool[]> {
+  const version = await connectMcp(endpoint, signal);
+  const listed = await rpc(endpoint, { jsonrpc: '2.0', id: 2, method: 'tools/list' }, signal, version);
   if (!Array.isArray(listed.tools)) throw new Error('tools/list returned no tools array');
 
   return listed.tools
@@ -48,4 +54,23 @@ export async function fetchMcpTools(endpoint: string, signal: AbortSignal): Prom
       name: t.name,
       description: typeof t.description === 'string' ? t.description : '',
     }));
+}
+
+// The server answers every tool with one JSON text block (mcp/src/server.ts).
+export async function callMcpTool(
+  endpoint: string,
+  version: string,
+  name: string,
+  args: Record<string, unknown>,
+  signal: AbortSignal
+): Promise<unknown> {
+  const result = await rpc(
+    endpoint,
+    { jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name, arguments: args } },
+    signal,
+    version
+  );
+  const text = result.content?.[0]?.text;
+  if (result.isError || typeof text !== 'string') throw new Error(text ?? `${name} returned no content`);
+  return JSON.parse(text);
 }

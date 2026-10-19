@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getExperience, getProject, listProjects } from './tools.ts';
+import { getExperience, getProject, listProjects } from './payloads.ts';
 
 describe('tool payloads', () => {
   it('lists every project with a case-study URL', () => {

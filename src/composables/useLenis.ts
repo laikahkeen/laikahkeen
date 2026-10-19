@@ -31,3 +31,10 @@ export function scrollToSection(id: string): void {
   // before mount. Both should jump, not animate.
   window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - navOffset(), behavior: 'instant' });
 }
+
+// For full-screen overlays: the page underneath must not scroll while they are up.
+export function holdScroll(hold: boolean): void {
+  if (hold) lenis?.stop();
+  else lenis?.start();
+  document.documentElement.style.overflow = hold ? 'hidden' : '';
+}
