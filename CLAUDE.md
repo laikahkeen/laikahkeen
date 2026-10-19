@@ -1,4 +1,5 @@
 <!-- GLOBAL:START - managed by sync.sh, don't edit between markers -->
+
 # Global Rules
 
 ## Verification
@@ -22,16 +23,19 @@ Never fabricate or hallucinate UI features, CLI flags, or API capabilities. If u
 When facing multiple independent tasks, use parallel subagents. When tasks have dependencies, process sequentially.
 
 ### Use Parallel Subagents When:
+
 - Implementing changes across independent packages or files
 - Running tests in one area while implementing in another
 - Any combination of research + implementation + testing where targets don't overlap
 
 ### Use Sequential Processing When:
+
 - Task B depends on Task A's output (e.g., implement API then write tests against it)
 - Changes to shared types that cascade across packages
 - Database migrations that must happen before code changes
 
 ### Subagent Scoping:
+
 - Each subagent should have a clear, scoped task within a single package boundary
 - Pass specific file paths and context to subagents, not vague descriptions
 - After parallel subagents complete, verify combined changes compile and pass tests
@@ -49,7 +53,7 @@ A modern, single-page developer portfolio for Lai Kah Keen built with Vue 3, Tai
 
 **A revamp is decided but unbuilt — see `PLAN.md` and "Reversed 2026-09-25" below.**
 Four things this file previously called settled have been overturned. The description
-above still describes the *live* site; do not read it as the target.
+above still describes the _live_ site; do not read it as the target.
 
 ## What this site is for
 
@@ -111,6 +115,9 @@ not a judgement call to make mid-task:
 - **Vue 3 Composition API with `<script setup>`**, Tailwind-first, GSAP + Lenis for motion.
 - **Content lives in `src/data/`**, never hardcoded in components.
 - **Minimal dependencies.** The bundle is small on purpose; adding a library needs a reason.
+  **three.js is the decided exception (owner, 2026-10-19)**, for the hero reel and the server
+  room. It loads only in lazy chunks, after the hero has painted; it must never reach the
+  home page's first load. See "Hero reel and server room".
 
 ### Reversed 2026-09-25 — decided by the owner, not yet built
 
@@ -137,6 +144,9 @@ Two further decisions from the same session, not reversals:
 - **Motion: less, not different.** The uniform fade-up-on-scroll is what dates the site.
   Strip most scroll animation, keep Lenis, let type and layout carry it. Break the seven
   equal full-width sections into varied shapes with real density differences.
+  **The hero is the deliberate exception (owner, 2026-10-17 and 2026-10-19):** a 15s
+  WebGL reel on first load, then an optional 3D room behind it. Everything below the hero
+  still follows "less".
 - **A public MCP server is the centrepiece**, in its own repo: TypeScript SDK on the
   edge, importing `src/data/*.ts` directly so the server and the site cannot disagree.
   Three tools, no credential, per-IP rate limited. No inference anywhere in v1.
@@ -146,7 +156,8 @@ Two further decisions from the same session, not reversals:
 - **Framework**: Vue 3 (Composition API with `<script setup>`)
 - **Build Tool**: Vite 8.x (bundles with **Rolldown**, not Rollup — see Deployment)
 - **Styling**: Tailwind CSS 3.x
-- **Animations**: GSAP 3.x with ScrollTrigger plugin
+- **Animations**: GSAP 3.x with ScrollTrigger and SplitText
+- **3D**: three.js, lazy-loaded; scenes modelled and light-baked in Blender 5
 - **Smooth Scroll**: Lenis
 - **Language**: TypeScript (with Vue TSC for type checking)
 
@@ -166,9 +177,11 @@ laikahkeen/
 │   ├── build-cv.sh      # cv.yaml -> html -> pdf, then verifies the output
 │   ├── cv-render.py     # CV presentation + content validation
 │   ├── build-og.sh      # og-template.html -> public/og-image.png, verified at 1200x630
-│   └── og-template.html # source for the social card — subtitle tracks cv.yaml basics.role
-├── public/              # Static assets (images, resume.pdf, generated og-image.png).
-│                        # No CNAME — see "Deployment"
+│   ├── og-template.html # source for the social card — subtitle tracks cv.yaml basics.role
+│   ├── build-server-room.sh # blender/server-room.py -> public/models/server-room.glb
+│   └── blender/         # Blender scripts. The room is built, lit and baked here, never by hand
+├── public/              # Static assets (images, resume.pdf, generated og-image.png,
+│                        # models/server-room.glb). No CNAME — see "Deployment"
 ├── src/
 │   ├── assets/          # Styles (main.css with Tailwind directives)
 │   ├── components/
@@ -179,6 +192,9 @@ laikahkeen/
 │   ├── data/            # Content data (projects, skills, journey, experience)
 │   │   └── writing/     # Posts, one <slug>.md each — see "Writing". Absent until the first post
 │   ├── writing/         # Build-time markdown pipeline + Vite plugin. Node only
+│   ├── reel/            # Hero reel: particle shapes + its three.js scene (lazy)
+│   ├── server/          # The server room: three.js scene, panels, tool-call builders (lazy)
+│   ├── debug/           # Dev-only frame counter for both. Never in a build
 │   ├── router/          # Route table. Home is '/', depth is '/work/<slug>', '/writing/<slug>'
 │   ├── views/           # HomeView (the scroll page), WorkView (a case study), Writing*View
 │   ├── App.vue          # Shell: Navigation + RouterView + Footer + Lenis
@@ -224,11 +240,12 @@ fetches. Static content stays neutral. "Accent = clickable" is the failure mode,
 is how this degrades into decoration.
 
 The rule is documented here and **not enforced by anything** — that is a known gap. What
-*is* enforced, by `src/theme.test.ts`: the accent clears WCAG AA on black (7.5:1), its
+_is_ enforced, by `src/theme.test.ts`: the accent clears WCAG AA on black (7.5:1), its
 hover variant does too, the palette has exactly one non-neutral, and it **fails** AA on
 white (2.8:1). That last assertion is why the theme is dark-only; if it ever passes, the
 dark-only decision rested on a premise that no longer holds and should be reopened rather
 than quietly kept.
+
 - Responsive: Mobile-first approach using Tailwind breakpoints (`sm:`, `md:`, `lg:`, `xl:`)
 - Custom animations defined in `tailwind.config.ts` under `extend.animation`
 
@@ -254,10 +271,11 @@ to rest. That reads as sluggishness but is not a performance problem — the pag
 long-task insights. Current setting is `lerp: 0.2`, measured at 194ms to cover 90% of a
 scroll distance (down from 385ms at `lerp: 0.1`).
 
-Useful distinction when measuring: time-to-*settle* is misleading, because smoothing has a
+Useful distinction when measuring: time-to-_settle_ is misleading, because smoothing has a
 long asymptotic tail nobody perceives. Measure **time to ~90% of the distance**.
 
 Two related rules:
+
 - **Never reintroduce `duration`.** It is frame-rate dependent and mutually exclusive with
   `lerp`. Also note `smoothTouch` is not a real Lenis option — it was set here for a while
   behind an `as any` cast, doing nothing.
@@ -285,7 +303,7 @@ When updating content, modify these data files rather than hardcoding in compone
 
 ### Sections
 
-1. **Hero**: Parallax background shapes, animated title with typewriter effect
+1. **Hero**: A 15s WebGL reel on first load, then "Enter the server" — see "Hero reel and server room"
 2. **About**: Profile photo with bio and core competencies
 3. **Journey**: Vertical timeline with milestone markers
 4. **Skills**: Categorized skill tags (Frontend, Backend, Tools, etc.)
@@ -345,7 +363,7 @@ Vitest, configured in the `test` block of `vite.config.ts` (which imports
 `*.test.ts`. `globals: false` — import `describe`/`it`/`expect` from `vitest` explicitly.
 
 **`src/test/setup.ts` is load-bearing, not boilerplate.** jsdom has no `matchMedia`, and
-GSAP's `registerPlugin(ScrollTrigger)` calls it at *module scope* in `useParallax.ts`.
+GSAP's `registerPlugin(ScrollTrigger)` calls it at _module scope_ in `useParallax.ts`.
 Since the router imports `HomeView` eagerly, any test that touches the router pulls in
 every section component — so without the shim the whole suite fails at collection, not at
 assertion. Its `matches: false` also means the reduced-motion and fine-pointer guards both
@@ -373,7 +391,8 @@ were verified by mutation: breaking each one does fail the suite.
 **Publish a post**: Add `src/data/writing/<slug>.md` — see "Writing"
 **Update CV**: Edit `cv/cv.yaml`, run `./scripts/build-cv.sh`, then promote deliberately (see "The CV")
 **Update the social card**: Edit `scripts/og-template.html`, run `./scripts/build-og.sh` (writes `public/og-image.png` directly)
-**Change Colors**: Modify `tailwind.config.ts` (stick to monochrome)
+**Change the server room**: Edit `scripts/blender/server-room.py`, run `./scripts/build-server-room.sh` (writes `public/models/server-room.glb` directly)
+**Change Colors**: Modify `tailwind.config.ts` — neutrals plus the one accent, which means "live system" only (see "The accent")
 **Add Meta Tags**: Update `index.html`
 **Modify Navigation**: Edit `src/components/layout/Navigation.vue`
 
@@ -386,10 +405,10 @@ by `src/writing/content.ts`; anything else fails the build:
 ```yaml
 ---
 title: Plain text
-date: 2026-10-13        # YYYY-MM-DD, sorts the index newest first
+date: 2026-10-13 # YYYY-MM-DD, sorts the index newest first
 summary: One or two sentences — the index, meta description and og:description
-slug: url-safe-slug     # /writing/<slug>; permanent once shared
-draft: true             # optional, default false. Drafts are never emitted to dist/
+slug: url-safe-slug # /writing/<slug>; permanent once shared
+draft: true # optional, default false. Drafts are never emitted to dist/
 ---
 ```
 
@@ -428,10 +447,10 @@ that look like defects from the outside. The four that get "fixed" by mistake:
   a parse-failure cause; the type and margin floors are CMU SCS. One page is the budget —
   when it overflows, **cut content, never shrink type or margins**.
 - **`design.hyphenate` stays `false`.** Chrome's auto-hyphenation breaks words in the PDF
-  *text layer* using U+2010, so `migration` extracts as `mi‐gration` and a keyword search
+  _text layer_ using U+2010, so `migration` extracts as `mi‐gration` and a keyword search
   misses it. Invisible in the rendered page.
 - **`design.font` must stay a `*-local` option.** A webfont embeds as Type 3; and never
-  lead a font stack with `-apple-system`, which embeds as Type 3 *and* inflates the file.
+  lead a font stack with `-apple-system`, which embeds as Type 3 _and_ inflates the file.
 
 `build-cv.sh` verifies page count, font embedding, and broken words on every run, and
 `cv-render.py` validates the content rules (two-line bullets, action-verb openings, no
@@ -458,6 +477,51 @@ edit to make.
 
 Two standing content rules: **no year counts anywhere**, and **no unverifiable numbers** —
 a figure that cannot be defended in an interview is worse than no figure.
+
+## Hero reel and server room
+
+Built 2026-10-17 to 2026-10-19 on the owner's direction ("go bigger, go wilder, get a 3D
+library if needed"). Both sit on top of the prerendered hero and never replace it: the
+SSR output is the resting hero, so crawlers, no-JS and reduced-motion visitors get it untouched.
+
+**The reel** (`HeroReel.vue`, `src/reel/`): 15s on a 120bpm grid, one particle swarm that
+types the MCP request, collapses, spells the featured projects, tiles into the propbook
+screenshot, and lands on the real `<h1>` (one world unit = one CSS pixel, so DOM rects map
+into the scene).
+
+- Plays **once per page load**, only when the page opens at the top, never under reduced
+  motion. Any key, click, wheel, touch or resize skips to the end.
+- The `<h1>` stays outside the reel and paints first — it is the LCP element.
+- No WebGL or no 2D canvas: the reel bows out and the resting hero is the whole experience.
+
+**The server room** (`ServerGame.vue`, `src/server/`): "Enter the server" appears under the
+hero once the reel has ended, watched or skipped. Three terminals, one per MCP tool; each
+makes a **real `tools/call`** to the endpoint and the response becomes the scene — project
+cards, the propbook build, a corridor of roles.
+
+- **Live vs replay.** It connects first (4s timeout). If the endpoint does not answer, it
+  replays from `mcp/src/payloads.ts` — the server's own payload code, not a copy — and the
+  HUD says so. **The accent appears only on live responses**; a replay stays neutral.
+- **`mcp/src/payloads.ts` must not import zod.** The site bundles it for the replay, and
+  the schemas would ride along. Schemas stay in `tools.ts`.
+- Click/tap a screen or press 1/2/3; Esc exits. Page scroll is held (`holdScroll`) while open.
+- If the model or WebGL fails, the room closes and the door is removed for that load.
+
+**The model is generated, never edited by hand.** `scripts/blender/server-room.py` models,
+lights and Cycles-bakes the room into one texture; three.js shows it unlit (`toneMapped:
+false`) and bloom only catches the over-1.0 glow mesh. Node names are the contract with
+`src/server/scene.ts` (listed at the top of the script). Two traps, both hit once:
+
+- **Blender 5's `transform_apply(scale=True)` also applies location and rotation** — those
+  default to `True`. Pass all three explicitly, or the screens export with their pose baked
+  into vertices and every camera angle goes wrong.
+- **Keep emissive things out of the baked mesh.** Hundreds of LED faces in the lightmap
+  starved the floor of texels. They live in the separate `glow` mesh, unbaked.
+
+**Debugging motion:** `npm run dev`, open `/?reel-debug`. A frame counter (24fps) appears;
+Space pauses, ←/→ step a frame. In the room it counts from opening and steps forward only.
+It is behind `import.meta.env.DEV`, so it is absent from every build — verified by grepping
+`dist/`.
 
 ## The MCP server
 
@@ -548,20 +612,25 @@ Kept as rows rather than overwritten, because the drift is the useful part. Re-m
 with `npm run build`; a mismatch means time or a dependency moved, not that something
 broke.
 
-| Date | Home first load (gz) | What changed |
-|---|---|---|
-| 2026-09-25 | 113.9 KB | before routing |
-| 2026-09-25 | 130.9 KB | `vue-router` + prerendering added |
-| 2026-09-25 | ~123.9 KB | Vite 5 → 8. Smaller despite no code change: better minification, and the chunk split shifted — ScrollTrigger now lands in the `gsap` chunk rather than `app` |
-| 2026-10-13 | 133.0 KB | `master` at `28004b9`, re-read before the writing pipeline. Method: sum of the gzip column `npm run build` prints for the `app`, `vendor`, `gsap` JS and `app` CSS that `dist/index.html` loads. The row above recorded no method, so the gap to it is unattributed |
-| 2026-10-13 | 133.7 KB | Writing pipeline, zero posts: nav link + routes + `@unhead/vue` `useHead`. Post HTML and its CSS ship only in the post view's chunk |
+| Date       | Home first load (gz) | What changed                                                                                                                                                                                                                                                        |
+| ---------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-09-25 | 113.9 KB             | before routing                                                                                                                                                                                                                                                      |
+| 2026-09-25 | 130.9 KB             | `vue-router` + prerendering added                                                                                                                                                                                                                                   |
+| 2026-09-25 | ~123.9 KB            | Vite 5 → 8. Smaller despite no code change: better minification, and the chunk split shifted — ScrollTrigger now lands in the `gsap` chunk rather than `app`                                                                                                        |
+| 2026-10-13 | 133.0 KB             | `master` at `28004b9`, re-read before the writing pipeline. Method: sum of the gzip column `npm run build` prints for the `app`, `vendor`, `gsap` JS and `app` CSS that `dist/index.html` loads. The row above recorded no method, so the gap to it is unattributed |
+| 2026-10-13 | 133.7 KB             | Writing pipeline, zero posts: nav link + routes + `@unhead/vue` `useHead`. Post HTML and its CSS ship only in the post view's chunk                                                                                                                                 |
+| 2026-10-17 | 138.0 KB             | `master` re-read before the reel, same method. The 4.3 KB over the row above is unattributed                                                                                                                                                                        |
+| 2026-10-17 | 146.2 KB             | Hero reel: GSAP SplitText + `HeroReel.vue`. three.js and the scene are a lazy chunk                                                                                                                                                                                 |
+| 2026-10-19 | 150.0 KB             | Server room door: `ServerGame.vue`, the MCP client's `tools/call`. Lazy and not counted: `three.module` 140.9 KB, `server` 21.0 KB, reel `scene` 1.5 KB, and `server-room.glb` (496 KB, fetched on entry)                                                           |
+| 2026-10-19 | 149.8 KB             | Plausible loader commented out in `src/main.ts` while its host returns Railway's 404                                                                                                                                                                                |
+
 - **Output directory**: `dist/`
 - **Install in CI**: `npm ci`, not `npm install` — a lockfile exists and CI must honour it
 - **Custom domain**: held in the repo's **Pages settings**, not in the tree. There is
   **no `public/CNAME`**; the workflow writes `dist/CNAME` at build time. If you go looking
   for `public/CNAME` because this file used to claim it existed, that is why.
 - **Publish mechanism**: GitHub's own `actions/upload-pages-artifact` + `actions/deploy-pages`,
-  with Pages source set to *GitHub Actions*. It was the third-party `peaceiris/actions-gh-pages`
+  with Pages source set to _GitHub Actions_. It was the third-party `peaceiris/actions-gh-pages`
   pushing a `gh-pages` branch until 2026-08. That branch is now **stale** — do not read it as
   the live site, and do not restore branch-based publishing without also flipping the Pages
   source setting back.
@@ -570,8 +639,9 @@ broke.
 
 ### Design System
 
-- Maintain strict monochrome theme - no colors outside black/white/gray
-- All hover states use grayscale transitions
+- Black, white and grey, plus the one accent — and the accent only marks a live system
+  (see "The accent"). Never use it for hover, emphasis or "clickable"
+- Hover states stay neutral
 - Consistent spacing using Tailwind's spacing scale
 - Typography: System fonts with fallbacks defined in Tailwind config
 
@@ -604,7 +674,7 @@ Target modern browsers with ES6+ support:
 
 When working on this project:
 
-1. **Respect the monochrome theme** - Never suggest adding colors
+1. **Respect the palette** - Neutrals plus one accent that means "live system"; never suggest another colour, or the accent for anything else
 2. **Use Tailwind utilities** - Avoid custom CSS unless absolutely necessary
 3. **Keep animations smooth** - Test scroll performance with GSAP changes
 4. **Maintain Vue 3 patterns** - Use Composition API and `<script setup>`
@@ -626,4 +696,4 @@ When working on this project:
 
 ---
 
-Last updated: 2026-09-19
+Last updated: 2026-10-19

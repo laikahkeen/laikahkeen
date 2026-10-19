@@ -121,3 +121,17 @@ export interface McpPanelCopy {
   sourceLabel: string;
   sourceUrl: string;
 }
+
+export type McpToolName = 'list_projects' | 'get_project' | 'get_experience';
+
+export interface ServerGameCopy {
+  enter: string;
+  connecting: string;
+  hint: string;
+  live: string;
+  replay: string;
+  exit: string;
+  done: string;
+  caseStudy: string;
+  tools: Record<McpToolName, string>;
+}

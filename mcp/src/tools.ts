@@ -1,69 +1,13 @@
 import { z } from 'zod';
-import { projects } from '../../src/data/projects.ts';
-import { experiences } from '../../src/data/experience.ts';
 
 /**
- * Tool payloads. Shaped from the site's own data files, so a visiting agent and
- * a visiting human are told the same thing.
- *
  * Three tools, and it stays three. The descriptions are the craft here — an agent
  * decides whether to call a tool from its description alone, so each one says what
- * it returns and when to reach for it.
+ * it returns and when to reach for it. Payloads are in payloads.ts.
  */
 
-export const SITE_URL = 'https://laikahkeen.com';
-
-export function listProjects(status?: 'active' | 'archived') {
-  return projects
-    .filter((p) => (status ? p.status === status : true))
-    .map((p) => ({
-      slug: p.slug,
-      title: p.title,
-      summary: p.description,
-      tech: p.tags,
-      status: p.status,
-      featured: p.featured,
-      caseStudy: `${SITE_URL}/work/${p.slug}`,
-      liveUrl: p.liveUrl,
-      sourceUrl: p.githubUrl,
-    }));
-}
-
-export function getProject(slug: string) {
-  const p = projects.find((x) => x.slug === slug);
-  if (!p) return undefined;
-  return {
-    slug: p.slug,
-    title: p.title,
-    summary: p.description,
-    problem: p.problem,
-    approach: p.solution,
-    outcome: p.impact,
-    role: p.role,
-    tech: p.tags,
-    status: p.status,
-    caseStudy: `${SITE_URL}/work/${p.slug}`,
-    liveUrl: p.liveUrl,
-    sourceUrl: p.githubUrl,
-  };
-}
-
-export function getExperience() {
-  return experiences.map((e) => ({
-    company: e.company,
-    role: e.role,
-    period: e.period,
-    location: e.location,
-    current: e.current,
-    summary: e.description,
-    highlights: e.responsibilities,
-  }));
-}
-
 export const getProjectInput = {
-  slug: z
-    .string()
-    .describe("Project slug, as returned by list_projects — e.g. 'keen-ops'. Not the display title."),
+  slug: z.string().describe("Project slug, as returned by list_projects — e.g. 'keen-ops'. Not the display title."),
 };
 
 export const listProjectsInput = {
@@ -75,7 +19,7 @@ export const listProjectsInput = {
 
 export const TOOL_DESCRIPTIONS = {
   list_projects:
-    'List Lai Kah Keen\'s engineering projects with a one-line summary, tech stack, status, and a link to the full case study. Start here — it returns the slugs the other tools take.',
+    "List Lai Kah Keen's engineering projects with a one-line summary, tech stack, status, and a link to the full case study. Start here — it returns the slugs the other tools take.",
   get_project:
     'Full detail on one project: the problem it addressed, the approach taken, the outcome, and his specific role. Use this when asked what someone actually built or how a system works, rather than what they list on a CV.',
   get_experience:

@@ -1,12 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import {
-  TOOL_DESCRIPTIONS,
-  getExperience,
-  getProject,
-  getProjectInput,
-  listProjects,
-  listProjectsInput,
-} from './tools.ts';
+import { getExperience, getProject, listProjects } from './payloads.ts';
+import { TOOL_DESCRIPTIONS, getProjectInput, listProjectsInput } from './tools.ts';
 
 export const SERVER_INFO = { name: 'laikahkeen', version: '0.1.0' } as const;
 
@@ -28,13 +22,23 @@ export function buildServer(): McpServer {
 
   server.registerTool(
     'list_projects',
-    { title: 'List projects', description: TOOL_DESCRIPTIONS.list_projects, inputSchema: listProjectsInput, annotations: readOnly },
-    async ({ status }) => json(listProjects(status)),
+    {
+      title: 'List projects',
+      description: TOOL_DESCRIPTIONS.list_projects,
+      inputSchema: listProjectsInput,
+      annotations: readOnly,
+    },
+    async ({ status }) => json(listProjects(status))
   );
 
   server.registerTool(
     'get_project',
-    { title: 'Get project', description: TOOL_DESCRIPTIONS.get_project, inputSchema: getProjectInput, annotations: readOnly },
+    {
+      title: 'Get project',
+      description: TOOL_DESCRIPTIONS.get_project,
+      inputSchema: getProjectInput,
+      annotations: readOnly,
+    },
     async ({ slug }) => {
       const project = getProject(slug);
       if (!project) {
@@ -53,13 +57,13 @@ export function buildServer(): McpServer {
         };
       }
       return json(project);
-    },
+    }
   );
 
   server.registerTool(
     'get_experience',
     { title: 'Get experience', description: TOOL_DESCRIPTIONS.get_experience, annotations: readOnly },
-    async () => json(getExperience()),
+    async () => json(getExperience())
   );
 
   return server;

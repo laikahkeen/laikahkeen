@@ -17,54 +17,59 @@
     <!-- Main Content -->
     <div class="relative z-10 mx-auto max-w-7xl px-6 text-center lg:px-8">
       <div ref="content">
-        <div ref="eyebrow" class="mb-6 overflow-hidden">
+        <div class="mb-6 overflow-hidden">
           <p class="text-xs font-medium uppercase tracking-[0.35em] text-gray-500">AI tooling and product frontends</p>
         </div>
 
-        <!-- Animated Name -->
+        <!-- Name: visible from the first frame, it is the LCP element -->
         <div class="mb-6 overflow-hidden">
           <h1 ref="name" class="text-6xl font-bold tracking-tight md:text-8xl lg:text-9xl">Lai Kah Keen</h1>
         </div>
 
-        <!-- Tagline -->
-        <div class="mb-8 overflow-hidden">
-          <p
-            ref="tagline"
-            class="mx-auto max-w-4xl text-xl font-light leading-tight text-gray-700 md:text-3xl lg:text-4xl"
-          >
-            I build the AI tooling other engineers adopt, and ship the product on top of it.
-          </p>
-        </div>
-
-        <!-- Description -->
-        <div class="mb-10 overflow-hidden">
-          <p ref="description" class="mx-auto max-w-3xl text-base leading-8 text-gray-500 md:text-lg">
-            Three MCP servers shipped — one adopted beyond engineering, by product and the non-technical business team,
-            one inside a commercial product, one running my own life. Vue, React and Go, from product shape through to
-            the billing behind it.
-          </p>
-        </div>
-
-        <div ref="metrics" class="mx-auto mb-10 grid max-w-3xl grid-cols-1 gap-3 text-left sm:grid-cols-3">
-          <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
-            <p class="text-2xl font-semibold">03</p>
-            <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">MCP servers shipped</p>
+        <HeroReel :name="name" @end="reelEnded = true">
+          <!-- Tagline -->
+          <div class="mb-8 overflow-hidden">
+            <p
+              data-reel="tagline"
+              class="mx-auto max-w-4xl text-xl font-light leading-tight text-gray-700 md:text-3xl lg:text-4xl"
+            >
+              I build the AI tooling other engineers adopt, and ship the product on top of it.
+            </p>
           </div>
-          <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
-            <p class="text-2xl font-semibold">Go + TS</p>
-            <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Core stack</p>
-          </div>
-          <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
-            <p class="text-2xl font-semibold">Billing</p>
-            <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Owned end to end</p>
-          </div>
-        </div>
 
-        <!-- CTA Buttons -->
-        <div ref="cta" class="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Button variant="primary" size="lg" @click="scrollToSection('projects')"> View My Work </Button>
-          <Button variant="secondary" size="lg" @click="scrollToSection('contact')"> Get In Touch </Button>
-        </div>
+          <!-- Description -->
+          <div class="mb-10 overflow-hidden">
+            <p data-reel="description" class="mx-auto max-w-3xl text-base leading-8 text-gray-500 md:text-lg">
+              Three MCP servers shipped — one adopted beyond engineering, by product and the non-technical business
+              team, one inside a commercial product, one running my own life. Vue, React and Go, from product shape
+              through to the billing behind it.
+            </p>
+          </div>
+
+          <div data-reel="metrics" class="mx-auto mb-10 grid max-w-3xl grid-cols-1 gap-3 text-left sm:grid-cols-3">
+            <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
+              <p data-reel="value" class="text-2xl font-semibold">03</p>
+              <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">MCP servers shipped</p>
+            </div>
+            <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
+              <p data-reel="value" class="text-2xl font-semibold">Go + TS</p>
+              <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Core stack</p>
+            </div>
+            <div class="border border-gray-200 bg-white/80 p-4 backdrop-blur">
+              <p data-reel="value" class="text-2xl font-semibold">Billing</p>
+              <p class="mt-1 text-xs uppercase tracking-[0.2em] text-gray-500">Owned end to end</p>
+            </div>
+          </div>
+
+          <!-- CTA Buttons -->
+          <div data-reel="cta" class="flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button variant="primary" size="lg" @click="scrollToSection('projects')"> View My Work </Button>
+            <Button variant="secondary" size="lg" @click="scrollToSection('contact')"> Get In Touch </Button>
+          </div>
+        </HeroReel>
+
+        <!-- Only once the reel has run: the room is where the reel's request leads. -->
+        <ServerGame v-if="reelEnded" class="mt-10" />
       </div>
     </div>
 
@@ -74,10 +79,7 @@
          when the description ran to five lines in an 806px-tall window. The
          section's pb-24 reserves the strip this sits in; keep the two in step
          if either changes. Hidden on viewports too short to seat it at all. -->
-    <div
-      ref="scrollIndicator"
-      class="absolute bottom-8 left-1/2 hidden -translate-x-1/2 [@media(min-height:760px)]:block"
-    >
+    <div class="absolute bottom-8 left-1/2 hidden -translate-x-1/2 [@media(min-height:760px)]:block">
       <div class="flex h-10 w-6 animate-bounce justify-center rounded-full border-2 border-black p-2">
         <div class="h-3 w-1 rounded-full bg-black"></div>
       </div>
@@ -89,16 +91,13 @@
 import { ref, onMounted } from 'vue';
 import gsap from 'gsap';
 import Button from '../ui/Button.vue';
+import HeroReel from '../ui/HeroReel.vue';
+import ServerGame from '../ui/ServerGame.vue';
 import { useMouseParallax } from '../../composables/useParallax';
 import { scrollToSection } from '../../composables/useLenis';
 
 const name = ref<HTMLElement | null>(null);
-const eyebrow = ref<HTMLElement | null>(null);
-const tagline = ref<HTMLElement | null>(null);
-const description = ref<HTMLElement | null>(null);
-const metrics = ref<HTMLElement | null>(null);
-const cta = ref<HTMLElement | null>(null);
-const scrollIndicator = ref<HTMLElement | null>(null);
+const reelEnded = ref(false);
 const shape1 = ref<HTMLElement | null>(null);
 const shape2 = ref<HTMLElement | null>(null);
 const shape3 = ref<HTMLElement | null>(null);
@@ -109,76 +108,6 @@ useMouseParallax(shape2, { strength: -200 });
 useMouseParallax(shape3, { strength: 100 });
 
 onMounted(() => {
-  // Hero entrance animation
-  const tl = gsap.timeline();
-
-  tl.from(eyebrow.value, {
-    y: 30,
-    opacity: 0,
-    duration: 0.7,
-    ease: 'power3.out',
-  })
-    .from(
-      name.value,
-      {
-        y: 100,
-        opacity: 0,
-        duration: 1,
-        ease: 'power4.out',
-      },
-      '-=0.35'
-    )
-    .from(
-      tagline.value,
-      {
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-      },
-      '-=0.5'
-    )
-    .from(
-      description.value,
-      {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-      },
-      '-=0.4'
-    )
-    .from(
-      metrics.value?.children || [],
-      {
-        y: 24,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.08,
-        ease: 'power3.out',
-      },
-      '-=0.35'
-    )
-    .from(
-      cta.value,
-      {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-      },
-      '-=0.4'
-    )
-    .from(
-      scrollIndicator.value,
-      {
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power2.out',
-      },
-      '-=0.4'
-    );
-
   // Parallax shapes on scroll
   gsap.to(shape1.value, {
     scrollTrigger: {
