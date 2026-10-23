@@ -1,6 +1,6 @@
 # Build context is the repo root, not mcp/: the server imports ../src/data and
 # ../src/types. No build step — Node 22.18+ strips types and runs src/ directly.
-FROM node:22-alpine
+FROM node:22.23.4-alpine
 
 WORKDIR /app
 COPY mcp/package.json mcp/package-lock.json mcp/
